@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+    <meta charset="utf-8">
+    
+    <meta name="google-site-verification" content="21k73v5G8oRoUeP-cTwUyeD5lkZ5asW5K667uxY6oqI">
+    
+    
+    <meta name="baidu-site-verification" content="I1QHrtH1Ea">
+    
+    
+    
+    <link rel="canonical" href="https://www.williamife.com//2019/09/20/jQuery/">
+    
+    
+    <title>jQuery架构赏析 | 我的博客 | What&#39;s past is prologue.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="JavaScript,jQuery">
+    <meta name="description" content="在15年之前H5及三大框架流行起来之前，jQuery 是前端不可或缺的技能之一， 据不完全统计至今为止世界上至少还有80%的网站由jQuery构成。jQuery对于现在来说也很有借鉴意义，所以就在网上搜集一些资料整理学习一下。  *本文略有增减* 一、整体架构jQuery 整体框架的结构十分清晰，按代码行文大致分为如下所示。 12345678910111213141516171819202122">
+<meta name="keywords" content="JavaScript,jQuery">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jQuery架构赏析">
+<meta property="og:url" content="https://www.williamife.com/2019/09/20/jQuery/index.html">
+<meta property="og:site_name" content="我的博客">
+<meta property="og:description" content="在15年之前H5及三大框架流行起来之前，jQuery 是前端不可或缺的技能之一， 据不完全统计至今为止世界上至少还有80%的网站由jQuery构成。jQuery对于现在来说也很有借鉴意义，所以就在网上搜集一些资料整理学习一下。  *本文略有增减* 一、整体架构jQuery 整体框架的结构十分清晰，按代码行文大致分为如下所示。 12345678910111213141516171819202122">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.williamife.com/img/images/jQuery1.jpg">
+<meta property="og:updated_time" content="2019-11-14T09:07:01.058Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="jQuery架构赏析">
+<meta name="twitter:description" content="在15年之前H5及三大框架流行起来之前，jQuery 是前端不可或缺的技能之一， 据不完全统计至今为止世界上至少还有80%的网站由jQuery构成。jQuery对于现在来说也很有借鉴意义，所以就在网上搜集一些资料整理学习一下。  *本文略有增减* 一、整体架构jQuery 整体框架的结构十分清晰，按代码行文大致分为如下所示。 12345678910111213141516171819202122">
+<meta name="twitter:image" content="https://www.williamife.com/img/images/jQuery1.jpg">
+    
+        <link rel="alternate" type="application/atom+xml" title="我的博客" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">William Cao</h5>
+          <a href="mailto:demondora@qq.com" title="demondora@qq.com" class="mail">demondora@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                关于
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c6664e66fb9a049b41cfdda" target="_blank" >
+                <i class="icon icon-lg icon-juejin"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/William-Cao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.weibo.com/" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">jQuery架构赏析</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">jQuery架构赏析</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-09-20T06:14:14.000Z" itemprop="datePublished" class="page-time">
+  2019-09-20
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <!-- <h4>TOC</h4> -->
+            <h4>文章目录</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#一、整体架构"><span class="post-toc-text">一、整体架构</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#二、jQuery闭包结构"><span class="post-toc-text">二、jQuery闭包结构</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#三、jQuery无new构造"><span class="post-toc-text">三、jQuery无new构造</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#四、jQuery方法的重载"><span class="post-toc-text">四、jQuery方法的重载</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#五、jQuery-fn-extend"><span class="post-toc-text">五、jQuery.(fn.)extend</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#六、链式调用及回溯"><span class="post-toc-text">六、链式调用及回溯</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#七、jQuery正则与细节优化"><span class="post-toc-text">七、jQuery正则与细节优化</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#八、jQuery-变量冲突处理"><span class="post-toc-text">八、jQuery 变量冲突处理</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-jQuery"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">jQuery架构赏析</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-09-20 14:14:14" datetime="2019-09-20T06:14:14.000Z"  itemprop="datePublished">2019-09-20</time>
+
+            
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>在15年之前H5及三大框架流行起来之前，jQuery 是前端不可或缺的技能之一， 据不完全统计至今为止世界上至少还有80%的网站由jQuery构成。jQuery对于现在来说也很有借鉴意义，所以就在网上搜集一些资料整理学习一下。</p>
+</blockquote>
+<p><strong>*本文略有增减*</strong></p>
+<h1 id="一、整体架构"><a href="#一、整体架构" class="headerlink" title="一、整体架构"></a>一、整体架构</h1><p>jQuery 整体框架的结构十分清晰，按代码行文大致分为如下所示。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params">window, undefined</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//变量、常量、正则初始化</span></span><br><span class="line">    <span class="keyword">var</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//对外提供的接口</span></span><br><span class="line">    jQuery = <span class="function"><span class="keyword">function</span>(<span class="params"> selector, context </span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> jQuery.fn.init( selector, context, rootjQuery );</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//jQuery对象添加方法和属性</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//jQuery的继承方法</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//jQuery.extend 扩展一些工具的方法（静态方法）</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//Sizzle 复杂选择器的实现</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//Callbacks 回调对象--函数的统一管理</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//Deferred 延迟对象，对异步的统一管理</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//support 功能检测</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//Data 数据缓存</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//queue 队列管理</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//Attribute 属性操作</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//Event 事件处理</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//DOM 操作</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//CSS 操作</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//ajax</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//动画</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//坐标和大小</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//模块化</span></span><br><span class="line">    <span class="keyword">if</span> ( <span class="keyword">typeof</span> <span class="built_in">module</span> === <span class="string">"object"</span> &amp;&amp; <span class="built_in">module</span> &amp;&amp; <span class="keyword">typeof</span> <span class="built_in">module</span>.exports === <span class="string">"object"</span> ) &#123;</span><br><span class="line">      <span class="built_in">module</span>.exports = jQuery;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> ( <span class="keyword">typeof</span> define === <span class="string">"function"</span> &amp;&amp; define.amd ) &#123;</span><br><span class="line">        define( <span class="string">"jquery"</span>, [], <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; <span class="keyword">return</span> jQuery; &#125; );</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( <span class="keyword">typeof</span> <span class="built_in">window</span> === <span class="string">"object"</span> &amp;&amp; <span class="keyword">typeof</span> <span class="built_in">window</span>.document === <span class="string">"object"</span> ) &#123;</span><br><span class="line">      <span class="built_in">window</span>.jQuery = <span class="built_in">window</span>.$ = jQuery;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;)(<span class="built_in">window</span>);</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h1 id="二、jQuery闭包结构"><a href="#二、jQuery闭包结构" class="headerlink" title="二、jQuery闭包结构"></a>二、jQuery闭包结构</h1><p>// 用一个函数域包起来，就是所谓的沙箱<br>// 在这里边 var 定义的变量，属于这个函数域内的局部变量，避免污染全局<br>// 把当前沙箱需要的外部变量通过函数参数引入进来<br>// 只要保证参数对内提供的接口的一致性，你还可以随意替换传进来的这个参数</p>
+<figure class="highlight js"><figcaption><span>第1种写法</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params">window, undefined</span>) </span>&#123;</span><br><span class="line">   <span class="comment">// jQuery 代码</span></span><br><span class="line">&#125;)(<span class="built_in">window</span>);</span><br></pre></td></tr></table></figure>
+<p>jQuery 具体的实现，都被包含在了一个立即执行函数构造的闭包里面，为了不污染全局作用域，只在后面暴露 $ 和 jQuery 这 2 个变量给外界，尽量的避开变量冲突。常用的还有另一种写法：</p>
+<figure class="highlight js"><figcaption><span>第2种写法</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params">window</span>) </span>&#123;</span><br><span class="line">   <span class="comment">// JS代码</span></span><br><span class="line">&#125;)(<span class="built_in">window</span>, <span class="literal">undefined</span>);</span><br></pre></td></tr></table></figure>
+<p>比较推崇的的第一种写法，也就是 jQuery 的写法。二者有何不同呢，当我们的代码运行在更早期的环境当中（pre-ES5，eg. Internet Explorer 8），undefined 仅是一个变量且它的值是可以被覆盖的。意味着你可以做这样的操作：<br><code>undefined = 42;console.log(undefined) // 42</code></p>
+<p>当使用第一种方式，可以确保你需要的 undefined 确实就是 undefined。<br><code>这也是 undefined 和 null 的区别之一</code></p>
+<p>另外不得不提出的是，jQuery 在这里有一个针对压缩优化细节，使用第一种方式，在代码压缩的时候，window 和 undefined 都可以压缩为 1 个字母并且确保它们就是 window 和 undefined。</p>
+<p>// 压缩策略</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// w -&gt; windwow , u -&gt; undefined</span></span><br><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params">w, u</span>) </span>&#123;</span><br><span class="line"> ···</span><br><span class="line">&#125;)(<span class="built_in">window</span>);</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h1 id="三、jQuery无new构造"><a href="#三、jQuery无new构造" class="headerlink" title="三、jQuery无new构造"></a>三、jQuery无new构造</h1><p>嘿，回想一下使用 jQuery 的时候，实例化一个 jQuery 对象的方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 无 new 构造</span></span><br><span class="line">$(<span class="string">'#test'</span>).text(<span class="string">'Test'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 当然也可以使用 new</span></span><br><span class="line"><span class="keyword">var</span> test = <span class="keyword">new</span> $(<span class="string">'#test'</span>);</span><br><span class="line">test.text(<span class="string">'Test'</span>);</span><br></pre></td></tr></table></figure>
+<p>大部分人使用 jQuery 的时候都是使用第一种无 new 的构造方式，直接<code>$(&#39;&#39;)</code>进行构造，这也是 jQuery 十分便捷的一个地方。当我们使用第一种无 new 构造方式的时候，其本质就是相当于 <code>new jQuery()</code>，那么在 jQuery 内部是如何实现的呢？看看：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params">window, undefined</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    jQuery = <span class="function"><span class="keyword">function</span>(<span class="params">selector, context</span>) </span>&#123;</span><br><span class="line">        <span class="comment">// The jQuery object is actually just the init constructor 'enhanced'</span></span><br><span class="line">        <span class="comment">// 看这里，实例化方法 jQuery() 实际上是调用了其拓展的原型方法 jQuery.fn.init</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> jQuery.fn.init(selector, context, rootjQuery);</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// jQuery.prototype 即是 jQuery 的原型，挂载在上面的方法，即可让所有生成的 jQuery 对象使用</span></span><br><span class="line">    jQuery.fn = jQuery.prototype = &#123;</span><br><span class="line">        <span class="comment">// 实例化化方法，这个方法可以称作 jQuery 对象构造器</span></span><br><span class="line">        init: <span class="function"><span class="keyword">function</span>(<span class="params">selector, context, rootjQuery</span>) </span>&#123;</span><br><span class="line">            <span class="comment">// ...</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 这一句很关键，也很绕</span></span><br><span class="line">    <span class="comment">// jQuery 没有使用 new 运算符将 jQuery 实例化，而是直接调用其函数</span></span><br><span class="line">    <span class="comment">// 要实现这样,那么 jQuery 就要看成一个类，且返回一个正确的实例</span></span><br><span class="line">    <span class="comment">// 且实例还要能正确访问 jQuery 类原型上的属性与方法</span></span><br><span class="line">    <span class="comment">// jQuery 的方式是通过原型传递解决问题，把 jQuery 的原型传递给jQuery.prototype.init.prototype</span></span><br><span class="line">    <span class="comment">// 所以通过这个方法生成的实例 this 所指向的仍然是 jQuery.fn，所以能正确访问 jQuery 类原型上的属性与方法</span></span><br><span class="line">    jQuery.fn.init.prototype = jQuery.fn;</span><br><span class="line"></span><br><span class="line">&#125;)(<span class="built_in">window</span>);</span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>首先要明确，使用 $(‘xxx’) 这种实例化方式，其内部调用的是 return new jQuery.fn.init(selector, context, rootjQuery) 这一句话，也就是构造实例是交给了 jQuery.fn.init() 方法去完成。</p>
+</li>
+<li><p>将 jQuery.fn.init 的 prototype 属性设置为 jQuery.fn，那么使用 new jQuery.fn.init() 生成的对象的原型对象就是 jQuery.fn ，所以挂载到 jQuery.fn 上面的函数就相当于挂载到 jQuery.fn.init() 生成的 jQuery 对象上，所有使用 new jQuery.fn.init() 生成的对象也能够访问到 jQuery.fn 上的所有原型方法。</p>
+</li>
+<li><p>也就是实例化方法存在这么一个关系链<br>jQuery.fn.init.prototype = jQuery.fn = jQuery.prototype ;<br>new jQuery.fn.init() 相当于 new jQuery() ;<br>jQuery() 返回的是 new jQuery.fn.init()，而 var obj = new jQuery()，所以这 2 者是相当的，所以我们可以无 new 实例化 jQuery 对象。</p>
+</li>
+</ol>
+<p><br></p>
+<h1 id="四、jQuery方法的重载"><a href="#四、jQuery方法的重载" class="headerlink" title="四、jQuery方法的重载"></a>四、jQuery方法的重载</h1><p>jQuery 源码晦涩难读的另一个原因是，使用了大量的方法重载，但是用起来却很方便：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取 title 属性的值</span></span><br><span class="line">$(<span class="string">'#id'</span>).attr(<span class="string">'title'</span>);</span><br><span class="line"><span class="comment">// 设置 title 属性的值</span></span><br><span class="line">$(<span class="string">'#id'</span>).attr(<span class="string">'title'</span>,<span class="string">'jQuery'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取 css 某个属性的值</span></span><br><span class="line">$(<span class="string">'#id'</span>).css(<span class="string">'title'</span>);</span><br><span class="line"><span class="comment">// 设置 css 某个属性的值</span></span><br><span class="line">$(<span class="string">'#id'</span>).css(<span class="string">'width'</span>,<span class="string">'200px'</span>);</span><br></pre></td></tr></table></figure>
+<p>方法的重载即是一个方法实现多种功能，经常又是 get 又是 set，虽然阅读起来十分不易，但是从实用性的角度考虑，这也是为什么 jQuery 如此受欢迎的原因，大多数人使用 jQuery() 构造方法使用的最多的就是直接实例化一个 jQuery 对象，但其实在它的内部实现中，有着 9 种不同的方法重载场景：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 接受一个字符串，其中包含了用于匹配元素集合的 CSS 选择器</span></span><br><span class="line">jQuery([selector,[context]])</span><br><span class="line"></span><br><span class="line"><span class="comment">// 传入单个 DOM</span></span><br><span class="line">jQuery(element)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 传入 DOM 数组</span></span><br><span class="line">jQuery(elementArray)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 传入 JS 对象</span></span><br><span class="line">jQuery(object)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 传入 jQuery 对象</span></span><br><span class="line">jQuery(jQuery object)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 传入原始 HTML 的字符串来创建 DOM 元素</span></span><br><span class="line">jQuery(html,[ownerDocument])</span><br><span class="line">jQuery(html,[attributes])</span><br><span class="line"></span><br><span class="line"><span class="comment">// 传入空参数</span></span><br><span class="line">jQuery()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 绑定一个在 DOM 文档载入完成后执行的函数</span></span><br><span class="line">jQuery(callback)</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h1 id="五、jQuery-fn-extend"><a href="#五、jQuery-fn-extend" class="headerlink" title="五、jQuery.(fn.)extend"></a>五、jQuery.(fn.)extend</h1><p><code>extend</code>方法在jQuery中是一个很重要的方法，jQuey内部用它来扩展静态方法或实例方法，而且我们开发jQuery插件开发的时候也会用到它。但是在内部，是存在<code>jQuery.fn.extend</code> 和 <code>jQuery.extend</code>两个 extend 方法的，而区分这两个 extend 方法是理解 jQuery 的很关键的一部分。先看结论：</p>
+<p>1）<code>jQuery.extend</code>(object) 为扩展jQuery类本身，为类添加新的<code>静态方法</code>；<br>2）<code>jQuery.fn.extend</code>(object) 给jQuery对象添加<code>实例方法</code>，也就是通过这个extend添加的新方法，实例化的jQuery对象都能使用，因为它是挂载在 jQuery.fn上的方法.<br><code>jQuery.fn = jQuery.prototype</code></p>
+<p>它们的官方解释是：<br>1）jQuery.extend()：把两个或者更多的对象合并到第一个当中，<br>2）jQuery.fn.extend()：把对象挂载到 jQuery 的 prototype 属性，来扩展一个新的 jQuery 实例方法。</p>
+<p><strong>使用 jQuery.extend() 拓展的静态方法，我们可以直接使用 <code>$.xxx</code> 进行调用。</strong><br><strong>使用 jQuery.fn.extend() 拓展的实例方法，需要使用 <code>$().xxx</code> 调用。</strong></p>
+<p><br></p>
+<h1 id="六、链式调用及回溯"><a href="#六、链式调用及回溯" class="headerlink" title="六、链式调用及回溯"></a>六、链式调用及回溯</h1><p>这一点的实现相对来说比较简单，只需要在要实现链式调用的方法的返回结果里，返回this，就能够实现<code>链式调用</code>了。</p>
+<p>除了链式调用，jQuery 甚至还允许<code>回溯</code>:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 通过 end() 方法终止在当前链的最新过滤操作，返回上一个对象集合</span></span><br><span class="line">$(<span class="string">'div'</span>).eq(<span class="number">0</span>).show().end().eq(<span class="number">1</span>).hide();</span><br></pre></td></tr></table></figure>
+<p>当选择了 (‘div’).eq(0) 之后使用 end() 可以回溯到上一步选中的 jQuery 对象 $(‘div’)，其内部实现其实是依靠添加了 <code>prevObject</code> 这个属性。<br>jQuery 完整的链式<code>调用、增栈、回溯</code>通过 return <code>this</code> 、 return <code>this.pushStack()</code> 、return <code>this.prevObject</code> 实现。</p>
+<p>  <img src="/img/images/jQuery1.jpg" alt></p>
+<p>总体来说：<br>1）<code>end()</code> 方法返回 <code>prevObject</code> 属性，这个属性记录了上一步操作的 <code>jQuery</code> 对象合集；<br>2）而 <code>prevObject</code> 属性由 <code>pushStack()</code> 方法生成，该方法将一个 <code>DOM</code> 元素集合加入到 <code>jQuery</code> 内部管理的一个栈中，通过改变 <code>jQuery</code> 对象的 <code>prevObject</code> 属性来跟踪链式调用中前一个方法返回的 <code>DOM</code> 结果集合；<br>3）当我们在链式调用 <code>end()</code> 方法后，内部就返回当前 <code>jQuery</code> 对象的 <code>prevObject</code> 属性，完成回溯。</p>
+<p><br></p>
+<h1 id="七、jQuery正则与细节优化"><a href="#七、jQuery正则与细节优化" class="headerlink" title="七、jQuery正则与细节优化"></a>七、jQuery正则与细节优化</h1><p>不得不提 jQuery 在细节优化上做的很好，也存在很多值得学习的小技巧。</p>
+<p>然后想谈谈正则表达式，jQuery 当中用了大量的正则表达式，我觉得如果研读 jQuery ，正则水平一定能够大大提升，如果是个正则小白，我建议在阅读之前先去了解以下几点：</p>
+<p>1）了解并尝试使用 Javascript 正则相关 API，包括了 test() 、replace() 、match() 、exec() 的用法；<br>2）区分上面 4 个方法，哪个是 <code>RegExp</code> 对象方法，哪个是 <code>String</code> 对象方法；<br>3）了解简单的<code>零宽断言</code>，了解什么是<code>匹配不捕获</code>以及<code>匹配且捕获</code>。</p>
+<p><br></p>
+<h1 id="八、jQuery-变量冲突处理"><a href="#八、jQuery-变量冲突处理" class="headerlink" title="八、jQuery 变量冲突处理"></a>八、jQuery 变量冲突处理</h1><p>最后想提一提 jQuery 变量的冲突处理，通过一开始保存全局变量的 window.jQuery 以及 windw.$ 。<br>当需要处理冲突的时候，调用静态方法 noConflict()，让出变量的控制权，源码如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params">window, undefined</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span></span><br><span class="line">        <span class="comment">// Map over jQuery in case of overwrite</span></span><br><span class="line">        <span class="comment">// 设置别名，通过两个私有变量映射了 window 环境下的 jQuery 和 $ 两个对象，以防止变量被强行覆盖</span></span><br><span class="line">        _jQuery = <span class="built_in">window</span>.jQuery,</span><br><span class="line">        _$ = <span class="built_in">window</span>.$;</span><br><span class="line"></span><br><span class="line">    jQuery.extend(&#123;</span><br><span class="line">        <span class="comment">// noConflict() 方法让出变量 $ 的 jQuery 控制权，这样其他脚本就可以使用它了</span></span><br><span class="line">        <span class="comment">// 通过全名替代简写的方式来使用 jQuery</span></span><br><span class="line">        <span class="comment">// deep -- 布尔值，指示是否允许彻底将 jQuery 变量还原(移交 $ 引用的同时是否移交 jQuery 对象本身)</span></span><br><span class="line">        noConflict: <span class="function"><span class="keyword">function</span>(<span class="params">deep</span>) </span>&#123;</span><br><span class="line">            <span class="comment">// 判断全局 $ 变量是否等于 jQuery 变量</span></span><br><span class="line">            <span class="comment">// 如果等于，则重新还原全局变量 $ 为 jQuery 运行之前的变量（存储在内部变量 _$ 中）</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">window</span>.$ === jQuery) &#123;</span><br><span class="line">                <span class="comment">// 此时 jQuery 别名 $ 失效</span></span><br><span class="line">                <span class="built_in">window</span>.$ = _$;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 当开启深度冲突处理并且全局变量 jQuery 等于内部 jQuery，则把全局 jQuery 还原成之前的状况</span></span><br><span class="line">            <span class="keyword">if</span> (deep &amp;&amp; <span class="built_in">window</span>.jQuery === jQuery) &#123;</span><br><span class="line">                <span class="comment">// 如果 deep 为 true，此时 jQuery 失效</span></span><br><span class="line">                <span class="built_in">window</span>.jQuery = _jQuery;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 这里返回的是 jQuery 库内部的 jQuery 构造函数（new jQuery.fn.init()）</span></span><br><span class="line">            <span class="comment">// 像使用 $ 一样尽情使用它吧</span></span><br><span class="line">            <span class="keyword">return</span> jQuery;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;(<span class="built_in">window</span>)</span><br></pre></td></tr></table></figure>
+<p>那么让出了这两个符号之后，是否就不能在我们的代码中使用 jQuery 或者呢 $ 呢？莫慌，还是可以使用的：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 让出 jQuery 、$ 的控制权不代表不能使用 jQuery 和 $ ，方法如下：</span></span><br><span class="line"><span class="keyword">var</span> query = jQuery.noConflict(<span class="literal">true</span>);</span><br><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params">$</span>) </span>&#123;</span><br><span class="line"><span class="comment">// 插件或其他形式的代码，也可以将参数设为 jQuery</span></span><br><span class="line">&#125;)(query);</span><br><span class="line"><span class="comment">//  ... 其他用 $ 作为别名的库的代码</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<p>文章转载：</p>
+<ul>
+<li><a href="https://www.cnblogs.com/coco1s/p/5261646.html" target="_blank" rel="noopener">【深入浅出jQuery】源码浅析–整体架构</a></li>
+<li><a href="https://github.com/chokcoco/jQuery-" target="_blank" rel="noopener">jQuery v1.10.2源码注解</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        分享就是回顾自己所学的知识，欢迎大家交流~
+        
+    </div>
+    
+    <footer>
+        <a href="https://www.williamife.com">
+            <img src="/img/avatar.jpg" alt="William Cao">
+            William Cao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jQuery/">jQuery</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2019/09/20/jQuery/&title=《jQuery架构赏析》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2019/09/20/jQuery/&title=《jQuery架构赏析》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2019/09/20/jQuery/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《jQuery架构赏析》 — 我的博客&url=https://www.williamife.com/2019/09/20/jQuery/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2019/09/20/jQuery/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2019/11/27/Node之线程与进程/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Node.js之进程与线程</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/08/19/上下文与作用域/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">从执行上下文，到作用域闭包</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷赏赐~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>William Cao &copy; 2018 - 2021</span></p>
+        <p> 
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">京ICP备19030143号-1</a>
+                
+            </span>
+            <span>
+                
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802031297" target="_blank">京公网安备11010802031297号</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2019/09/20/jQuery/&title=《jQuery架构赏析》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2019/09/20/jQuery/&title=《jQuery架构赏析》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2019/09/20/jQuery/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《jQuery架构赏析》 — 我的博客&url=https://www.williamife.com/2019/09/20/jQuery/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2019/09/20/jQuery/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACMElEQVR42u3aQY6DMAwF0N7/0sx2pKrwv6GVCI9V1aFJXhaeOPbrFT/bv2f/nff3P/3q/a/JLKceDAyM2zK23Wd/Wfmv2nHytWFgYDyHkQTQJFzub1Ab1pO1YWBgYOwvMQ+X7TcYGBgYZxifAmiSrLbjYGBgYLRJbJ6azkb7US6OgYFxQ0Z+6/77z1+pb2BgYNyKsZXPtUfJPCU+WBUGBsbSjDzAtSlosujZbz++iYGB8QDG7KB2Laa9yCvqnxgYGDdnzBaXXH7NSpX55wMeBgbGEoz2yr4tTOYbkVA/bjQGBsbSjP3jV36wS8JunprOWjcwMDDWZrRtW7MCZx5wh20WGBgYSzPaEDnLj/Mx26CPgYHxHEYS7GYXarM0dbhlGBgYSzPaJc6CY95qll/wYWBgYLRJbDvlbPwLWi4wMDBuxWiPdO1xbXYBl4wTNbBiYGDcnPGNA1+SEp8pYQ7/M2BgYNyckQ9xVdGxDeV1MQADA2MhxpnS46x42V6x1ZUNDAyMhzHaZq/8ILifyuazH+TiGBgYSzNmbab5N20JIdloDAyM5zDa4a7Ft3drRTcHBgbGbRlb+cxKkm1Zop4XAwNjacasRSyZvg3WbfKct6xhYGCswWiD7Jn9aLejaATBwMB4AONMt9X5trA2iT3oHMHAwHg8I58gCaazKzkMDAyMWZBNRsvfz2/+MTAwnsNIQuGsgWx2VdeGYwwMjLUZZzo18tQ0b+loywMYGBhLM/4A+3DbGfjSlpYAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

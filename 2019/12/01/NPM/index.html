@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+    <meta charset="utf-8">
+    
+    <meta name="google-site-verification" content="21k73v5G8oRoUeP-cTwUyeD5lkZ5asW5K667uxY6oqI">
+    
+    
+    <meta name="baidu-site-verification" content="I1QHrtH1Ea">
+    
+    
+    
+    <link rel="canonical" href="https://www.williamife.com//2019/12/01/NPM/">
+    
+    
+    <title>在centos下搭建npm镜像 | 我的博客 | What&#39;s past is prologue.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Node.js,Linux,npm">
+    <meta name="description" content="想搭建一个属于公司内部的 npm 镜像？这边文章或许能帮到你！  公司开发环境与外网隔绝，需要搭建内网npm源 确保npm服务快速、稳定，提高下载速度 不是搭建 npm 私服，而是镜像源  npmjs.org将自己的项目挂在https://github.com/npm/npm-registry-couchapp。原项目项目地址为：https://github.com/isaacs/npmjs.or">
+<meta name="keywords" content="Node.js,Linux,npm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在centos下搭建npm镜像">
+<meta property="og:url" content="https://www.williamife.com/2019/12/01/NPM/index.html">
+<meta property="og:site_name" content="我的博客">
+<meta property="og:description" content="想搭建一个属于公司内部的 npm 镜像？这边文章或许能帮到你！  公司开发环境与外网隔绝，需要搭建内网npm源 确保npm服务快速、稳定，提高下载速度 不是搭建 npm 私服，而是镜像源  npmjs.org将自己的项目挂在https://github.com/npm/npm-registry-couchapp。原项目项目地址为：https://github.com/isaacs/npmjs.or">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.williamife.com/img/images/npm1.png">
+<meta property="og:image" content="https://www.williamife.com/img/images/npm2.png">
+<meta property="og:image" content="https://www.williamife.com/img/images/npm3.png">
+<meta property="og:image" content="https://www.williamife.com/img/images/npm4.jpg">
+<meta property="og:updated_time" content="2019-12-19T10:03:18.905Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在centos下搭建npm镜像">
+<meta name="twitter:description" content="想搭建一个属于公司内部的 npm 镜像？这边文章或许能帮到你！  公司开发环境与外网隔绝，需要搭建内网npm源 确保npm服务快速、稳定，提高下载速度 不是搭建 npm 私服，而是镜像源  npmjs.org将自己的项目挂在https://github.com/npm/npm-registry-couchapp。原项目项目地址为：https://github.com/isaacs/npmjs.or">
+<meta name="twitter:image" content="https://www.williamife.com/img/images/npm1.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="我的博客" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">William Cao</h5>
+          <a href="mailto:demondora@qq.com" title="demondora@qq.com" class="mail">demondora@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                关于
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c6664e66fb9a049b41cfdda" target="_blank" >
+                <i class="icon icon-lg icon-juejin"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/William-Cao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.weibo.com/" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">在centos下搭建npm镜像</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">在centos下搭建npm镜像</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-12-01T11:59:00.000Z" itemprop="datePublished" class="page-time">
+  2019-12-01
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <!-- <h4>TOC</h4> -->
+            <h4>文章目录</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#一、安装CouchDB"><span class="post-toc-text">一、安装CouchDB</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1、安装rpm仓库"><span class="post-toc-text">1、安装rpm仓库</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2、修改default-ini"><span class="post-toc-text">2、修改default.ini</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#二、下载couchapp"><span class="post-toc-text">二、下载couchapp</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#三、测试使用镜像"><span class="post-toc-text">三、测试使用镜像</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-NPM"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">在centos下搭建npm镜像</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-12-01 19:59:00" datetime="2019-12-01T11:59:00.000Z"  itemprop="datePublished">2019-12-01</time>
+
+            
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p><strong>想搭建一个属于公司内部的 npm 镜像？这边文章或许能帮到你！</strong></p>
+<ul>
+<li>公司开发环境与外网隔绝，需要搭建内网npm源</li>
+<li>确保npm服务快速、稳定，提高下载速度</li>
+<li>不是搭建 npm 私服，而是镜像源</li>
+</ul>
+<p>npmjs.org将自己的项目挂在<a href="https://github.com/npm/npm-registry-couchapp" target="_blank" rel="noopener">https://github.com/npm/npm-registry-couchapp</a>。原项目项目地址为：<code>https://github.com/isaacs/npmjs.org</code>。需要制作镜像的同学可以按照说明来制作镜像，首先你需要安装CouchDB 1.4.0或更新的版本。</p>
+<p>由于文档较少及项目更新导致操作流程不一致，在实践中出现一些坑，只能亲自填坑。</p>
+<p><br></p>
+<h1 id="一、安装CouchDB"><a href="#一、安装CouchDB" class="headerlink" title="一、安装CouchDB"></a>一、安装CouchDB</h1><blockquote>
+<p>使用 YUM 安装，推荐阅读 <a href="https://blog.csdn.net/qq_21816375/article/details/80353268" target="_blank" rel="noopener">CouchDB安装以及使用</a>这篇文章，下面列举几个重要的步骤。</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@VM_0_9_centos ~]# cat /etc/redhat-release</span><br><span class="line">CentOS Linux release 7.2.1511 (Core)</span><br></pre></td></tr></table></figure>
+<h2 id="1、安装rpm仓库"><a href="#1、安装rpm仓库" class="headerlink" title="1、安装rpm仓库"></a>1、安装rpm仓库</h2><p>修改/etc/yum.repos.d/bintray-apache-couchdb-rpm.repo，命令如下：</p>
+<p>vim /etc/yum.repos.d/bintray-apache-couchdb-rpm.repo<br>添加如下内容，保存并退出：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[bintray--apache-couchdb-rpm]</span><br><span class="line">name=bintray--apache-couchdb-rpm</span><br><span class="line">baseurl=http://apache.bintray.com/couchdb-rpm/el$releasever/$basearch/</span><br><span class="line">gpgcheck=0</span><br><span class="line">repo_gpgcheck=0</span><br><span class="line">enabled=1</span><br></pre></td></tr></table></figure>
+<h2 id="2、修改default-ini"><a href="#2、修改default-ini" class="headerlink" title="2、修改default.ini"></a>2、修改default.ini</h2><p>由于<code>couchdb</code>默认是监听本地的请求，因此你需要配置它，让它可以接受来自局域网内的请求，将配置中的<code>[httpd]</code>段端口和地址前面的分号注释去掉，将<code>127.0.0.1</code>改成<code>0.0.0.0</code>然后重启服务即可。</p>
+<p>安装完成之后，启动和停止的命令如下：<br>$ sudo systemctl start couchdb<br>$ sudo systemctl stop couchdb</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">port = 5984 // 默认端口号，可修改</span><br><span class="line">bind_address = 0.0.0.0 //把127.0.0.1修改为0.0.0.0</span><br></pre></td></tr></table></figure>
+<p>启动成功后访问<a href="http://localhost:5984/" target="_blank" rel="noopener">http://localhost:5984/</a>会出现如下图所示：</p>
+<p>  <img src="/img/images/npm1.png" alt></p>
+<p>进入数据库配置页面<a href="http://localhost:5984/_utils/#" target="_blank" rel="noopener">http://localhost:5984/_utils/#</a></p>
+<p>  <img src="/img/images/npm2.png" alt></p>
+<p><br></p>
+<h1 id="二、下载couchapp"><a href="#二、下载couchapp" class="headerlink" title="二、下载couchapp"></a>二、下载couchapp</h1><blockquote>
+<p>下面就是couchapp的使用说明了，简单翻译下。</p>
+</blockquote>
+<ul>
+<li><p>You need CouchDB version 1.4.0 or higher. 1.5.0 or higher is best.<br>你需要CouchDB 1.4.0 以上的版本，yum 会默认安装最新版本，我目前安装的是 2.3.1。</p>
+</li>
+<li><p>Once you have CouchDB installed, create a new database:<br><code>curl -X PUT http://localhost:5984/registry</code><br>使用这个命令创建名为<code>registry</code>数据库，也可以直接在页面上配置。</p>
+</li>
+<li><p>You’ll need the following entries added in your local.ini<br>然后把这一段内容放进<code>local.ini</code>，我的路径为<code>/opt/couchdb/etc</code>。</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[couch_httpd_auth]</span><br><span class="line">public_fields = appdotnet, avatar, avatarMedium, avatarLarge, date, email, fields, freenode, fullname, github, homepage, name, roles, twitter, type, _id, _rev</span><br><span class="line">users_db_public = true</span><br><span class="line"></span><br><span class="line">[httpd]</span><br><span class="line">secure_rewrites = false</span><br><span class="line"></span><br><span class="line">[couchdb]</span><br><span class="line">delayed_commits = false</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<blockquote>
+<p>最后就是复制整个项目啦，并且执行相应的脚本。用户名和密码不是必须，但最好是创建用户名和密码，否则脚本可能运行出错。</p>
+</blockquote>
+<p>Clone the repository if you haven’t already, and cd into it:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">git clone git:<span class="comment">//github.com/npm/npm-registry-couchapp</span></span><br><span class="line">cd npm-registry-couchapp</span><br><span class="line"></span><br><span class="line">npm install</span><br><span class="line"></span><br><span class="line">npm start \</span><br><span class="line">  --npm-registry-couchapp:couch=http:<span class="comment">//admin:password@localhost:5984/registry</span></span><br><span class="line"></span><br><span class="line">npm run load \</span><br><span class="line">  --npm-registry-couchapp:couch=http:<span class="comment">//admin:password@localhost:5984/registry</span></span><br><span class="line"></span><br><span class="line">npm run copy \</span><br><span class="line">  --npm-registry-couchapp:couch=http:<span class="comment">//admin:password@localhost:5984/registry</span></span><br><span class="line"></span><br><span class="line">vim ~<span class="regexp">/.npmrc</span></span><br><span class="line"><span class="regexp">_npm-registry-couchapp:couch=http:/</span><span class="regexp">/admin:password@localhost:5984/</span>registry</span><br></pre></td></tr></table></figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/images/npm3.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/images/npm4.jpg" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>会遇到问题的地方上面都过了一遍，在couchdb的<strong>web管理界面</strong><a href="http://localhost:5984/_utils/#/replication" target="_blank" rel="noopener">http://localhost:5984/_utils/#/replication</a>进行同步操作，记得勾选连续<code>Continuous</code>而不是一次性<code>One time</code>，让脚本不停的跑，由于数据量大，同步镜像需要很长时间。</p>
+<p><br></p>
+<h1 id="三、测试使用镜像"><a href="#三、测试使用镜像" class="headerlink" title="三、测试使用镜像"></a>三、测试使用镜像</h1><p>说明文档里提到三种方式，我们直接使用全局配置把registry地址改成我们内网的即可，然后就可以跟平常一样使用npm安装模块，你会发现安装模块时请求的是内网镜像地址了。</p>
+<p><strong>npm config set registry <a href="http://localhost:5984/registry/_design/app/_rewrite" target="_blank" rel="noopener">http://localhost:5984/registry/_design/app/_rewrite</a></strong></p>
+<p>然后测试一下看看：<strong>npm search node</strong></p>
+<p>Bingo！</p>
+<p><br></p>
+<blockquote>
+<p>文章中提到的localhost地址记得改成你自己实际的ip地址，在镜像完成同步之前，若你使用npm命令测试安装可能看到404的结果，不要着急。</p>
+</blockquote>
+<p><br></p>
+<p>参考文章：</p>
+<ul>
+<li><a href="https://blog.csdn.net/qq_21816375/article/details/80353268" target="_blank" rel="noopener">CouchDB安装以及使用</a></li>
+<li><a href="http://ju.outofmemory.cn/entry/55280" target="_blank" rel="noopener">centos下搭建npm镜像</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        分享就是回顾自己所学的知识，欢迎大家交流~
+        
+    </div>
+    
+    <footer>
+        <a href="https://www.williamife.com">
+            <img src="/img/avatar.jpg" alt="William Cao">
+            William Cao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Node-js/">Node.js</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/npm/">npm</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2019/12/01/NPM/&title=《在centos下搭建npm镜像》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2019/12/01/NPM/&title=《在centos下搭建npm镜像》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2019/12/01/NPM/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《在centos下搭建npm镜像》 — 我的博客&url=https://www.williamife.com/2019/12/01/NPM/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2019/12/01/NPM/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2020/02/25/浏览器Timing/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Network 之 Resource Timing字段解析</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/11/27/Node之线程与进程/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Node.js之进程与线程</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷赏赐~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>William Cao &copy; 2018 - 2021</span></p>
+        <p> 
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">京ICP备19030143号-1</a>
+                
+            </span>
+            <span>
+                
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802031297" target="_blank">京公网安备11010802031297号</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2019/12/01/NPM/&title=《在centos下搭建npm镜像》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2019/12/01/NPM/&title=《在centos下搭建npm镜像》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2019/12/01/NPM/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《在centos下搭建npm镜像》 — 我的博客&url=https://www.williamife.com/2019/12/01/NPM/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2019/12/01/NPM/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAAByklEQVR42u3azarDIBAG0L7/S/duLxTtN45KCsdVaII5djFkfl6veL3/rc/fR9efzyd3NyxcXNw29z1doxeM6PkBRndHBlxc3PvcUcSYXydhLtknMeDi4j6fu/bieaDExcX9XW6Hle+Pi4v7BG4eaBJKXtM4mKvh4uI2uPlrzl0fqe/i4uIucd/F1Sl5zHeI3o6Li3uFmweUvJUyf776+YKLi3ufmzdT88+RHJQXVl45DhcXt81NGqXzF1RLonkppFDLwcXF3cpdG7dKQJ2EaniNi4t7kbtWJM1HKKoH+5L84OLiXuTmIaxTJF07TGEeBBcXt83tbFE93onkChcX9zQ3KVustVuSYaxq2wYXF/cmN2+gdgat8vTpSyDDxcU9xu0HoA2pS/zH4eLi3uSWPzKWEptq2IrmyHBxca9wk/GpTutlDY2Li3ufO094qgMZ1T0Lz+Di4h7mrg1RJYlQvk+5t4OLi3uYWy1V7N20mlzh4uLe5K4Fr9bwRNBQWfzQwcXF3cqtBprq2NbmXA0XF/eR3CR4VdOe8iQpLi7uY7hrI5jVxsxQiIuLe5G7NozVH+HK/yBcXNyb3HIoCQ7QL5VuqO/i4uKucP8A/wLsC7p7T10AAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+    <meta charset="utf-8">
+    
+    <meta name="google-site-verification" content="21k73v5G8oRoUeP-cTwUyeD5lkZ5asW5K667uxY6oqI">
+    
+    
+    <meta name="baidu-site-verification" content="I1QHrtH1Ea">
+    
+    
+    
+    <link rel="canonical" href="https://www.williamife.com//2019/06/14/Nginx/">
+    
+    
+    <title>使用Nginx部署静态页面 | 我的博客 | What&#39;s past is prologue.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Nginx">
+    <meta name="description" content="最近和朋友在一起开发个人项目，需要部署至服务器对外展示，但是环境神码的都是从 0 开始，下面就简单说下如何用 Nginx 部署一个的静态网站。  一、 准备环境 云服务器 腾讯云 你的代码 GitHub 一台电脑 蔡徐坤  本文案例使用基于以太坊区块链上的永存的留言DAPP项目  二、 环境配置使用 shell 登录服务器，由于服务器系统是 CentOS 系统，故选择yum安装Nginx较为方便">
+<meta name="keywords" content="Nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Nginx部署静态页面">
+<meta property="og:url" content="https://www.williamife.com/2019/06/14/Nginx/index.html">
+<meta property="og:site_name" content="我的博客">
+<meta property="og:description" content="最近和朋友在一起开发个人项目，需要部署至服务器对外展示，但是环境神码的都是从 0 开始，下面就简单说下如何用 Nginx 部署一个的静态网站。  一、 准备环境 云服务器 腾讯云 你的代码 GitHub 一台电脑 蔡徐坤  本文案例使用基于以太坊区块链上的永存的留言DAPP项目  二、 环境配置使用 shell 登录服务器，由于服务器系统是 CentOS 系统，故选择yum安装Nginx较为方便">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-07-10T05:43:49.590Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用Nginx部署静态页面">
+<meta name="twitter:description" content="最近和朋友在一起开发个人项目，需要部署至服务器对外展示，但是环境神码的都是从 0 开始，下面就简单说下如何用 Nginx 部署一个的静态网站。  一、 准备环境 云服务器 腾讯云 你的代码 GitHub 一台电脑 蔡徐坤  本文案例使用基于以太坊区块链上的永存的留言DAPP项目  二、 环境配置使用 shell 登录服务器，由于服务器系统是 CentOS 系统，故选择yum安装Nginx较为方便">
+    
+        <link rel="alternate" type="application/atom+xml" title="我的博客" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">William Cao</h5>
+          <a href="mailto:demondora@qq.com" title="demondora@qq.com" class="mail">demondora@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                关于
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c6664e66fb9a049b41cfdda" target="_blank" >
+                <i class="icon icon-lg icon-juejin"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/William-Cao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.weibo.com/" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">使用Nginx部署静态页面</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">使用Nginx部署静态页面</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-06-14T08:02:02.000Z" itemprop="datePublished" class="page-time">
+  2019-06-14
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <!-- <h4>TOC</h4> -->
+            <h4>文章目录</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#一、-准备环境"><span class="post-toc-text">一、 准备环境</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#二、-环境配置"><span class="post-toc-text">二、 环境配置</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#三、-开始部署"><span class="post-toc-text">三、 开始部署</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#四、-遇到问题"><span class="post-toc-text">四、 遇到问题</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Nginx"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">使用Nginx部署静态页面</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-06-14 16:02:02" datetime="2019-06-14T08:02:02.000Z"  itemprop="datePublished">2019-06-14</time>
+
+            
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>最近和朋友在一起开发个人项目，需要部署至服务器对外展示，但是环境神码的都是从 0 开始，下面就简单说下如何用 Nginx 部署一个的静态网站。</p>
+</blockquote>
+<h1 id="一、-准备环境"><a href="#一、-准备环境" class="headerlink" title="一、 准备环境"></a>一、 准备环境</h1><ul>
+<li>云服务器 <a href="https://cloud.tencent.com/" target="_blank" rel="noopener">腾讯云</a></li>
+<li>你的代码 <a href="https://github.com/William-Cao/vowsonblockchain" target="_blank" rel="noopener">GitHub</a></li>
+<li>一台电脑 <a href="./">蔡徐坤</a></li>
+</ul>
+<p>本文案例使用<a href="http://vowsonblockchain.xyz/app" target="_blank" rel="noopener">基于以太坊区块链上的永存的留言DAPP</a>项目</p>
+<p><br></p>
+<h1 id="二、-环境配置"><a href="#二、-环境配置" class="headerlink" title="二、 环境配置"></a>二、 环境配置</h1><p>使用 shell 登录服务器，由于服务器系统是 <code>CentOS</code> 系统，故选择yum安装Nginx较为方便（可使用其它方式安装）<code>yum install -y nginx</code></p>
+<p>安装完成后使用命令：<br>(1) 开始启动：nginx<br>(2) 测试Nginx配置是否正确：nginx -t<br>(3) 优雅重启：nginx -s reload</p>
+<p><br></p>
+<h1 id="三、-开始部署"><a href="#三、-开始部署" class="headerlink" title="三、 开始部署"></a>三、 开始部署</h1><p>进入 Nginx 配置路径：<code>cd /etc/nginx/</code>-&gt;<code>vim nginx.conf</code><br>或者 <code>cd /etc/nginx/conf.d</code> 新增一个配置文件</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line"></span><br><span class="line"><span class="code">    ······</span></span><br><span class="line"></span><br><span class="line"><span class="code">    listen       80 default_server;</span></span><br><span class="line"><span class="code">    # listen       [::]:80 default_server;</span></span><br><span class="line"><span class="code">    server_name  vowsonblockchain.xyz;</span></span><br><span class="line"></span><br><span class="line"><span class="code">    # Load configuration files for the default server block.</span></span><br><span class="line"></span><br><span class="line"><span class="code">    location / &#123;</span></span><br><span class="line"><span class="code">            root /root/william/vowsonblockchain/build_webpack;</span></span><br><span class="line"><span class="code">            index index.html;</span></span><br><span class="line"><span class="code">            try_files $uri $uri/ /index.html;</span></span><br><span class="line"><span class="code">    &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="code">    # location ~* ^.+\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt)&#123;</span></span><br><span class="line"><span class="code">    #       root /root/william/vowsonblockchain/build_webpack;</span></span><br><span class="line"><span class="code">    #&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="code">    ······</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>SPA项目记得加上<code>try_files $uri $uri/ /index.html;</code><br>保存完文件之后再执行<code>nginx -s reload</code>就可以开始愉快的访问你的网站了。</p>
+<p><br></p>
+<h1 id="四、-遇到问题"><a href="#四、-遇到问题" class="headerlink" title="四、 遇到问题"></a>四、 遇到问题</h1><p>在实践过程中并没有什么特别难以理解的地方，重点是知道遇到何种问题才好解决。<br>一些常见的问题可阅读以下文章对号入座，放上链接，文章就不搬了。</p>
+<ul>
+<li><a href="https://www.centos.bz/2018/01/centos-7%EF%BC%8C%E4%BD%BF%E7%94%A8yum%E5%AE%89%E8%A3%85nginx/" target="_blank" rel="noopener">使用yum安装 Nginx</a></li>
+<li><a href="https://blog.csdn.net/weixin_42167759/article/details/85049546" target="_blank" rel="noopener">Nginx 服务的基本配置</a></li>
+<li><a href="https://blog.csdn.net/ucicno000/article/details/81034393" target="_blank" rel="noopener">Nginx 出现 403 Forbidden 最终解决</a></li>
+<li><a href="https://cloud.tencent.com/document/product/400/35244" target="_blank" rel="noopener">Nginx 服务器证书安装</a></li>
+<li><a href="https://juejin.im/post/5a2600bdf265da432b4aaaba" target="_blank" rel="noopener">Nginx 从入门到实践</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        分享就是回顾自己所学的知识，欢迎大家交流~
+        
+    </div>
+    
+    <footer>
+        <a href="https://www.williamife.com">
+            <img src="/img/avatar.jpg" alt="William Cao">
+            William Cao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Nginx/">Nginx</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2019/06/14/Nginx/&title=《使用Nginx部署静态页面》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2019/06/14/Nginx/&title=《使用Nginx部署静态页面》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2019/06/14/Nginx/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《使用Nginx部署静态页面》 — 我的博客&url=https://www.williamife.com/2019/06/14/Nginx/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2019/06/14/Nginx/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2019/06/26/JS中继承的几种方式/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">JS中继承的几种方式</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/05/29/Mock/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">在项目中使用Mock.js的基本步骤</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷赏赐~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>William Cao &copy; 2018 - 2021</span></p>
+        <p> 
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">京ICP备19030143号-1</a>
+                
+            </span>
+            <span>
+                
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802031297" target="_blank">京公网安备11010802031297号</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2019/06/14/Nginx/&title=《使用Nginx部署静态页面》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2019/06/14/Nginx/&title=《使用Nginx部署静态页面》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2019/06/14/Nginx/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《使用Nginx部署静态页面》 — 我的博客&url=https://www.williamife.com/2019/06/14/Nginx/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2019/06/14/Nginx/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACIElEQVR42u3aO27DMBAFwNz/0k6bxvJ7SzmAyGEl2LLMUbHgfn5+4vX6s959cn3/+jNvWBgYGI9lvC5Xcs815voJ777N94aBgXEOI9nE9XXybRtwk71hYGBg5JtLjolf/C8MDAyMILHMA2hyTMTAwMCYJbF5jSsPuCvJMwYGxjmMvOr+/9df6W9gYGA8ivEq13WJLQ+mbfj+8BwMDIytGbMENW8MtKW3/NiHgYGBMWsoJsMT+UBG/mowMDD2ZszGJmZDXe2xstgDBgbGAYwE0LYbi+RzPcRjYGBszVhPPvMGZDvGkb8gDAyMMxnt8a59ES2gaGpiYGBsx5iV+NtRsPX/+vBMDAyMAxgrbcXZcMYXy20YGBjHMJIBr9kgRX7gK/aAgYFxACMfm1hpZ7ahdjhsgYGBsR1jJRTmCerK6yj2iYGBsTUjH4+4a0ii/VWxMDAwtmPkBfpZ4/OuIP5hhxgYGFsz2hL/XQnw+hjZWwwGBsamjFmQbZPYNozmoRwDA+McRhsuZ02C2bhYFJoxMDAOYMyaiO0W8wZn3c7EwMDYlPEqVxIKZyMXeZCNDoUYGBgbMe5tcLbNg/X0tcZgYGA8ltGmmnmKOzsUDoM1BgbGAYx2kCIfFGtLeG1bAgMDA6M9XSaw/FBYJLEYGBgYZdkr38SsLVG0MDEwMDZiJEnsbPxrJXH9SrkNAwPjgYylSY1RwW6lnbDUyMTAwHge4xdSRtsZ895xOwAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

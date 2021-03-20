@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+    <meta charset="utf-8">
+    
+    <meta name="google-site-verification" content="21k73v5G8oRoUeP-cTwUyeD5lkZ5asW5K667uxY6oqI">
+    
+    
+    <meta name="baidu-site-verification" content="I1QHrtH1Ea">
+    
+    
+    
+    <link rel="canonical" href="https://www.williamife.com//2019/11/27/Node之线程与进程/">
+    
+    
+    <title>Node.js之进程与线程 | 我的博客 | What&#39;s past is prologue.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Node.js">
+    <meta name="description" content="本篇文章通过Node.js的角度讲解进程与线程，除了介绍概念外还会讲解一些在项目中的实战的应用。  在文章开始前先问几个问题：  Node.js是单线程吗？  Node.js 做耗时的计算时候，如何避免阻塞？  Node.js如何实现多进程的开启和关闭？  Node.js可以创建线程吗？  你们开发过程中如何实现进程守护的？  除了使用第三方模块，你们自己是否封装过一个多进程架构?    一、">
+<meta name="keywords" content="Node.js">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Node.js之进程与线程">
+<meta property="og:url" content="https://www.williamife.com/2019/11/27/Node之线程与进程/index.html">
+<meta property="og:site_name" content="我的博客">
+<meta property="og:description" content="本篇文章通过Node.js的角度讲解进程与线程，除了介绍概念外还会讲解一些在项目中的实战的应用。  在文章开始前先问几个问题：  Node.js是单线程吗？  Node.js 做耗时的计算时候，如何避免阻塞？  Node.js如何实现多进程的开启和关闭？  Node.js可以创建线程吗？  你们开发过程中如何实现进程守护的？  除了使用第三方模块，你们自己是否封装过一个多进程架构?    一、">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-03-17T13:32:27.215Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Node.js之进程与线程">
+<meta name="twitter:description" content="本篇文章通过Node.js的角度讲解进程与线程，除了介绍概念外还会讲解一些在项目中的实战的应用。  在文章开始前先问几个问题：  Node.js是单线程吗？  Node.js 做耗时的计算时候，如何避免阻塞？  Node.js如何实现多进程的开启和关闭？  Node.js可以创建线程吗？  你们开发过程中如何实现进程守护的？  除了使用第三方模块，你们自己是否封装过一个多进程架构?    一、">
+    
+        <link rel="alternate" type="application/atom+xml" title="我的博客" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">William Cao</h5>
+          <a href="mailto:demondora@qq.com" title="demondora@qq.com" class="mail">demondora@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                关于
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c6664e66fb9a049b41cfdda" target="_blank" >
+                <i class="icon icon-lg icon-juejin"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/William-Cao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.weibo.com/" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Node.js之进程与线程</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Node.js之进程与线程</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-11-27T08:15:15.000Z" itemprop="datePublished" class="page-time">
+  2019-11-27
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <!-- <h4>TOC</h4> -->
+            <h4>文章目录</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#一、-进程"><span class="post-toc-text">一、 进程</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#二、-线程"><span class="post-toc-text">二、 线程</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-单线程"><span class="post-toc-text">1. 单线程</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-多线程"><span class="post-toc-text">2. 多线程</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#三、-Node-js线程与进程"><span class="post-toc-text">三、 Node.js线程与进程</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#四、-Node-js进程创建"><span class="post-toc-text">四、 Node.js进程创建</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#五、-Node-js守护进程"><span class="post-toc-text">五、 Node.js守护进程</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#六、-总结"><span class="post-toc-text">六、 总结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Node之线程与进程"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Node.js之进程与线程</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-11-27 16:15:15" datetime="2019-11-27T08:15:15.000Z"  itemprop="datePublished">2019-11-27</time>
+
+            
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>本篇文章通过Node.js的角度讲解进程与线程，除了介绍概念外还会讲解一些在项目中的实战的应用。</p>
+</blockquote>
+<p>在文章开始前先问几个问题：</p>
+<ol>
+<li><p>Node.js是单线程吗？</p>
+</li>
+<li><p>Node.js 做耗时的计算时候，如何避免阻塞？</p>
+</li>
+<li><p>Node.js如何实现多进程的开启和关闭？</p>
+</li>
+<li><p>Node.js可以创建线程吗？</p>
+</li>
+<li><p>你们开发过程中如何实现进程守护的？</p>
+</li>
+<li><p>除了使用第三方模块，你们自己是否封装过一个多进程架构?</p>
+</li>
+</ol>
+<p><br></p>
+<h1 id="一、-进程"><a href="#一、-进程" class="headerlink" title="一、 进程"></a>一、 进程</h1><p>进程（Process）是计算机中的程序关于某数据集合上的一次运行活动，是系统进行资源分配和调度的<code>基本单位</code>，是操作系统结构的基础，进程是线程的<code>容器</code>（来自百科）。我们启动一个服务、运行一个实例，就是开一个服务进程。<code>多进程</code>就是进程的复制（fork），<code>fork</code> 出来的每个进程都拥有自己的独立空间地址、数据栈，一个进程无法访问另外一个进程里定义的变量、数据结构，只有建立了 <code>IPC</code> 通信，进程之间才可数据共享。</p>
+<p><br></p>
+<h1 id="二、-线程"><a href="#二、-线程" class="headerlink" title="二、 线程"></a>二、 线程</h1><p>线程是操作系统能够进行运算调度的<code>最小单位</code>，首先我们要清楚线程是隶属于进程的，被包含于进程之中。一个线程只能隶属于一个进程，但是一个进程是可以拥有多个线程的。<br>同一块代码，可以根据系统CPU核心数启动多个进程，每个进程都有属于自己的独立运行空间，进程之间是不相互影响的。同一进程中的多条线程将共享该进程中的全部系统资源，如虚拟地址空间，文件描述符和信号处理等。但同一进程中的多个线程有各自的<code>调用栈</code>（call stack），自己的<code>寄存器环境</code>（register context），自己的<code>线程本地存储</code>（thread-local storage)，线程又有单线程和多线程之分，具有代表性的 JavaScript、Java 语言。</p>
+<p><br></p>
+<h2 id="1-单线程"><a href="#1-单线程" class="headerlink" title="1. 单线程"></a>1. 单线程</h2><p>Javascript 就是属于单线程，程序顺序执行，可以想象一下队列，前面一个执行完之后，后面才可以执行，当你在使用单线程语言编码时切勿有过多耗时的同步操作，否则线程会造成阻塞，导致后续响应无法处理。你如果采用 Javascript 进行编码时候，请尽可能的使用异步操作。</p>
+<p>Google 的V8 Javascript引擎已经在Chrome浏览器里证明了它的性能，所以Node.js的作者Ryan Dahl选择了v8作为Node.js的执行引擎，v8赋予Node.js高效性能的同时也注定了Node.js和大名鼎鼎的Nginx一样，都是以单线程为基础的，当然这也正是作者Ryan Dahl设计Node.js的初衷。</p>
+<blockquote>
+<p>单线程优缺点</p>
+</blockquote>
+<p><strong>高性能</strong><br>首先，单线程避免了频繁创建、切换进程的开销，使执行速度更加迅速。<br>第二，资源占用小，Node.js在大负荷下对内存占用仍然很低。</p>
+<p><strong>线程安全</strong><br>单线程的js还保证了绝对的线程安全，不用担心同一变量同时被多个线程进行读写而造成的程序崩溃。线程安全的同时也解放了开发人员，免去了多线程编程中忘记对变量加锁或者解锁造成的悲剧。</p>
+<p><strong>异步和非阻塞</strong><br>Node.js是单线程的，但是它如何做到I/O的异步和非阻塞的呢？其实Node.js在底层访问I/O还是多线程的，Node.js的fs模块用到libuv来处理I/O，所以在我们看来Node.js的代码就是非阻塞和异步形式的。</p>
+<p><strong>单线程和多核</strong><br>线程是cpu调度的一个基本单位，一个cpu同时只能执行一个线程的任务，同样一个线程任务也只能在一个cpu上执行，所以如果你运行Node.js的机器是像i5，i7这样多核cpu，那么将无法充分利用多核cpu的性能来为Node.js服务。</p>
+<p><br></p>
+<h2 id="2-多线程"><a href="#2-多线程" class="headerlink" title="2. 多线程"></a>2. 多线程</h2><p>在C++、C#、python等其他语言都有与之对应的多线程编程，有些时候这很有趣，带给我们灵活的编程方式；但是也可能带给我们一堆麻烦，在编写更多代码的同时也存在着更多的风险，线程的切换和锁也会造成系统资源的开销。</p>
+<p>多线程的代价还在于创建新的线程和执行期上下文线程的切换开销，由于每创建一个线程就会占用一定的内存，当应用程序并发大了之后，内存将会很快耗尽。</p>
+<p><br></p>
+<h1 id="三、-Node-js线程与进程"><a href="#三、-Node-js线程与进程" class="headerlink" title="三、 Node.js线程与进程"></a>三、 Node.js线程与进程</h1><p>Node.js 是 Javascript 在服务端的运行环境，构建在 chrome 的 V8 引擎之上，基于事件驱动、非阻塞I/O模型，充分利用操作系统提供的<code>异步I/O</code>进行多任务的执行，适合于 <code>I/O 密集型</code>的应用场景，因为异步，程序无需阻塞等待结果返回，而是基于回调通知的机制，原本同步模式等待的时间，则可以用来处理其它任务。</p>
+<p>在 Web 服务器方面，著名的 Nginx 也是采用此模式（事件驱动），Nginx 采用 C 语言进行编写，主要用来做高性能的 Web 服务器，不适合做业务。<br>Web业务开发中，如果你有高并发应用场景那么 Node.js 会是你不错的选择。</p>
+<p>在单核 CPU 系统之上我们采用 <code>单进程 + 单线程</code> 的模式来开发。在多核 CPU 系统之上，可以通过 <code>child_process.fork</code>开启多个进程（Node.js 在 v0.8 版本之后新增了<code>Cluster</code> 来实现多进程架构） ，即 <code>多进程 + 单线程</code> 模式。</p>
+<p><strong>注意：开启多进程不是为了解决高并发，主要是解决了单进程模式下 Node.js CPU 利用率不足的情况，充分利用多核 CPU 的性能。</strong></p>
+<p><strong><em>Node.js 中的进程 Process 是一个全局对象，无需 require 直接使用，给我们提供了当前进程中的相关信息。</em></strong></p>
+<pre><code>process.env：环境变量，例如通过 process.env.NODE_ENV 获取不同环境项目配置信息
+process.nextTick：这个在谈及 Event Loop 时经常为会提到
+process.pid：获取当前进程id
+process.ppid：当前进程对应的父进程
+process.cwd()：获取当前进程工作目录
+process.platform：获取当前进程运行的操作系统平台
+process.uptime()：当前进程已运行时间，例如：pm2 守护进程的 uptime 值
+进程事件：process.on(&apos;uncaughtException&apos;, cb) 捕获异常信息、
+    process.on(&apos;exit&apos;, cb）进程推出监听
+三个标准流：process.stdout 标准输出、process.stdin 标准输入、
+    process.stderr 标准错误输
+</code></pre><p><br></p>
+<h1 id="四、-Node-js进程创建"><a href="#四、-Node-js进程创建" class="headerlink" title="四、 Node.js进程创建"></a>四、 Node.js进程创建</h1><blockquote>
+<p>Node.js 提供了 child_process 内置模块，用于创建子进程，</p>
+</blockquote>
+<p><strong>四种方式</strong></p>
+<ul>
+<li><code>child_process.spawn</code>：适用于返回大量数据，例如图像处理，二进制数据处理。</li>
+<li><code>child_process.exec</code>：适用于小量数据，maxBuffer 默认值为 200 * 1024 超出这个默认值将会导致程序崩溃，数据量过大可采用 spawn。</li>
+<li><code>child_process.execFile</code>：类似 child_process.exec，区别是不能通过 shell 来执行，不支持像 I/O 重定向和文件查找这样的行为</li>
+<li><code>child_process.fork</code>： 衍生新的进程，进程之间是相互独立的，每个进程都有自己的 V8 实例、内存，系统资源是有限的，不建议衍生太多的子进程出来，通长根据系统 CPU 核心数设置。</li>
+</ul>
+<p><br></p>
+<h1 id="五、-Node-js守护进程"><a href="#五、-Node-js守护进程" class="headerlink" title="五、 Node.js守护进程"></a>五、 Node.js守护进程</h1><p>守护进程运行在后台不受终端的影响，什么意思呢？比如当我们打开终端执行 node app.js 开启一个服务进程之后，这个终端就会一直被占用，如果关掉终端，服务就会断掉，即前台运行模式。如果采用守护进程进程方式，这个终端我执行 node app.js 开启一个服务进程之后，我还可以在这个终端上做些别的事情，且不会相互影响。</p>
+<p>在实际工作中对守护进程的健壮性要求还是很高的，例如：进程的异常监听、工作进程管理调度、进程挂掉之后重启等等，这些还需要我们去不断思考。</p>
+<p><br></p>
+<h1 id="六、-总结"><a href="#六、-总结" class="headerlink" title="六、 总结"></a>六、 总结</h1><blockquote>
+<p>单线程的Node.js给我们编码带来了太多的便利和乐趣，我们应该时刻保持清醒的头脑，在Node.js代码中任何一个隐藏的问题都可能击溃整个线上正在运行的Node.js程序。</p>
+</blockquote>
+<p>单线程异步的Node.js不代表不会阻塞，在主线程做过多的任务可能会导致主线程的卡死，影响整个程序的性能，所以我们要非常小心的处理cpu密集型任务，合理的利用各种技术把任务丢给子线程或子进程去完成，保持Node.js主线程的畅通。</p>
+<p>线程/进程的使用并不是没有开销的，尽可能减少创建和销毁线程/进程的次数，可以提升我们系统整体的性能和出错的概率。最后请不要一味的追求高性能和高并发，因为我们可能不需要系统具有那么大的吞吐率。高效，敏捷，低成本的开发才是项目所需要的。</p>
+<p><br></p>
+<p>参考文章：</p>
+<ul>
+<li><a href="https://juejin.im/post/5d06d6ddf265da1b9570562a" target="_blank" rel="noopener">Node.js进阶之进程与线程</a></li>
+<li><a href="https://juejin.im/post/5c471795f265da6120621fa0#heading-9" target="_blank" rel="noopener">[转][NodeJs系列]Node.js的线程和进程详解</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        分享就是回顾自己所学的知识，欢迎大家交流~
+        
+    </div>
+    
+    <footer>
+        <a href="https://www.williamife.com">
+            <img src="/img/avatar.jpg" alt="William Cao">
+            William Cao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Node-js/">Node.js</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2019/11/27/Node之线程与进程/&title=《Node.js之进程与线程》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2019/11/27/Node之线程与进程/&title=《Node.js之进程与线程》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2019/11/27/Node之线程与进程/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Node.js之进程与线程》 — 我的博客&url=https://www.williamife.com/2019/11/27/Node之线程与进程/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2019/11/27/Node之线程与进程/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2019/12/01/NPM/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">在centos下搭建npm镜像</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/09/20/jQuery/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">jQuery架构赏析</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷赏赐~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>William Cao &copy; 2018 - 2021</span></p>
+        <p> 
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">京ICP备19030143号-1</a>
+                
+            </span>
+            <span>
+                
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802031297" target="_blank">京公网安备11010802031297号</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2019/11/27/Node之线程与进程/&title=《Node.js之进程与线程》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2019/11/27/Node之线程与进程/&title=《Node.js之进程与线程》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2019/11/27/Node之线程与进程/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Node.js之进程与线程》 — 我的博客&url=https://www.williamife.com/2019/11/27/Node之线程与进程/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2019/11/27/Node之线程与进程/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACKElEQVR42u3aO24DMQwFQN//0k6TJjAsP5LrACuNKsP706ggKFKPRzyeL+P16rv7k3fmT40GBgbGbRnP5Vjfk785+Vb1fgwMjNMY7yaxDqnrQJkE3ISdPIuBgYGxvicJl+t3Jr8xMDAwckYv4aviMTAwMHqb2CqvF3a/vhfHwMC4ISOvuv//76/0NzAwMG7FeBZHXm6rBspe8+D3KQwMjK0ZeYDrTaJ3aKM5HwwMjK0ZvSZi3jCoJp3VVigGBsZpjF7yN3nDVc0JDAyMvRnVAxPV2tckNSyEewwMjK0ZvY1o8n8SLieNUgwMjBMY1eQv/2e+AY7WvpfDYmBg3JYxCYXzJK9K/XMVAwNja0aexvVKYNWDGpNvYWBgnMAYhbnWhPLFKqSJGBgY2zF6ZfpJ6X9+IGPUi8DAwLgtI3l1Xqa/9tkoZGNgYGzNqAbWagLXa0U8egMDA2NrRv6KfPOZYKoL1EwTMTAwNmVUj1NMRi8xLZwfwcDA2ILRS86qZf1qMK1uiTEwMM5hJAlctSWwfnbSZsDAwDiNkYTd6sGsXrrZrKdhYGBsyphsOKsTzQ9brEPzh1CLgYGxHWPS5vxGUyFZmnyZMDAwdmIkQTafaMKoNjijL2JgYBzAqJb+8/CaFNeqm9gPLUwMDIzjGZOtaXWbWqBiYGBgFD922YHUOHnFwMA4gZEfiUimlW9Z8+W4rNyGgYFxQ0b1iMOkDVAtt02SVAwMjC0YPzxC5PN/0EM3AAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

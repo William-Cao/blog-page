@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+    <meta charset="utf-8">
+    
+    <meta name="google-site-verification" content="21k73v5G8oRoUeP-cTwUyeD5lkZ5asW5K667uxY6oqI">
+    
+    
+    <meta name="baidu-site-verification" content="I1QHrtH1Ea">
+    
+    
+    
+    <link rel="canonical" href="https://www.williamife.com//2018/12/05/JS异步发展流程/">
+    
+    
+    <title>JS异步发展流程 | 我的博客 | What&#39;s past is prologue.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="JavaScript,Node.js">
+    <meta name="description" content="异步编程的语法目标，就是怎样让它更像同步编程 什么是异步 异步任务指的是，不进入主线程、而进入”任务队列”（task queue）的任务，只有”任务队列”通知主线程，某个异步任务可以执行了，该任务才会进入主线程执行。  异步执行的运行机制如下:  所有同步任务都在主线程上执行，形成一个执行栈（execution context stack）。 主线程之外，还存在一个”任务队列”（task queu">
+<meta name="keywords" content="JavaScript,Node.js">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS异步发展流程">
+<meta property="og:url" content="https://www.williamife.com/2018/12/05/JS异步发展流程/index.html">
+<meta property="og:site_name" content="我的博客">
+<meta property="og:description" content="异步编程的语法目标，就是怎样让它更像同步编程 什么是异步 异步任务指的是，不进入主线程、而进入”任务队列”（task queue）的任务，只有”任务队列”通知主线程，某个异步任务可以执行了，该任务才会进入主线程执行。  异步执行的运行机制如下:  所有同步任务都在主线程上执行，形成一个执行栈（execution context stack）。 主线程之外，还存在一个”任务队列”（task queu">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-11-27T07:52:14.074Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JS异步发展流程">
+<meta name="twitter:description" content="异步编程的语法目标，就是怎样让它更像同步编程 什么是异步 异步任务指的是，不进入主线程、而进入”任务队列”（task queue）的任务，只有”任务队列”通知主线程，某个异步任务可以执行了，该任务才会进入主线程执行。  异步执行的运行机制如下:  所有同步任务都在主线程上执行，形成一个执行栈（execution context stack）。 主线程之外，还存在一个”任务队列”（task queu">
+    
+        <link rel="alternate" type="application/atom+xml" title="我的博客" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">William Cao</h5>
+          <a href="mailto:demondora@qq.com" title="demondora@qq.com" class="mail">demondora@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                关于
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c6664e66fb9a049b41cfdda" target="_blank" >
+                <i class="icon icon-lg icon-juejin"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/William-Cao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.weibo.com/" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">JS异步发展流程</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">JS异步发展流程</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-12-05T01:39:14.000Z" itemprop="datePublished" class="page-time">
+  2018-12-05
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <!-- <h4>TOC</h4> -->
+            <h4>文章目录</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#什么是异步"><span class="post-toc-text">什么是异步</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1、回调函数"><span class="post-toc-text">1、回调函数</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2、事件发布订阅"><span class="post-toc-text">2、事件发布订阅</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3、哨兵变量"><span class="post-toc-text">3、哨兵变量</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4、Promise"><span class="post-toc-text">4、Promise</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5、Generator"><span class="post-toc-text">5、Generator</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6、Async-await"><span class="post-toc-text">6、Async/await</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-JS异步发展流程"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">JS异步发展流程</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-12-05 09:39:14" datetime="2018-12-05T01:39:14.000Z"  itemprop="datePublished">2018-12-05</time>
+
+            
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>异步编程的语法目标，就是怎样让它更像同步编程</p>
+<h3 id="什么是异步"><a href="#什么是异步" class="headerlink" title="什么是异步"></a>什么是异步</h3><blockquote>
+<p>异步任务指的是，不进入主线程、而进入”任务队列”（task queue）的任务，只有”任务队列”通知主线程，某个异步任务可以执行了，该任务才会进入主线程执行。</p>
+</blockquote>
+<p>异步执行的运行机制如下:</p>
+<ol>
+<li>所有同步任务都在主线程上执行，形成一个执行栈（execution context stack）。</li>
+<li>主线程之外，还存在一个”任务队列”（task queue）。只要异步任务有了运行结果，就在”任务队列”之中放置一个事件。</li>
+<li>一旦”执行栈”中的所有同步任务执行完毕，系统就会读取”任务队列”，看看里面有哪些事件。那些对应的异步任务，于是结束等待状态，进入执行栈，开始执行。</li>
+<li>主线程不断重复上面的第三步。</li>
+</ol>
+<hr>
+<h3 id="1、回调函数"><a href="#1、回调函数" class="headerlink" title="1、回调函数"></a>1、回调函数</h3><p>场景： 读取一个文件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>)</span><br><span class="line">fs.readFile(<span class="string">'./1.txt'</span>, <span class="string">'utf8'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">err, data</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 回调的特点是第一个参数一般为错误对象</span></span><br><span class="line">    <span class="keyword">if</span> (err) &#123;</span><br><span class="line">        <span class="comment">// 如果err有值说明程序出错了</span></span><br><span class="line">        <span class="built_in">console</span>.log(err)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 否则表示成功获取到数据data</span></span><br><span class="line">        <span class="built_in">console</span>.log(data)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>当然回调函数也有它的缺点：</p>
+<ul>
+<li>无法捕获错误（使用try catch）</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">funnction readFile (fileName) &#123;</span><br><span class="line">    fs.readFile(fileName, <span class="string">'utf8'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">data</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (err) &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(err)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(data)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    readFile(<span class="string">'./1.txt'</span>)</span><br><span class="line">&#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">    <span class="comment">// 如果上边读取文件出错，获取不到错误信息</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'err'</span>, e)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>不能return<code>readFile 方法中无法返回读取到文件的内容（data）</code></li>
+<li>回调地狱</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">fs.readFile(<span class="string">'./data1.txt'</span>, <span class="string">'utf8'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">err, data1</span>) </span>&#123;</span><br><span class="line">  fs.readFile(<span class="string">'./data2.txt'</span>, <span class="string">'utf8'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">err, data2</span>) </span>&#123;</span><br><span class="line">    fs.readFile(<span class="string">'./data3.txt'</span>, <span class="string">'utf8'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">err, data3</span>) </span>&#123;</span><br><span class="line">      fs.readFile(<span class="string">'./data4.txt'</span>, <span class="string">'utf8'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">err, data4</span>) </span>&#123;</span><br><span class="line">        fs.readFile(<span class="string">'./data5.txt'</span>, <span class="string">'utf8'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">err, data5</span>) </span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(data1, data2, data3, data4, data5)</span><br><span class="line">        &#125;)</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// 这样的代码称为恶魔金字塔；且有以下问题</span></span><br><span class="line"><span class="comment">// 1、代码非常难看</span></span><br><span class="line"><span class="comment">// 2、难以维护</span></span><br><span class="line"><span class="comment">// 3、效率比较低，因为它们是串行的；一次只能请求一个文件</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h3 id="2、事件发布订阅"><a href="#2、事件发布订阅" class="headerlink" title="2、事件发布订阅"></a>2、事件发布订阅</h3><p>为了解决回调嵌套的问题</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> EventEmitter = <span class="built_in">require</span>(<span class="string">'events'</span>)</span><br><span class="line"><span class="comment">// nodejs核心模块之一,包含两个核心方法:</span></span><br><span class="line"><span class="comment">// on &gt;&gt; 表示注册监听,emit &gt;&gt; 表示发射事件</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> eve = <span class="keyword">new</span> EventEmitter()</span><br><span class="line"><span class="keyword">let</span> html = &#123;&#125; <span class="comment">// 存放页面模板和数据</span></span><br><span class="line">eve.on(<span class="string">'reading'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">key, value</span>) </span>&#123;</span><br><span class="line">    html[key] = value</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">Object</span>.keys(html).length == <span class="number">2</span>) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(html)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line">fs.readFile(<span class="string">'./template.txt'</span>, <span class="string">'utf8'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">err, template</span>) </span>&#123;</span><br><span class="line">    eve.emit(<span class="string">'reading'</span>, template)</span><br><span class="line">    <span class="comment">// 触发reading事件，执行事件的回调函数向html中填入模板</span></span><br><span class="line">&#125;)</span><br><span class="line">fs.readFile(<span class="string">'./data.txt'</span>, <span class="string">'utf8'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">err, template</span>) </span>&#123;</span><br><span class="line">    eve.emit(<span class="string">'reading'</span>, template)</span><br><span class="line">    <span class="comment">// 触发reading事件，执行事件的回调函数向html中填入数据</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h3 id="3、哨兵变量"><a href="#3、哨兵变量" class="headerlink" title="3、哨兵变量"></a>3、哨兵变量</h3><p>事件发布订阅已经可以解决回调嵌套的问题，但是还需要引入events模块；<br>利用哨兵变量一样可以解决回调嵌套的问题，且不需要引入其他模块</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个哨兵函数来处理</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">done</span> (<span class="params">key, value</span>) </span>&#123;</span><br><span class="line">    html[key] = value</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">Object</span>.keys(html).length == <span class="number">2</span>) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(html)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fs.readFile(<span class="string">'./template.txt'</span>, <span class="string">'utf8'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">err, template</span>) </span>&#123;</span><br><span class="line">    done(<span class="string">'template'</span>, template)</span><br><span class="line">&#125;)</span><br><span class="line">fs.readFile(<span class="string">'./data.txt'</span>, <span class="string">'utf8'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">err, template</span>) </span>&#123;</span><br><span class="line">    done(<span class="string">'data'</span>, data)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 可以封装一个高阶函数去生成哨兵函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">render</span> (<span class="params">length, cb</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> htm = &#123;&#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">key, value</span>) </span>&#123;</span><br><span class="line">        html[key] = value</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">Object</span>.keys(html).length == length) &#123;</span><br><span class="line">            cb(html)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> done = render(<span class="number">2</span>, <span class="function"><span class="keyword">function</span> (<span class="params">html</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(html)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h3 id="4、Promise"><a href="#4、Promise" class="headerlink" title="4、Promise"></a>4、Promise</h3><p>上述方法都是用回调函数来处理异步；我们的目标是把异步往同步的方向靠拢</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//promise的用法不再阐述，可自行查阅文档</span></span><br><span class="line"><span class="keyword">let</span> promise1 = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">    fs.readFile(<span class="string">'./1.txt'</span>, <span class="string">'utf8'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">err, data</span>) </span>&#123;</span><br><span class="line">        resolve(data)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">promise1.then(<span class="function"><span class="keyword">function</span> (<span class="params">data</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(data)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h3 id="5、Generator"><a href="#5、Generator" class="headerlink" title="5、Generator"></a>5、Generator</h3><p>当我们在调用一个函数的时候，它并不会马上执行，而是需要我们手动的去执行迭代操作（next方法）；简单来说，调用生成器函数会返回一个迭代器，可以用迭代器来执行遍历每个中断点（yield）<br>调用next方法会有返回值value，是生成器函数对外输出的数据；next方法还可以接受参数，是向生成器函数内部输入的数据</p>
+<ul>
+<li>生成器简单使用</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 方法名前边加*就是生成器函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> *<span class="title">foo</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> index = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">while</span> (index &lt; <span class="number">2</span>) &#123;</span><br><span class="line">    <span class="keyword">yield</span> index++; <span class="comment">//暂停函数执行，并执行yield后的操作</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> bar =  foo(); <span class="comment">// 返回的其实是一个迭代器</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(bar.next());    <span class="comment">// &#123; value: 0, done: false &#125;</span></span><br><span class="line"><span class="built_in">console</span>.log(bar.next());    <span class="comment">// &#123; value: 1, done: false &#125;</span></span><br><span class="line"><span class="built_in">console</span>.log(bar.next());    <span class="comment">// &#123; value: undefined, done: true &#125;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>生成器 + Promise解决异步的实现</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">readFile</span> (<span class="params">filaName</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">        fs.readFile(filename, <span class="function"><span class="keyword">function</span> (<span class="params">err, data</span>) </span>&#123;</span><br><span class="line">          <span class="keyword">if</span> (err) &#123;</span><br><span class="line">            reject(err)</span><br><span class="line">          &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            resolve(data)</span><br><span class="line">          &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> *<span class="title">read</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> template = <span class="keyword">yield</span> readFile(<span class="string">'./template.txt'</span>)</span><br><span class="line">    <span class="keyword">let</span> data = <span class="keyword">yield</span> readFile(<span class="string">'./data.txt'</span>)</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        template: template,</span><br><span class="line">        data: data</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 生成迭代器r1</span></span><br><span class="line"><span class="keyword">let</span> r1 = read()</span><br><span class="line"><span class="keyword">let</span> templatePromise = r1.next().value</span><br><span class="line">templatePromise.then(<span class="function"><span class="keyword">function</span>(<span class="params">template</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 将获取到的template的内容传递给生成器函数</span></span><br><span class="line">    <span class="keyword">let</span> dataPromsie = r1.next(template).value</span><br><span class="line">    dataPromise.then(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">        <span class="comment">//最后一次执行next传入data的值；最后返回&#123;template， data&#125;</span></span><br><span class="line">        <span class="keyword">let</span> result = r1.next(data).value</span><br><span class="line">        <span class="built_in">console</span>.log(result)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>生成器 + promise的实现已经有了一些同步的样子;借助一些工具(co)，可以优雅的编写上述的代码</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//实现 co 方法</span></span><br><span class="line"><span class="comment">//参数是一个生成器函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">co</span> (<span class="params">genFn</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> r1 = genFn()</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolev, reject</span>) </span>&#123;</span><br><span class="line">        !<span class="function"><span class="keyword">function</span> <span class="title">next</span>(<span class="params">lastVal</span>) </span>&#123;</span><br><span class="line">            <span class="keyword">let</span> p1 = r1.next(lastVal)</span><br><span class="line">            <span class="keyword">if</span> (p1.done) &#123;</span><br><span class="line">                resolve(p1.value)</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                p1.value.then(next, reject)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;()</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//现在获取上边的result可以这样来取</span></span><br><span class="line">co(read).then(<span class="function"><span class="keyword">function</span>(<span class="params">result</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(result)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h3 id="6、Async-await"><a href="#6、Async-await" class="headerlink" title="6、Async/await"></a>6、Async/await</h3><p> Async其实是一个语法糖，它的实现就是将Generator函数和自动执行器（co），包装在一个函数中</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//实现 co 方法</span></span><br><span class="line"><span class="comment">//参数是一个生成器函数</span></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">read</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> template = <span class="keyword">await</span> readFile(<span class="string">'./template.txt'</span>);</span><br><span class="line">  <span class="keyword">let</span> data = <span class="keyword">await</span> readFile(<span class="string">'./data.txt'</span>);</span><br><span class="line">  <span class="keyword">return</span> template + <span class="string">'+'</span> + data;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等同于</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">read</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">return</span> co(<span class="function"><span class="keyword">function</span>*(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> template = <span class="keyword">yield</span> readFile(<span class="string">'./template.txt'</span>);</span><br><span class="line">    <span class="keyword">let</span> data = <span class="keyword">yield</span> readFile(<span class="string">'./data.txt'</span>);</span><br><span class="line">    <span class="keyword">return</span> template + <span class="string">'+'</span> + data;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<blockquote>
+<p>异步编程发展的目标就是让异步逻辑的代码看起来像同步一样，发展到Async/await,是处理异步编程的一个里程碑。</p>
+</blockquote>
+<p><br></p>
+<p>参考文章：</p>
+<ul>
+<li><a href="https://www.jianshu.com/p/5ae0f11767cd" target="_blank" rel="noopener">js异步发展简史</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        分享就是回顾自己所学的知识，欢迎大家交流~
+        
+    </div>
+    
+    <footer>
+        <a href="https://www.williamife.com">
+            <img src="/img/avatar.jpg" alt="William Cao">
+            William Cao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Node-js/">Node.js</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2018/12/05/JS异步发展流程/&title=《JS异步发展流程》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2018/12/05/JS异步发展流程/&title=《JS异步发展流程》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2018/12/05/JS异步发展流程/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JS异步发展流程》 — 我的博客&url=https://www.williamife.com/2018/12/05/JS异步发展流程/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2018/12/05/JS异步发展流程/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/12/23/JS隐式转换/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">关于JS隐式转换的那些小事儿</h4>
+      </a>
+    </div>
+  
+
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷赏赐~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>William Cao &copy; 2018 - 2021</span></p>
+        <p> 
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">京ICP备19030143号-1</a>
+                
+            </span>
+            <span>
+                
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802031297" target="_blank">京公网安备11010802031297号</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2018/12/05/JS异步发展流程/&title=《JS异步发展流程》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2018/12/05/JS异步发展流程/&title=《JS异步发展流程》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2018/12/05/JS异步发展流程/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JS异步发展流程》 — 我的博客&url=https://www.williamife.com/2018/12/05/JS异步发展流程/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2018/12/05/JS异步发展流程/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJElEQVR42u3aS27jMBAFwNz/0pp1kEh4r+kMILK4MmxEYmXR6N/XV3yuH2f2/d0z77758MHAwHgt43o8yXWfr5XA8vfeUjEwMA5g3EWw58/PgfI5dCbPSe6GgYGB0X7OwXkQx8DAwJgx8vCapIPJezEwMDDyIJgUqFHZufxkDAyMcxh51/3/f/6T+QYGBsarGFd5VgrRJFBeo4OBgbE3Iw9wbaqX/Dqj3r4FAwPjGMbKOkVy3STpbEehGBgYezPycnFWcM6abvW4FAMD4zBGu/qQrFPkpDygf/sVAwNja8b6skV7rTyjq5t3GBgYWzNmAbfFJ2G3DdBFNw4DA+O1jFkrbb1MXVny+OWGGBgYWzPW07IkaVu5Sv4cDAyMvRnPF1oZds6SwraRh4GBsTcjb5nlba+2hs4T0KX8FAMD47WM2YPaYnW2RtaGewwMjF0ZyYWSk4wtZ+ngcJqBgYGxKaMtYtsyOP/bOgPEwMDYmjELlCtDgvXWW70QhoGBsQVjZaDYLmd8Kt/75Y0YGBgHMNpQO1vLaOer+YABAwPjBMZs0SFvxrWjzbpFiIGBsSnjKs/KUGEW6OukEAMDYzvGSkmZg2ejgjz1xMDAOIGRJ3brl2vBRbDGwMA4gDELfEmjrV3L+FgtjoGBgVHy2k5+PSLFwMDAGF2oLVnzIPuB1BADA+OFjNkAMgmRbfma/CMwMDBOY+Sl42zxov11JRnFwMDYjvEPE91Bz8VGIxAAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+    <meta charset="utf-8">
+    
+    <meta name="google-site-verification" content="21k73v5G8oRoUeP-cTwUyeD5lkZ5asW5K667uxY6oqI">
+    
+    
+    <meta name="baidu-site-verification" content="I1QHrtH1Ea">
+    
+    
+    
+    <link rel="canonical" href="https://www.williamife.com//2019/04/29/JS中的原型和原型链/">
+    
+    
+    <title>JS中的原型和原型链 | 我的博客 | What&#39;s past is prologue.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="JavaScript">
+    <meta name="description" content="在基于类的传统面向对象的编程语言中，对象由类实例化而来，实例化的过程中，类的属性和方法会拷贝到这个对象中；对象的继承实际上是类的继承，在定义子类继承于父类时，子类会将父类的属性和方法拷贝到自身当中。因此，这类语言中，对象创建和继承行为都是通过拷贝完成的。但在JavaScript中，对象的创建、对象的继承（更好的叫法是对象的代理，因为它并不是传统意义上的继承）是不存在拷贝行为的。(ES6 中的cla">
+<meta name="keywords" content="JavaScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS中的原型和原型链">
+<meta property="og:url" content="https://www.williamife.com/2019/04/29/JS中的原型和原型链/index.html">
+<meta property="og:site_name" content="我的博客">
+<meta property="og:description" content="在基于类的传统面向对象的编程语言中，对象由类实例化而来，实例化的过程中，类的属性和方法会拷贝到这个对象中；对象的继承实际上是类的继承，在定义子类继承于父类时，子类会将父类的属性和方法拷贝到自身当中。因此，这类语言中，对象创建和继承行为都是通过拷贝完成的。但在JavaScript中，对象的创建、对象的继承（更好的叫法是对象的代理，因为它并不是传统意义上的继承）是不存在拷贝行为的。(ES6 中的cla">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.williamife.com/img/images/prototype.png">
+<meta property="og:updated_time" content="2019-07-10T05:43:49.586Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JS中的原型和原型链">
+<meta name="twitter:description" content="在基于类的传统面向对象的编程语言中，对象由类实例化而来，实例化的过程中，类的属性和方法会拷贝到这个对象中；对象的继承实际上是类的继承，在定义子类继承于父类时，子类会将父类的属性和方法拷贝到自身当中。因此，这类语言中，对象创建和继承行为都是通过拷贝完成的。但在JavaScript中，对象的创建、对象的继承（更好的叫法是对象的代理，因为它并不是传统意义上的继承）是不存在拷贝行为的。(ES6 中的cla">
+<meta name="twitter:image" content="https://www.williamife.com/img/images/prototype.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="我的博客" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">William Cao</h5>
+          <a href="mailto:demondora@qq.com" title="demondora@qq.com" class="mail">demondora@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                关于
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c6664e66fb9a049b41cfdda" target="_blank" >
+                <i class="icon icon-lg icon-juejin"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/William-Cao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.weibo.com/" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">JS中的原型和原型链</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">JS中的原型和原型链</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-04-29T11:01:55.000Z" itemprop="datePublished" class="page-time">
+  2019-04-29
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <!-- <h4>TOC</h4> -->
+            <h4>文章目录</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#一、-原型"><span class="post-toc-text">一、 原型</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#二、-原型链"><span class="post-toc-text">二、 原型链</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#三、-prototype"><span class="post-toc-text">三、 prototype</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#四、-constructor"><span class="post-toc-text">四、 constructor</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#五、-注意事项"><span class="post-toc-text">五、 注意事项</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-JS中的原型和原型链"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">JS中的原型和原型链</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-04-29 19:01:55" datetime="2019-04-29T11:01:55.000Z"  itemprop="datePublished">2019-04-29</time>
+
+            
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p><strong><em>在基于类的传统面向对象的编程语言中，对象由类实例化而来，实例化的过程中，类的属性和方法会拷贝到这个对象中；对象的继承实际上是类的继承，在定义子类继承于父类时，子类会将父类的属性和方法拷贝到自身当中。因此，这类语言中，对象创建和继承行为都是通过拷贝完成的。但在JavaScript中，对象的创建、对象的继承<code>（更好的叫法是对象的代理，因为它并不是传统意义上的继承）</code>是不存在拷贝行为的。<code>(ES6 中的class也只不过是语法糖，并非真正意义上的类)</code></em></strong></p>
+<h1 id="一、-原型"><a href="#一、-原型" class="headerlink" title="一、 原型"></a>一、 原型</h1><p>在JavaScript中，函数可以有属性。 每个函数都有一个特殊的属性叫作原型<code>prototype</code>，正如下面所展示的。原型是为了<code>共享</code>多个对象之间的一些共有特性（属性或方法），这个功能也是任何一门面向对象的编程语言必须具备的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">doSomething</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line"><span class="built_in">console</span>.log( doSomething.prototype );</span><br><span class="line"></span><br><span class="line"><span class="comment">// doSomething 函数有一个默认的原型属性，它在控制台上面呈现了出来.</span></span><br><span class="line"><span class="comment">// 运行这段代码之后，控制台上面应该出现了像这样的一个对象.</span></span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">constructor</span>: ƒ doSomething(),</span><br><span class="line">    __proto__: &#123;</span><br><span class="line">        <span class="keyword">constructor</span>: ƒ Object(),</span><br><span class="line">        hasOwnProperty: ƒ hasOwnProperty(),</span><br><span class="line">        isPrototypeOf: ƒ isPrototypeOf(),</span><br><span class="line">        propertyIsEnumerable: ƒ propertyIsEnumerable(),</span><br><span class="line">        toLocaleString: ƒ toLocaleString(),</span><br><span class="line">        toString: ƒ toString(),</span><br><span class="line">        valueOf: ƒ valueOf()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="二、-原型链"><a href="#二、-原型链" class="headerlink" title="二、 原型链"></a>二、 原型链</h1><p>JavaScript 常被描述为一种基于原型的语言 (prototype-based language)——每个对象拥有一个原型对象，对象以其原型为模板、从原型继承方法和属性。原型对象也可能拥有原型，并从中继承方法和属性，一层一层、以此类推。这种关系常被称为原型链 (prototype chain)，它解释了为何一个对象会拥有定义在其他对象中的属性和方法。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/images/prototype.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>JavaScript中的对象，都有一个内置属性<code>[[Prototype]]</code>，指向这个对象的原型对象。当查找一个属性或方法时，如果在当前对象中找不到定义，会继续在当前对象的原型对象中查找；如果原型对象中依然没有找到，会继续在原型对象的原型中查找<code>(原型也是对象，也有它自己的原型)</code>；如此继续，直到找到为止，或者查找到最顶层的原型对象中也没有找到，就结束查找，返回undefined。可以看出，这个查找过程是一个链式的查找，每个对象都有一个到它自身原型对象的链接，这些链接组建的整个链条就是原型链。拥有相同原型的多个对象，他们的共同特征正是通过这种查找模式体现出来的。</p>
+<p>在<code>doSomething</code>的例子中，我们可以看到最顶层的原型对象，这个对象就是Object.prototype，这个对象中保存了最常用的方法，如toString、valueOf、hasOwnProperty等，因此我们才能在任何对象中使用这些方法。</p>
+<h1 id="三、-prototype"><a href="#三、-prototype" class="headerlink" title="三、 prototype"></a>三、 prototype</h1><p>prototype 属性：继承成员被定义的地方</p>
+<p>在 JavaScript 原型继承结构里面，规范中用 <code>[[Prototype]]</code> 表示对象隐式的原型，在 JavaScript 中用 <code>__proto__</code> 表示，在 Firefox 和 Chrome 浏览器中是可以访问得到这个属性的，在 IE 下不行。所有 JavaScript 对象都有 <code>__proto__</code> 属性，但只有 <code>Object.prototype.__proto__</code>为 <code>null</code> ，前提是没有修改过这个属性。这个属性指向它的原型对象。 至于显示的原型，在 JavaScript 里用 prototype 属性表示。</p>
+<h1 id="四、-constructor"><a href="#四、-constructor" class="headerlink" title="四、 constructor"></a>四、 constructor</h1><p>每个实例对象都从原型中继承了一个 <code>constructor</code> 属性，该属性指向了用于构造此实例对象的构造函数。</p>
+<p>一个小技巧是，你可以在 <code>constructor</code> 属性的末尾添加一对圆括号（括号中包含所需的参数），从而用这个构造器创建另一个对象实例。毕竟构造器是一个函数，故可以通过圆括号调用；只需在前面添加 <code>new</code> 关键字，便能将此函数作为构造器使用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">deepClone</span>(<span class="params">obj</span>) </span>&#123; <span class="comment">//递归拷贝</span></span><br><span class="line">    <span class="keyword">if</span>(obj === <span class="literal">null</span>) <span class="keyword">return</span> <span class="literal">null</span>; <span class="comment">//null 的情况</span></span><br><span class="line">    <span class="keyword">if</span>(obj <span class="keyword">instanceof</span> <span class="built_in">RegExp</span>) <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">RegExp</span>(obj);</span><br><span class="line">    <span class="keyword">if</span>(obj <span class="keyword">instanceof</span> <span class="built_in">Date</span>) <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Date</span>(obj);</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">typeof</span> obj !== <span class="string">'object'</span>) &#123;</span><br><span class="line">        <span class="comment">//如果不是复杂数据类型，直接返回</span></span><br><span class="line">        <span class="keyword">return</span> obj;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 如果obj是数组，那么 obj.constructor 是 [Function: Array]</span></span><br><span class="line"><span class="comment">     * 如果obj是对象，那么 obj.constructor 是 [Function: Object]</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">let</span> t = <span class="keyword">new</span> obj.constructor();</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> key <span class="keyword">in</span> obj) &#123;</span><br><span class="line">        <span class="comment">//如果 obj[key] 是复杂数据类型，递归</span></span><br><span class="line">        t[key] = deepClone(obj[key]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> t;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="五、-注意事项"><a href="#五、-注意事项" class="headerlink" title="五、 注意事项"></a>五、 注意事项</h1><p>对象的<code>原型</code>（可以通过Object.getPrototypeOf()或者已被弃用的__proto__属性获得）与构造函数的 <code>prototype</code> 属性之间的区别是很重要的。前者是每个实例上都有的属性，后者是构造函数的属性。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span>.getPrototypeOf(<span class="keyword">new</span> <span class="built_in">String</span>()) === <span class="built_in">String</span>.prototype <span class="comment">// true</span></span><br><span class="line"><span class="built_in">Object</span>.getPrototypeOf(<span class="keyword">new</span> <span class="built_in">Number</span>()) === <span class="built_in">Number</span>.prototype <span class="comment">// true</span></span><br><span class="line"><span class="built_in">Object</span>.getPrototypeOf(<span class="keyword">new</span> <span class="built_in">Object</span>()) === <span class="built_in">Object</span>.prototype <span class="comment">// true</span></span><br><span class="line"><span class="built_in">Object</span>.getPrototypeOf(<span class="keyword">new</span> <span class="built_in">Array</span>()) === <span class="built_in">Array</span>.prototype   <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<p><strong>Q: 如何创造一个既没有属性方法也没有原型链的空对象?</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> nullObject = <span class="built_in">Object</span>.create(<span class="literal">null</span>);</span><br><span class="line"><span class="comment">// &#123;&#125; No properties</span></span><br><span class="line">nullObject.__proto__;   <span class="comment">// undefined</span></span><br><span class="line">nullObject.prototype;   <span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<p>参考文章：</p>
+<ul>
+<li><a href="https://juejin.im/post/599d69fc6fb9a0248f4a7b31" target="_blank" rel="noopener">白话原型和原型链</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/web/1306_jiangjj_jsinstanceof/index.html" target="_blank" rel="noopener">JavaScript instanceof 运算符深入剖析</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript" target="_blank" rel="noopener">MDN Web Docs</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        分享就是回顾自己所学的知识，欢迎大家交流~
+        
+    </div>
+    
+    <footer>
+        <a href="https://www.williamife.com">
+            <img src="/img/avatar.jpg" alt="William Cao">
+            William Cao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2019/04/29/JS中的原型和原型链/&title=《JS中的原型和原型链》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2019/04/29/JS中的原型和原型链/&title=《JS中的原型和原型链》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2019/04/29/JS中的原型和原型链/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JS中的原型和原型链》 — 我的博客&url=https://www.williamife.com/2019/04/29/JS中的原型和原型链/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2019/04/29/JS中的原型和原型链/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2019/05/10/JS数据结构与算法/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">JS中的数据结构和算法</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/03/28/浅谈IO模型与Event Loop/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">I/O模型、Libuv和Eventloop</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷赏赐~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>William Cao &copy; 2018 - 2021</span></p>
+        <p> 
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">京ICP备19030143号-1</a>
+                
+            </span>
+            <span>
+                
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802031297" target="_blank">京公网安备11010802031297号</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2019/04/29/JS中的原型和原型链/&title=《JS中的原型和原型链》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2019/04/29/JS中的原型和原型链/&title=《JS中的原型和原型链》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2019/04/29/JS中的原型和原型链/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JS中的原型和原型链》 — 我的博客&url=https://www.williamife.com/2019/04/29/JS中的原型和原型链/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2019/04/29/JS中的原型和原型链/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACp0lEQVR42u3awW7CMBAE0P7/T7dXpIowsxtTKr2cUIBkX5C8Zuyvr/j4fjgez/x+9/H8s09ev07uePOBh4eHtyj9WaHXpV9/sj2TP47rmvHw8PBO856NqMln2oeS3CunvrDg4eHhfSRvNgmePT48PDy8/8vLh/vriXgyUf6DxoCHh4cX8NpLJ8FEO12eRR63ZS14eHh4MS9fRfqc10fW9/Dw8PDWq+rtgNsO3+1QXleLh4eHd2wgbEtvw9lNHNw2Bjw8PLy/4uXRahJG7JvEZmkNDw8P7zRvFrPmLWHWhGbLb3h4eHgneLPBekPdN4C6JeDh4eHdysuX/PNtWJvm0U7TIzYeHh7eMV47ELdlzV7PtnDh4eHhneO1Rcym3Um5w8Wt67aEh4eHd5h3Irptj7Z5vBj/8fDw8A7w8i9sItq8/STXrB8oHh4e3gFeHjq0S2KbSCJ/iNGWLDw8PLxbeXlg2oa5bcibbzLIK8TDw8M7zZsNym10u9koMOx4eHh4eDfx2pggH9bzK8w2VEW14eHh4b2Ftx+s72oYm+ADDw8P7/289vabuLaY+7fbDvDw8PCO8XJAHqR+L442Jn5aIR4eHt4BXrsAttk+1cYNsya02jqAh4eHF/NmF521kFnUe1edeHh4eHfx9ov9yTR602xWQTMeHh7e23n5hDvfWLDH5PEuHh4e3mlejsy3Xm2aUNuioqwaDw8Pb8GbLU3lMW5b9Obxvdh0hYeHh3cTr52Xzm6ZTM03i22bMAUPDw9vxmubwR6cNIY89o3+MeDh4eEd4CUT3H0QnL+7X4TDw8PD+xxeMoHOz2wW6qKfAQ8PD+9jeG3O0V6hbTA3ZMZ4eHh4JS+/dN4e2s0E7VaG6KfCw8PDO8Db/OG/K3hNysofPR4eHt4x3g/0VA0BH7OcGgAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

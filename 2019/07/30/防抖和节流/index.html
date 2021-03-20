@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+    <meta charset="utf-8">
+    
+    <meta name="google-site-verification" content="21k73v5G8oRoUeP-cTwUyeD5lkZ5asW5K667uxY6oqI">
+    
+    
+    <meta name="baidu-site-verification" content="I1QHrtH1Ea">
+    
+    
+    
+    <link rel="canonical" href="https://www.williamife.com//2019/07/30/防抖和节流/">
+    
+    
+    <title>JS中的防抖与节流 | 我的博客 | What&#39;s past is prologue.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="JavaScript">
+    <meta name="description" content="在日常开发中，我们经常会处理各种事件，比如常见的click、scroll、 resize等等。仔细一想，会发现像scroll、scroll、onchange这类事件会频繁触发，如果我们在回调中计算元素位置、做一些跟DOM相关的操作，引起浏览器回流和重绘，频繁触发回调，很可能会造成浏览器掉帧，甚至会使浏览器崩溃，影响用户体验。针对这种现象，目前有两种常用的解决方案：防抖和节流。 一、 防抖（debo">
+<meta name="keywords" content="JavaScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS中的防抖与节流">
+<meta property="og:url" content="https://www.williamife.com/2019/07/30/防抖和节流/index.html">
+<meta property="og:site_name" content="我的博客">
+<meta property="og:description" content="在日常开发中，我们经常会处理各种事件，比如常见的click、scroll、 resize等等。仔细一想，会发现像scroll、scroll、onchange这类事件会频繁触发，如果我们在回调中计算元素位置、做一些跟DOM相关的操作，引起浏览器回流和重绘，频繁触发回调，很可能会造成浏览器掉帧，甚至会使浏览器崩溃，影响用户体验。针对这种现象，目前有两种常用的解决方案：防抖和节流。 一、 防抖（debo">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-08-03T05:32:50.248Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JS中的防抖与节流">
+<meta name="twitter:description" content="在日常开发中，我们经常会处理各种事件，比如常见的click、scroll、 resize等等。仔细一想，会发现像scroll、scroll、onchange这类事件会频繁触发，如果我们在回调中计算元素位置、做一些跟DOM相关的操作，引起浏览器回流和重绘，频繁触发回调，很可能会造成浏览器掉帧，甚至会使浏览器崩溃，影响用户体验。针对这种现象，目前有两种常用的解决方案：防抖和节流。 一、 防抖（debo">
+    
+        <link rel="alternate" type="application/atom+xml" title="我的博客" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">William Cao</h5>
+          <a href="mailto:demondora@qq.com" title="demondora@qq.com" class="mail">demondora@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                关于
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c6664e66fb9a049b41cfdda" target="_blank" >
+                <i class="icon icon-lg icon-juejin"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/William-Cao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.weibo.com/" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">JS中的防抖与节流</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">JS中的防抖与节流</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-07-30T03:08:09.000Z" itemprop="datePublished" class="page-time">
+  2019-07-30
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <!-- <h4>TOC</h4> -->
+            <h4>文章目录</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#一、-防抖（debounce）"><span class="post-toc-text">一、 防抖（debounce）</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-非立即执行"><span class="post-toc-text">1. 非立即执行</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-立即执行"><span class="post-toc-text">2. 立即执行</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3-防抖合并"><span class="post-toc-text">3. 防抖合并</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#二、节流（throttle）"><span class="post-toc-text">二、节流（throttle）</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-时间戳"><span class="post-toc-text">1. 时间戳</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-定时器"><span class="post-toc-text">2. 定时器</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3-节流合并"><span class="post-toc-text">3. 节流合并</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-防抖和节流"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">JS中的防抖与节流</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-07-30 11:08:09" datetime="2019-07-30T03:08:09.000Z"  itemprop="datePublished">2019-07-30</time>
+
+            
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p><strong><em>在日常开发中，我们经常会处理各种事件，比如常见的click、scroll、 resize等等。仔细一想，会发现像scroll、scroll、onchange这类事件会频繁触发，如果我们在回调中计算元素位置、做一些跟DOM相关的操作，引起浏览器回流和重绘，频繁触发回调，很可能会造成浏览器掉帧，甚至会使浏览器崩溃，影响用户体验。针对这种现象，目前有两种常用的解决方案：防抖和节流。</em></strong></p>
+<h1 id="一、-防抖（debounce）"><a href="#一、-防抖（debounce）" class="headerlink" title="一、 防抖（debounce）"></a>一、 防抖（debounce）</h1><blockquote>
+<p>所谓防抖，就是指触发事件后，就是把触发非常频繁的事件合并成一次去执行。即在指定时间内只执行一次回调函数，如果在指定的时间内又触发了该事件，则回调函数的执行时间会基于此刻重新开始计算。</p>
+</blockquote>
+<h2 id="1-非立即执行"><a href="#1-非立即执行" class="headerlink" title="1. 非立即执行"></a>1. 非立即执行</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">debounce</span>(<span class="params">fn, wait</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> timeout;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> ctx = <span class="keyword">this</span>, args = <span class="built_in">arguments</span>;</span><br><span class="line">    clearTimeout(timeout);</span><br><span class="line">    timeout = setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      fn.apply(ctx, args);</span><br><span class="line">    &#125;, wait);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-立即执行"><a href="#2-立即执行" class="headerlink" title="2. 立即执行"></a>2. 立即执行</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">debounce</span>(<span class="params">fn, wait</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> timeout;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">let</span> context = <span class="keyword">this</span> , args = <span class="built_in">arguments</span>;</span><br><span class="line">        clearTimeout(timeout);</span><br><span class="line"></span><br><span class="line">        timeout = setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">          timeout = <span class="literal">null</span>;</span><br><span class="line">        &#125;, wait);</span><br><span class="line">        <span class="keyword">if</span> (!timeout) fn.apply(context, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="3-防抖合并"><a href="#3-防抖合并" class="headerlink" title="3. 防抖合并"></a>3. 防抖合并</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@desc </span>函数防抖</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param </span>fn 函数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param </span>wait 延迟执行毫秒数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param </span>immediate true 表立即执行，false 表非立即执行</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">debounce</span>(<span class="params">fn, wait, immediate</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> timeout;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">let</span> context = <span class="keyword">this</span> , args = <span class="built_in">arguments</span>;</span><br><span class="line">        clearTimeout(timeout);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (immediate) &#123;</span><br><span class="line">          timeout = setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">            timeout = <span class="literal">null</span>;</span><br><span class="line">          &#125;, wait);</span><br><span class="line">          <span class="keyword">if</span> (!timeout) fn.apply(context, args);</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            timeout = setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">              fn.apply(context, args)</span><br><span class="line">            &#125;, wait);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="二、节流（throttle）"><a href="#二、节流（throttle）" class="headerlink" title="二、节流（throttle）"></a>二、节流（throttle）</h1><blockquote>
+<p>所谓节流，就是指连续触发事件但是在 n 秒中只执行一次函数。 节流会稀释函数的执行频率。当触发事件的时候，我们设置一个定时器，再次触发事件的时候，如果定时器存在，就不执行，直到delay时间后，定时器执行执行函数，并且清空定时器，这样就可以设置下个定时器。</p>
+</blockquote>
+<h2 id="1-时间戳"><a href="#1-时间戳" class="headerlink" title="1. 时间戳"></a>1. 时间戳</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">throttle</span>(<span class="params">fn, wait</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> previous = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">let</span> now = <span class="built_in">Date</span>.now();</span><br><span class="line">        <span class="keyword">let</span> context = <span class="keyword">this</span> , args = <span class="built_in">arguments</span>;</span><br><span class="line">        <span class="keyword">if</span> (now - previous &gt; wait) &#123;</span><br><span class="line">            fn.apply(context, args);</span><br><span class="line">            previous = now;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-定时器"><a href="#2-定时器" class="headerlink" title="2. 定时器"></a>2. 定时器</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">throttle</span>(<span class="params">fn,wait</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> timeout;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">let</span> context = <span class="keyword">this</span> , args = <span class="built_in">arguments</span>;</span><br><span class="line">        <span class="keyword">if</span> (!timeout) &#123;</span><br><span class="line">            timeout = setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">                timeout = <span class="literal">null</span>;</span><br><span class="line">                fn.apply(context, args)</span><br><span class="line">            &#125;, wait)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="3-节流合并"><a href="#3-节流合并" class="headerlink" title="3. 节流合并"></a>3. 节流合并</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@desc </span>函数节流</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param </span>fn 函数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param </span>wait 延迟执行毫秒数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param </span>type 1 时间戳，0 定时器</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">throttle</span>(<span class="params">fn, wait, type</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> previous = <span class="number">0</span> , timeout;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">let</span> context = <span class="keyword">this</span>;</span><br><span class="line">        <span class="keyword">let</span> args = <span class="built_in">arguments</span>;</span><br><span class="line">        <span class="keyword">if</span>(type) &#123;</span><br><span class="line">          <span class="keyword">let</span> now = <span class="built_in">Date</span>.now();</span><br><span class="line">          <span class="keyword">if</span> (now - previous &gt; wait) &#123;</span><br><span class="line">            fn.apply(context, args);</span><br><span class="line">            previous = now;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="keyword">if</span> (!timeout) &#123;</span><br><span class="line">            timeout = setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">                timeout = <span class="literal">null</span>;</span><br><span class="line">                fn.apply(context, args)</span><br><span class="line">            &#125;, wait)</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<p>参考文章：</p>
+<ul>
+<li><a href="https://github.com/mqyqingfeng/Blog/issues/26" target="_blank" rel="noopener">JavaScript专题之跟着 underscore 学节流</a></li>
+<li><a href="https://github.com/mqyqingfeng/Blog/issues/22" target="_blank" rel="noopener">JavaScript专题之跟着 underscore 学防抖</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        分享就是回顾自己所学的知识，欢迎大家交流~
+        
+    </div>
+    
+    <footer>
+        <a href="https://www.williamife.com">
+            <img src="/img/avatar.jpg" alt="William Cao">
+            William Cao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2019/07/30/防抖和节流/&title=《JS中的防抖与节流》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2019/07/30/防抖和节流/&title=《JS中的防抖与节流》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2019/07/30/防抖和节流/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JS中的防抖与节流》 — 我的博客&url=https://www.williamife.com/2019/07/30/防抖和节流/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2019/07/30/防抖和节流/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2019/08/19/上下文与作用域/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">从执行上下文，到作用域闭包</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/06/26/JS中继承的几种方式/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">JS中继承的几种方式</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷赏赐~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>William Cao &copy; 2018 - 2021</span></p>
+        <p> 
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">京ICP备19030143号-1</a>
+                
+            </span>
+            <span>
+                
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802031297" target="_blank">京公网安备11010802031297号</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2019/07/30/防抖和节流/&title=《JS中的防抖与节流》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2019/07/30/防抖和节流/&title=《JS中的防抖与节流》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2019/07/30/防抖和节流/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JS中的防抖与节流》 — 我的博客&url=https://www.williamife.com/2019/07/30/防抖和节流/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2019/07/30/防抖和节流/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJklEQVR42u3aO3LDMAwFQN//0k6Two3lB4DOROSqymQUkcsCIT6PR/w8X57X3yTvJ2++W2Xxg4GBcVvG8/K5XuB64d533r3/4WgwMDAOYCShMA+aSdhNDiXZGwYGBsYqah6CMTAwMOaMyUUwCcEYGBgYkyS2l9AmiW5SgFuWi2NgYNyQkVfd//7nr/Q3MDAwbsV4Fp88Nb3+/qr9/H4NAwNja8a8TNZrIVST2+jgMDAwtmZMCm3V4YxkraTZuew+i4GB8e8ZawNftUiX/9WHr2FgYGzNyF/tDUlUE9E8ZGNgYJzGqF4QqwE3SWur72NgYJzJyEPbfOghaRg0v4+BgbE1Iy94TQpw1SpgvhMMDIxdGUkJvvqba0Ae6MtVQwwMjK0Z+bVvMkbWGxGL0lcMDIytGXkS2xuhyAtnvQQbAwPjHEY1QZ1sJW8wlA8UAwPjGEYvaFZbnl9pOWBgYGzNmATHnFcdKVt228XAwNiCsbZh2RtCXTA6hoGBcQAjbz1WE91e7E+O8m2XAwMDY1NGNaQm7OqIWHWItny6GBgYWzBWldKur3TV0bHo0DEwMDZlzMe8qttNynbVMI2BgbE3o9cNrC7QG+DIDwsDA+MERjVBrY5E9EJ5tWGAgYFxAqPaAJiE5sl/gEInFgMDA2OQslbDenSUGBgYGMXF5m3LvMGAgYFxDiO/0vU2OhnpWFxuw8DAuCGjN+KQl8zyTfTapRgYGFszfgAyz+TzAopGfwAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+    <meta charset="utf-8">
+    
+    <meta name="google-site-verification" content="21k73v5G8oRoUeP-cTwUyeD5lkZ5asW5K667uxY6oqI">
+    
+    
+    <meta name="baidu-site-verification" content="I1QHrtH1Ea">
+    
+    
+    
+    <link rel="canonical" href="https://www.williamife.com//2019/03/21/关于Web安全常见的攻防姿势/">
+    
+    
+    <title>关于6种Web安全常见的攻防姿势 | 我的博客 | What&#39;s past is prologue.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Web安全">
+    <meta name="description" content="关于Web安全的问题，是一个老生常谈的问题，作为离用户最近的一层，我们大前端应该把手伸的更远一点。 我们最常见的Web安全攻击有以下几种：  XSS 跨站脚本攻击 CSRF 跨站请求伪造 URL 跳转漏洞 ClickJacking 点击劫持/UI-覆盖攻击 SQL Injection SQL注入 OS Command Injection OS命令注入  一、XSS XSS （Cross Site">
+<meta name="keywords" content="Web安全">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于6种Web安全常见的攻防姿势">
+<meta property="og:url" content="https://www.williamife.com/2019/03/21/关于Web安全常见的攻防姿势/index.html">
+<meta property="og:site_name" content="我的博客">
+<meta property="og:description" content="关于Web安全的问题，是一个老生常谈的问题，作为离用户最近的一层，我们大前端应该把手伸的更远一点。 我们最常见的Web安全攻击有以下几种：  XSS 跨站脚本攻击 CSRF 跨站请求伪造 URL 跳转漏洞 ClickJacking 点击劫持/UI-覆盖攻击 SQL Injection SQL注入 OS Command Injection OS命令注入  一、XSS XSS （Cross Site">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.williamife.com/img/images/http2.png">
+<meta property="og:updated_time" content="2019-11-27T08:04:18.345Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于6种Web安全常见的攻防姿势">
+<meta name="twitter:description" content="关于Web安全的问题，是一个老生常谈的问题，作为离用户最近的一层，我们大前端应该把手伸的更远一点。 我们最常见的Web安全攻击有以下几种：  XSS 跨站脚本攻击 CSRF 跨站请求伪造 URL 跳转漏洞 ClickJacking 点击劫持/UI-覆盖攻击 SQL Injection SQL注入 OS Command Injection OS命令注入  一、XSS XSS （Cross Site">
+<meta name="twitter:image" content="https://www.williamife.com/img/images/http2.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="我的博客" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">William Cao</h5>
+          <a href="mailto:demondora@qq.com" title="demondora@qq.com" class="mail">demondora@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                关于
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c6664e66fb9a049b41cfdda" target="_blank" >
+                <i class="icon icon-lg icon-juejin"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/William-Cao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.weibo.com/" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">关于6种Web安全常见的攻防姿势</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">关于6种Web安全常见的攻防姿势</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-03-21T09:10:00.000Z" itemprop="datePublished" class="page-time">
+  2019-03-21
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <!-- <h4>TOC</h4> -->
+            <h4>文章目录</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#一、XSS"><span class="post-toc-text">一、XSS</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-反射型"><span class="post-toc-text">1. 反射型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-存储型"><span class="post-toc-text">2. 存储型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3-基于DOM"><span class="post-toc-text">3. 基于DOM</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#二、CSRF"><span class="post-toc-text">二、CSRF</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-通过-Cookie-进行-CSRF-攻击"><span class="post-toc-text">1. 通过 Cookie 进行 CSRF 攻击</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-CSRF攻击的防范"><span class="post-toc-text">2. CSRF攻击的防范</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#三、URL跳转漏洞"><span class="post-toc-text">三、URL跳转漏洞</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-实现方式"><span class="post-toc-text">1. 实现方式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-防御方案"><span class="post-toc-text">2. 防御方案</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#四、ClickJacking"><span class="post-toc-text">四、ClickJacking</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-iframe覆盖"><span class="post-toc-text">1. iframe覆盖</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-图片覆盖"><span class="post-toc-text">2. 图片覆盖</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#五、SQL-Injection"><span class="post-toc-text">五、SQL Injection</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-原理"><span class="post-toc-text">1. 原理</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-攻击"><span class="post-toc-text">2. 攻击</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3-防护"><span class="post-toc-text">3. 防护</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#六、OS命令注入"><span class="post-toc-text">六、OS命令注入</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-exec"><span class="post-toc-text">1. exec</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-execFile-spawn"><span class="post-toc-text">2. execFile/spawn</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-关于Web安全常见的攻防姿势"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">关于6种Web安全常见的攻防姿势</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-03-21 17:10:00" datetime="2019-03-21T09:10:00.000Z"  itemprop="datePublished">2019-03-21</time>
+
+            
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p><strong>关于Web安全的问题，是一个老生常谈的问题，作为离用户最近的一层，我们大前端应该把手伸的更远一点。</strong></p>
+<p>我们最常见的Web安全攻击有以下几种：</p>
+<ol>
+<li><code>XSS</code> 跨站脚本攻击</li>
+<li><code>CSRF</code> 跨站请求伪造</li>
+<li><code>URL</code> 跳转漏洞</li>
+<li><code>ClickJacking</code> 点击劫持/UI-覆盖攻击</li>
+<li><code>SQL Injection</code> SQL注入</li>
+<li><code>OS Command Injection</code> OS命令注入</li>
+</ol>
+<h1 id="一、XSS"><a href="#一、XSS" class="headerlink" title="一、XSS"></a>一、XSS</h1><blockquote>
+<p>XSS （Cross Site Script），中文是跨站脚本攻击；其原本缩写是 CSS，但为了和层叠样式表(Cascading Style Sheet)有所区分，因而在安全领域叫做 XSS。</p>
+</blockquote>
+<p><strong><em>恶意攻击者往Web页面里插入恶意Script代码，当用户浏览该页之时，嵌入其中Web里面的Script代码会被执行，从而达到恶意攻击用户的目的。</em></strong></p>
+<p>XSS攻击可以分为3类：</p>
+<ul>
+<li>反射型 - 非持久型  <code>Reflected XSS</code></li>
+<li>存储型 - 持久型    <code>Stored XSS</code></li>
+<li>基于DOM或本地的XSS  <code>DOM-based or local XSS</code></li>
+</ul>
+<p><br></p>
+<h2 id="1-反射型"><a href="#1-反射型" class="headerlink" title="1. 反射型"></a>1. 反射型</h2><p>反射型 XSS 只是简单地把用户输入的数据 “反射” 给浏览器，这种攻击方式往往需要攻击者诱使用户点击一个恶意链接，或者提交一个表单，或者进入一个恶意网站时，注入脚本进入被攻击者的网站。</p>
+<p><code>假装我是一个恶意链接（Click Me~）</code></p>
+<figure class="highlight js"><figcaption><span>node</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 启http服务</span></span><br><span class="line"><span class="keyword">const</span> server = http.createServer(<span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">  res.setHeader(<span class="string">'Access-Control-Allow-Origin'</span>, <span class="string">'*'</span>);</span><br><span class="line">  res.writeHead(<span class="number">200</span>, &#123;<span class="string">'Content-Type'</span>: <span class="string">'text/html; charset=UTF-8'</span>&#125;);</span><br><span class="line">  res.write(<span class="string">'&lt;script&gt;while(true)alert("反射型 XSS 攻击")&lt;/script&gt;'</span>);</span><br><span class="line">  res.end();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">server.listen(<span class="string">'8000'</span>);</span><br></pre></td></tr></table></figure>
+<p>这样就产生了反射型 XSS 攻击。攻击者可以注入任意的恶意脚本进行攻击，可能注入恶作剧脚本，或者注入能获取用户隐私数据(如cookie)的脚本，这取决于攻击者的目的。</p>
+<h2 id="2-存储型"><a href="#2-存储型" class="headerlink" title="2. 存储型"></a>2. 存储型</h2><p>存储型 XSS 会把用户输入的数据 “存储” 在服务器端，当浏览器请求数据时，脚本从服务器上传回并执行。<code>这种 XSS 攻击具有很强的稳定性。</code></p>
+<p>比较常见的一个场景是攻击者在社区或论坛上写下一篇包含恶意 JavaScript 代码的文章或评论，文章或评论发表后，所有访问该文章或评论的用户，都会在他们的浏览器中执行这段恶意的 JavaScript 代码。</p>
+<figure class="highlight html"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>存储型 XSS<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span>Try Me：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">id</span>=<span class="string">"input"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"btn"</span>&gt;</span>Submit<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">const</span> input = <span class="built_in">document</span>.getElementById(<span class="string">'input'</span>);</span></span><br><span class="line"><span class="javascript">    <span class="keyword">const</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">'btn'</span>);</span></span><br><span class="line"><span class="javascript">    <span class="keyword">let</span> val;</span></span><br><span class="line"></span><br><span class="line"><span class="javascript">    input.addEventListener(<span class="string">'change'</span>, e =&gt; &#123;</span></span><br><span class="line">      val = e.target.value;</span><br><span class="line"><span class="javascript">    &#125;, <span class="literal">false</span>);</span></span><br><span class="line"></span><br><span class="line"><span class="javascript">    btn.addEventListener(<span class="string">'click'</span>, e =&gt; &#123;</span></span><br><span class="line"><span class="javascript">      fetch(<span class="string">'http://localhost:8000/save'</span>, &#123;</span></span><br><span class="line"><span class="javascript">        method: <span class="string">'POST'</span>,</span></span><br><span class="line">        body: val</span><br><span class="line">      &#125;);</span><br><span class="line"><span class="javascript">    &#125;, <span class="literal">false</span>);</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><figcaption><span>node</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> userInput = <span class="string">''</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">handleReequest</span> (<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> method = req.method;</span><br><span class="line">  res.setHeader(<span class="string">'Access-Control-Allow-Origin'</span>, <span class="string">'*'</span>);</span><br><span class="line">  res.setHeader(<span class="string">'Access-Control-Allow-Headers'</span>, <span class="string">'Content-Type'</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (method === <span class="string">'POST'</span> &amp;&amp; req.url === <span class="string">'/save'</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> body = <span class="string">''</span>;</span><br><span class="line">    req.on(<span class="string">'data'</span>, chunk =&gt; &#123;</span><br><span class="line">      body += chunk;</span><br><span class="line">    &#125;);</span><br><span class="line">    req.on(<span class="string">'end'</span>, () =&gt; &#123;</span><br><span class="line">      <span class="keyword">if</span> (body) &#123;</span><br><span class="line">        userInput = body;</span><br><span class="line">      &#125;</span><br><span class="line">      res.end();</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    res.writeHead(<span class="number">200</span>, &#123; <span class="string">'Content-Type'</span>: <span class="string">'text/html; charset=UTF-8'</span> &#125;);</span><br><span class="line">    res.write(userInput);</span><br><span class="line">    res.end();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 启http服务</span></span><br><span class="line"><span class="keyword">const</span> server = http.createServer(<span class="function">(<span class="params">req, res</span>)=&gt;</span> &#123;</span><br><span class="line">  handleReequest(req, res)</span><br><span class="line">&#125;);</span><br><span class="line">server.listen(<span class="string">'8000'</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="3-基于DOM"><a href="#3-基于DOM" class="headerlink" title="3. 基于DOM"></a>3. 基于DOM</h2><p>基于DOM或本地的XSS其实是一种特殊类型的反射型XSS，它是基于DOM文档对象模型的一种漏洞。可以通过DOM来动态修改页面内容，从客户端获取DOM中的数据并在本地执行。<code>基于这个特性，就可以利用JS脚本来实现XSS漏洞的利用。</code></p>
+<figure class="highlight html"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">id</span>=<span class="string">"input"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"btn"</span>&gt;</span>Submit<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"div"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">const</span> input = <span class="built_in">document</span>.getElementById(<span class="string">'input'</span>);</span></span><br><span class="line"><span class="javascript">    <span class="keyword">const</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">'btn'</span>);</span></span><br><span class="line"><span class="javascript">    <span class="keyword">const</span> div = <span class="built_in">document</span>.getElementById(<span class="string">'div'</span>);</span></span><br><span class="line"><span class="javascript">    <span class="keyword">let</span> val;</span></span><br><span class="line"></span><br><span class="line"><span class="javascript">    input.addEventListener(<span class="string">'change'</span>, (e) =&gt; &#123;</span></span><br><span class="line">        val = e.target.value;</span><br><span class="line"><span class="javascript">    &#125;, <span class="literal">false</span>);</span></span><br><span class="line"></span><br><span class="line"><span class="javascript">    btn.addEventListener(<span class="string">'click'</span>, () =&gt; &#123;</span></span><br><span class="line"><span class="xml">        div.innerHTML = `<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">$&#123;val&#125;</span>&gt;</span>Try Me~<span class="tag">&lt;/<span class="name">a</span>&gt;</span>`</span></span><br><span class="line"><span class="javascript">    &#125;, <span class="literal">false</span>);</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>总结:</strong><br>XSS攻击的本质就是，利用一切手段在目标用户的浏览器中执行攻击脚本。</p>
+<p><strong>防范:</strong><br>对于一切用户的输入、输出、客户端的输出内容视为不可信，在数据添加到DOM或者执行了DOM API的时候，我们需要对内容进行HtmlEncode或JavaScriptEncode，以预防XSS攻击。</p>
+<p><strong><em>现在主流的浏览器内置了防范 XSS 的措施，例如 <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP" target="_blank" rel="noopener">内容安全策略(CSP)</a>。但对于开发者来说，也应该寻找可靠的解决方案来防止 XSS 攻击。</em></strong></p>
+<h1 id="二、CSRF"><a href="#二、CSRF" class="headerlink" title="二、CSRF"></a>二、CSRF</h1><blockquote>
+<p>CSRF(Cross-site request forgery)跨站请求伪造，也被称为“One Click Attack”或者Session Riding，通常缩写为CSRF或者XSRF，是一种对网站的恶意利用。</p>
+</blockquote>
+<p>通常情况下，CSRF 攻击是攻击者借助受害者的 Cookie 骗取服务器的信任，可以在受害者毫不知情的情况下以受害者名义伪造请求发送给受攻击服务器，从而在并未授权的情况下执行在权限保护之下的操作。</p>
+<p>关于浏览器的Cookie策略请参考<a href="https://www.williamife.com/2019/03/04/%E4%BB%8EHTTP%E5%88%B0WEB%E7%BC%93%E5%AD%98/#%E5%85%AD%E3%80%81HTTP-Cookie">HTTP Cookie</a>。</p>
+<p><br></p>
+<h2 id="1-通过-Cookie-进行-CSRF-攻击"><a href="#1-通过-Cookie-进行-CSRF-攻击" class="headerlink" title="1. 通过 Cookie 进行 CSRF 攻击"></a>1. 通过 Cookie 进行 CSRF 攻击</h2><p>假设有一个BBS站点<code>http://www.a.com</code>:</p>
+<ol>
+<li><p>当用户登录之后，会设置如下 cookie：<br><code>res.setHeader(&#39;Set-Cookie&#39;, [&#39;user=william; expires=Fri, 23 Mar 2019 00:00:00 GMT;&#39;])</code></p>
+</li>
+<li><p>当登录后的用户发起 <code>http://www.a.com/delete?id=666666</code> 请求时，会删除 id 为 666666 的帖子。</p>
+</li>
+<li><p>CSRF攻击者准备的网站B：<code>&lt;img src=&quot;http://www.a.com/delete?id=666666&quot;&gt;</code></p>
+</li>
+<li><p>当登录用户访问攻击者的网站B时，会向 <code>www.a.com</code> 发起一个删除用户帖子的请求。此时若用户在切换到 <code>www.a.com</code> 的帖子页面刷新，会发现ID 为 666666 的帖子已经被删除。</p>
+</li>
+</ol>
+<p>在站点没有做做任何 CSRF 防御的情况下，要完成一次CSRF攻击，受害者必须依次完成两个步骤：</p>
+<ul>
+<li>登录受信任网站A，并在本地生成Cookie。</li>
+<li>在不登出A的情况下，访问危险网站B。</li>
+</ul>
+<p><br></p>
+<h2 id="2-CSRF攻击的防范"><a href="#2-CSRF攻击的防范" class="headerlink" title="2. CSRF攻击的防范"></a>2. CSRF攻击的防范</h2><pre><code>1.验证 HTTP Referer 字段
+2.添加 Token 验证
+3.限制 Cookie
+4.验证码
+</code></pre><p><strong><em>尽管CSRF听起来像跨站脚本(XSS)，但它与XSS非常不同，XSS利用站点内的信任用户，而CSRF则通过伪装来自受信任用户的请求来利用受信任的网站。与XSS攻击相比，CSRF攻击往往不大流行(因此对其进行防范的资源也相当稀少)和难以防范，所以被认为比XSS更具危险性。但往往同XSS一同作案!</em></strong></p>
+<p><br></p>
+<h1 id="三、URL跳转漏洞"><a href="#三、URL跳转漏洞" class="headerlink" title="三、URL跳转漏洞"></a>三、URL跳转漏洞</h1><blockquote>
+<p>借助未验证的URL跳转，将应用程序引导到不安全的第三方区域，从而导致的安全问题。</p>
+</blockquote>
+<p>  <img src="/img/images/http2.png" alt></p>
+<p>当用户点击后,经过服务器或者浏览器解析后，将会跳到恶意的网站中。</p>
+<pre><code>http://a.baidu.com/index?act=go&amp;url=http://evil.cn/
+http://b.baidu.com/safecheck.html?id=1&amp;url=http://evil.cn/
+http://c.baidu.com/f/user/passport?jumpUrl=http://evil.cn/
+</code></pre><h2 id="1-实现方式"><a href="#1-实现方式" class="headerlink" title="1. 实现方式"></a>1. 实现方式</h2><ul>
+<li>META标签内跳转</li>
+<li>Javascript跳转</li>
+<li>Header头跳转</li>
+</ul>
+<p><strong><em>通过以GET或者POST的方式接收将要跳转的URL，然后通过上面的几种方式的其中一种来跳转到目标URL。一方面，由于用户的输入会进入Meta，javascript，http头所以都可能发生相应上下文的漏洞，如xss等等，但是同时，即使只是对于URL跳转本身功能方面就存在一个缺陷，因为会将用户浏览器从可信的站点导向到不可信的站点，同时如果跳转的时候带有敏感数据一样可能将敏感数据泄漏给不可信的第三方。</em></strong></p>
+<h2 id="2-防御方案"><a href="#2-防御方案" class="headerlink" title="2. 防御方案"></a>2. 防御方案</h2><p><code>① referer的限制</code><br>如果确定传递URL参数进入的来源，我们可以通过该方式实现安全限制，保证该URL的有效性，避免恶意用户自己生成跳转链接</p>
+<p><code>② 加入有效性验证Token</code><br>我们保证所有生成的链接都是来自于我们可信域的，通过在生成的链接里加入用户不可控的Token对生成的链接进行校验，可以避免用户生成自己的恶意链接从而被利用，但是如果功能本身要求比较开放，可能导致有一定的限制。</p>
+<p><br></p>
+<h1 id="四、ClickJacking"><a href="#四、ClickJacking" class="headerlink" title="四、ClickJacking"></a>四、ClickJacking</h1><blockquote>
+<p>ClickJacking点击劫持，也叫UI覆盖攻击，攻击者会利用一个或多个透明或不透明的层来诱骗用户支持点击按钮的操作，而实际的点击确实用户看不到的一个按钮，从而达到在用户不知情的情况下实施攻击。</p>
+</blockquote>
+<h2 id="1-iframe覆盖"><a href="#1-iframe覆盖" class="headerlink" title="1. iframe覆盖"></a>1. iframe覆盖</h2><p>这种攻击方式的关键在于可以实现页中页的<code>&lt;iframe&gt;</code>标签，并且可以使用css样式表将他不可见。</p>
+<p>防止点击劫持有两种主要方法：</p>
+<ol>
+<li><p>X-FRAME-OPTIONS<br>X-FRAME-OPTIONS是微软提出的一个http响应首部，指示浏览器不允许从其他域进行取景，专门用来防御利用iframe嵌套的点击劫持攻击。并且在IE8、Firefox3.6、Chrome4以上的版本均能很好的支持。<br><code>DENY</code> : 拒绝任何域加载<br><code>SAMEORIGIN</code> : 允许同源域下加载<br><code>ALLOW-FROM</code> : 可以定义允许frame加载的页面地址</p>
+</li>
+<li><p>顶层判断<br>在UI中采用防御性代码，以确保当前帧是最顶层的窗口,如:<br><code>top != self || top.location != self.location || top.location != location</code></p>
+</li>
+</ol>
+<h2 id="2-图片覆盖"><a href="#2-图片覆盖" class="headerlink" title="2. 图片覆盖"></a>2. 图片覆盖</h2><p>图片覆盖攻击（Cross Site Image Overlaying），攻击者使用一张或多张图片，利用图片的style或者能够控制的CSS，将图片覆盖在网页上，形成点击劫持。当然图片本身所带的信息可能就带有欺骗的含义，这样不需要用户点击，也能达到欺骗的目的。</p>
+<figure class="highlight html"><figcaption><span>html</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"http://www.a.com/delete?id=666666"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"~~~"</span> <span class="attr">style</span>=<span class="string">"~~~"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>解决方案: 在防御图片覆盖攻击时，需要检查用户提交的HTML代码中，img标签的style属性是否可能导致浮出。</p>
+<p><br></p>
+<h1 id="五、SQL-Injection"><a href="#五、SQL-Injection" class="headerlink" title="五、SQL Injection"></a>五、SQL Injection</h1><blockquote>
+<p>SQL 注入漏洞（SQL Injection）是 Web 开发中最常见的一种安全漏洞。可以用它来从数据库获取敏感信息，或者利用数据库的特性执行添加用户，导出文件等一系列恶意操作，甚至有可能获取数据库乃至系统用户最高权限。</p>
+</blockquote>
+<h2 id="1-原理"><a href="#1-原理" class="headerlink" title="1. 原理"></a>1. 原理</h2><p>SQL注入攻击指的是通过构建特殊的输入作为参数传入Web应用程序，而这些输入大都是SQL语法里的一些组合，通过执行SQL语句进而执行攻击者所要的操作，其主要原因是程序没有细致地过滤用户输入的数据，致使非法数据侵入系统。</p>
+<p>根据相关技术原理，SQL注入可以分为平台层注入和代码层注入。前者由不安全的数据库配置或数据库平台的漏洞所致；后者主要是由于程序员对输入未进行细致地过滤，从而执行了非法的数据查询。基于此，SQL注入的产生原因通常表现在以下几方面：</p>
+<p>① 不当的类型处理；<br>② 不安全的数据库配置；<br>③ 不合理的查询集处理；<br>④ 不当的错误处理；<br>⑤ 转义字符处理不合适；<br>⑥ 多个提交处理不当。</p>
+<h2 id="2-攻击"><a href="#2-攻击" class="headerlink" title="2. 攻击"></a>2. 攻击</h2><p>当应用程序使用输入内容来构造动态sql语句以访问数据库时，会发生sql注入攻击。如果代码使用存储过程，而这些存储过程作为包含未筛选的用户输入的字符串来传递，也会发生sql注入。sql注入可能导致攻击者使用应用程序登陆在数据库中执行命令。相关的SQL注入可以通过测试工具pangolin进行。</p>
+<h2 id="3-防护"><a href="#3-防护" class="headerlink" title="3. 防护"></a>3. 防护</h2><p>① 永远不要信任用户的输入。对用户的输入进行校验，可以通过正则表达式，或限制长度；对单引号和双”-“进行转换等。<br>② 永远不要使用动态拼装sql，可以使用参数化的sql或者直接使用存储过程进行数据查询存取。<br>③ 永远不要使用管理员权限的数据库连接，为每个应用使用单独的权限有限的数据库连接。<br>④ 不要把机密信息直接存放，加密或者hash掉密码和敏感的信息。<br>⑤ 应用的异常信息应该给出尽可能少的提示，最好使用自定义的错误信息对原始错误信息进行包装<br>⑥ sql注入的检测方法一般采取辅助软件或网站平台来检测，软件一般采用sql注入检测工具jsky，网站平台就有亿思网站安全平台检测工具MDCSOFT SCAN等。采用MDCSOFT-IPS可以有效的防御SQL注入，XSS攻击等。</p>
+<p><br></p>
+<h1 id="六、OS命令注入"><a href="#六、OS命令注入" class="headerlink" title="六、OS命令注入"></a>六、OS命令注入</h1><blockquote>
+<p>OS 注入攻击是指程序提供了直接执行 Shell 命令的函数的场景，当攻击者不合理使用，且开发者对用户参数未考虑安全因素的话，就会执行恶意的命令调用，被攻击者利用。</p>
+</blockquote>
+<p>OS 命令注入其实原理和 SQL 注入是类似的，只是场景不一样而已。<br>在 Node.js 中可以使用 <code>exec()</code> 执行命令通过传入一段字符串命令，并把一个错误或命令处理结果回传至回调函数中。</p>
+<h2 id="1-exec"><a href="#1-exec" class="headerlink" title="1. exec"></a>1. exec</h2><figure class="highlight js"><figcaption><span>node</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> userInput = <span class="string">"user input"</span>;</span><br><span class="line">child_process.exec(<span class="string">'ls -l '</span> + userInput, (err, data) =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(data);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>攻击者可以使用一个分号”;”来结束命令，并开始一个新的调用，他们可以使用反引号或$()来运行子命令。还有很多潜在的滥用。</p>
+<p><strong>在child_process.exec引擎下，将调用执行”/bin/sh”。而不是目标程序。已发送的命令只是被传递给一个新的”/bin/ sh’进程来执行shell。 child_process.exec的名字有一定误导性 - 这是一个bash的解释器，而不是启动一个程序。这意味着，如果直接执行用户输入的参数，所有的shell字符可能会产生毁灭性的后果。</strong></p>
+<h2 id="2-execFile-spawn"><a href="#2-execFile-spawn" class="headerlink" title="2. execFile/spawn"></a>2. execFile/spawn</h2><p>在 Node.js 中除了 exec() 之外，还有 execFile() 和 spawn() 两个方法也可以用来执行系统命令。它们和 exec() 的区别是后者是直接将一个命令字符串传给 /bin/sh 执行，而前者是提供了一个数组作为参数容器，最后参数会被直接传到 C 的命令执行方法 execve() 中，不容易执行额外的参数。</p>
+<figure class="highlight js"><figcaption><span>child_process.execFile</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> path = <span class="string">"user input"</span>;</span><br><span class="line">child_process.execFile(<span class="string">'/bin/ls'</span>, [<span class="string">'-l'</span>, path], (err, result) =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(result)</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><figcaption><span>child_process.spawn</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> path = <span class="string">"user input"</span>;</span><br><span class="line"><span class="keyword">let</span> ls = child_process.spawn(<span class="string">'/bin/ls'</span>, [<span class="string">'-l'</span>, path])</span><br><span class="line">ls.stdout.on(<span class="string">'data'</span>, data =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(data.toString());</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p><code>注意：</code>使用spawn或execFile并不总是安全的。例如，运行 /bin/find，并传入用户输入参数仍有可能导致系统被攻陷。 find命令有一些选项，允许读/写任意文件。</p>
+<ul>
+<li>避免使用child_process.exec，当需要包含用户输入的参数时更是如此，请牢记。</li>
+<li>尽量避免让用户传入参数，使用选择项比让用户直接输入字符串要好得多。</li>
+<li>必须允许用户输入参数的情况下，请广泛参考该命令的参数，确定哪些选项是安全的，并建立一个白名单。</li>
+</ul>
+<p><br></p>
+<p>参考文章：</p>
+<ul>
+<li><a href="https://segmentfault.com/a/1190000018073845" target="_blank" rel="noopener">常见六大Web安全攻防解析</a></li>
+<li><a href="https://blog.csdn.net/ghostxbh/article/details/82142095" target="_blank" rel="noopener">Web安全的三个攻防姿势</a></li>
+<li><a href="http://blog.nsfocus.net/offensive-defensive-stances-web-security/" target="_blank" rel="noopener">关于Web安全的三个攻防姿势</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        分享就是回顾自己所学的知识，欢迎大家交流~
+        
+    </div>
+    
+    <footer>
+        <a href="https://www.williamife.com">
+            <img src="/img/avatar.jpg" alt="William Cao">
+            William Cao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Web安全/">Web安全</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2019/03/21/关于Web安全常见的攻防姿势/&title=《关于6种Web安全常见的攻防姿势》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2019/03/21/关于Web安全常见的攻防姿势/&title=《关于6种Web安全常见的攻防姿势》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2019/03/21/关于Web安全常见的攻防姿势/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《关于6种Web安全常见的攻防姿势》 — 我的博客&url=https://www.williamife.com/2019/03/21/关于Web安全常见的攻防姿势/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2019/03/21/关于Web安全常见的攻防姿势/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2019/03/28/浅谈IO模型与Event Loop/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">I/O模型、Libuv和Eventloop</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/03/11/解决跨域的N种方法/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">解决跨域的N种方法</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷赏赐~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>William Cao &copy; 2018 - 2021</span></p>
+        <p> 
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">京ICP备19030143号-1</a>
+                
+            </span>
+            <span>
+                
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802031297" target="_blank">京公网安备11010802031297号</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2019/03/21/关于Web安全常见的攻防姿势/&title=《关于6种Web安全常见的攻防姿势》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2019/03/21/关于Web安全常见的攻防姿势/&title=《关于6种Web安全常见的攻防姿势》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2019/03/21/关于Web安全常见的攻防姿势/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《关于6种Web安全常见的攻防姿势》 — 我的博客&url=https://www.williamife.com/2019/03/21/关于Web安全常见的攻防姿势/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2019/03/21/关于Web安全常见的攻防姿势/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACr0lEQVR42u3aS27DMAwFwN7/0um2QGrnkRTTFBivjCAfjRYm88Svr/h6/LieX7+6f/7U1f3VL97/+rELDw8Pb7D0+2Xl77kH3C832Y5kPXh4eHjbvMnP3H9b8lg/VVTw8PDw/guv1/7mLXK15ODh4eF9Jm9eKvJG+Q8KAx4eHl7Ay7+6+uDOQ4RqzHE4a8HDw8OLeXlT+zn3K+d7eHh4eONT9WqReAyuldXi4eHhbT0IowduL0hNWuFkqKsaDePh4eG9h1eNACaDVkl5qEa6l2vAw8PDO8rr/dXvharJw73adr/4Tjw8PLxlXu9oPx8OSGBnRw3w8PDw9ni9tvh+KdUyMHlPIffFw8PDO8qrtsvVBU1GspKS88uq8PDw8BZ41YOr/J/+fcHIc4PeWBgeHh7ee3i9R3xeYJIF9fDNQS48PDy8Fi8/AKu21NUDs+qQQVS08PDw8NZ41Wa3OvyUR73V4aoXn8LDw8Nb41WjhLwV7o0I9IauLlNqPDw8vGXe5FCqGt32QopCg46Hh4e3zOsNVPUOrs4OIly+Hw8PD2+NdypcyDci2ZR5kIGHh4e3was+rMtHUMX7vCw1gwk8PDy8MS95fPcGqqrhbPUwrDB0hYeHh3eUNx8R6LXg+XBVFYOHh4f3fl5+5UViHkZUD+Hw8PDwtnl5UJu3vJOd7gXHhTkvPDw8vEO8Hqm3ZfcbkTf30St4eHh4b+SdfepOTvNH68HDw8M7ypsEEMnPJ1FsL6KNigceHh7eAm9SAHoRQ7JN83s8PDy8bV6vGOSH/acC3Or24eHh4W3zkih2XhImIwjVxh0PDw/vc3i9Rrl6qJbHDdE0GR4eHt4H8KqxaX7Elce4UUOPh4eHt8arHj7NR6/yAGKyWXh4eHgbvOof/nxBk1h2FEDg4eHhbfG+AYyrK/Biv/t2AAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

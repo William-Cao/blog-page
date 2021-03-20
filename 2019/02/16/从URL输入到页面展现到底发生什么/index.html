@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+    <meta charset="utf-8">
+    
+    <meta name="google-site-verification" content="21k73v5G8oRoUeP-cTwUyeD5lkZ5asW5K667uxY6oqI">
+    
+    
+    <meta name="baidu-site-verification" content="I1QHrtH1Ea">
+    
+    
+    
+    <link rel="canonical" href="https://www.williamife.com//2019/02/16/从URL输入到页面展现到底发生什么/">
+    
+    
+    <title>从URL输入到页面展现到底发生什么？ | 我的博客 | What&#39;s past is prologue.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="开发,运维">
+    <meta name="description" content="从开发&amp;amp;运维角度方面来看，总体来说分为以下几个过程：  DNS 解析:将域名解析成 IP 地址 TCP 连接：TCP 三次握手 发送 HTTP 请求 服务器处理请求并返回 HTTP 报文 浏览器解析渲染页面 断开连接：TCP 四次挥手  一、什么是URLURL（Uniform Resource Locator），统一资源定位符，用于定位互联网上资源，俗称网址。 scheme: // hos">
+<meta name="keywords" content="开发,运维">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从URL输入到页面展现到底发生什么？">
+<meta property="og:url" content="https://www.williamife.com/2019/02/16/从URL输入到页面展现到底发生什么/index.html">
+<meta property="og:site_name" content="我的博客">
+<meta property="og:description" content="从开发&amp;amp;运维角度方面来看，总体来说分为以下几个过程：  DNS 解析:将域名解析成 IP 地址 TCP 连接：TCP 三次握手 发送 HTTP 请求 服务器处理请求并返回 HTTP 报文 浏览器解析渲染页面 断开连接：TCP 四次挥手  一、什么是URLURL（Uniform Resource Locator），统一资源定位符，用于定位互联网上资源，俗称网址。 scheme: // hos">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.williamife.com/img/images/page1.png">
+<meta property="og:image" content="https://www.williamife.com/img/images/page2.png">
+<meta property="og:image" content="https://www.williamife.com/img/images/page3.png">
+<meta property="og:image" content="https://www.williamife.com/img/images/page4.png">
+<meta property="og:image" content="https://www.williamife.com/img/images/page5.png">
+<meta property="og:image" content="https://www.williamife.com/img/images/page6.png">
+<meta property="og:image" content="https://www.williamife.com/img/images/page7.png">
+<meta property="og:image" content="https://www.williamife.com/img/images/page8.png">
+<meta property="og:image" content="https://www.williamife.com/img/images/page9.png">
+<meta property="og:image" content="https://www.williamife.com/img/images/page10.png">
+<meta property="og:image" content="https://www.williamife.com/img/images/page11.png">
+<meta property="og:updated_time" content="2019-11-27T07:53:03.571Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从URL输入到页面展现到底发生什么？">
+<meta name="twitter:description" content="从开发&amp;amp;运维角度方面来看，总体来说分为以下几个过程：  DNS 解析:将域名解析成 IP 地址 TCP 连接：TCP 三次握手 发送 HTTP 请求 服务器处理请求并返回 HTTP 报文 浏览器解析渲染页面 断开连接：TCP 四次挥手  一、什么是URLURL（Uniform Resource Locator），统一资源定位符，用于定位互联网上资源，俗称网址。 scheme: // hos">
+<meta name="twitter:image" content="https://www.williamife.com/img/images/page1.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="我的博客" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">William Cao</h5>
+          <a href="mailto:demondora@qq.com" title="demondora@qq.com" class="mail">demondora@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                关于
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c6664e66fb9a049b41cfdda" target="_blank" >
+                <i class="icon icon-lg icon-juejin"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/William-Cao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.weibo.com/" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">从URL输入到页面展现到底发生什么？</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">从URL输入到页面展现到底发生什么？</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-02-16T08:30:00.000Z" itemprop="datePublished" class="page-time">
+  2019-02-16
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <!-- <h4>TOC</h4> -->
+            <h4>文章目录</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#一、什么是URL"><span class="post-toc-text">一、什么是URL</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#二、DNS域名解析"><span class="post-toc-text">二、DNS域名解析</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#DNS的优化与应用"><span class="post-toc-text">DNS的优化与应用</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#OSI参考模型与TCP-IP四层模型"><span class="post-toc-text">OSI参考模型与TCP/IP四层模型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#三、TCP三次握手"><span class="post-toc-text">三、TCP三次握手</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#四、发送-HTTP-请求"><span class="post-toc-text">四、发送 HTTP 请求</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#五、服务器处理请求并返回-HTTP-报文"><span class="post-toc-text">五、服务器处理请求并返回 HTTP 报文</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#六、浏览器解析渲染页面"><span class="post-toc-text">六、浏览器解析渲染页面</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#浏览器的主要构成"><span class="post-toc-text">浏览器的主要构成</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-多进程的浏览器"><span class="post-toc-text">1.多进程的浏览器</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-多线程的浏览器内核"><span class="post-toc-text">2.多线程的浏览器内核</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#浏览器的渲染过程"><span class="post-toc-text">浏览器的渲染过程</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-HTML解析，构建DOM"><span class="post-toc-text">1. HTML解析，构建DOM</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-解析CSS，生成CSS规则树"><span class="post-toc-text">2. 解析CSS，生成CSS规则树</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#3-合并DOM树和CSS规则，生成render树"><span class="post-toc-text">3. 合并DOM树和CSS规则，生成render树</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#4-布局render树（Layout-Reflow），负责各元素尺寸、位置的计算"><span class="post-toc-text">4. 布局render树（Layout/Reflow），负责各元素尺寸、位置的计算</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#5-绘制render树（Paint），绘制页面像素信息"><span class="post-toc-text">5. 绘制render树（Paint），绘制页面像素信息</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#七、断开连接"><span class="post-toc-text">七、断开连接</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-从URL输入到页面展现到底发生什么"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">从URL输入到页面展现到底发生什么？</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-02-16 16:30:00" datetime="2019-02-16T08:30:00.000Z"  itemprop="datePublished">2019-02-16</time>
+
+            
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>从开发&amp;运维角度方面来看，总体来说分为以下几个过程：</p>
+<ul>
+<li>DNS 解析:将域名解析成 IP 地址</li>
+<li>TCP 连接：TCP 三次握手</li>
+<li>发送 HTTP 请求</li>
+<li>服务器处理请求并返回 HTTP 报文</li>
+<li>浏览器解析渲染页面</li>
+<li>断开连接：TCP 四次挥手</li>
+</ul>
+<h2 id="一、什么是URL"><a href="#一、什么是URL" class="headerlink" title="一、什么是URL"></a>一、什么是URL</h2><p>URL（Uniform Resource Locator），统一资源定位符，用于定位互联网上资源，俗称网址。</p>
+<p><code>scheme: // host.domain:port / path / filename ? abc = 123 # 456789</code></p>
+<pre>
+scheme       - 定义因特网服务的类型。常见的协议有 http、https、ftp、file，
+               其中最常见的类型是 http，而 https 则是进行加密的网络传输。
+host         - 定义域主机（http 的默认主机是 www）
+domain       - 定义因特网域名，比如 baidu.com
+port         - 定义主机上的端口号（http 的默认端口号是 80）
+path         - 定义服务器上的路径（如果省略，则文档必须位于网站的根目录中）。
+filename     - 定义文档/资源的名称
+query        - 即查询参数
+fragment     - 即 # 后的hash值，一般用来定位到某个位置
+</pre>
+
+<p><br></p>
+<h2 id="二、DNS域名解析"><a href="#二、DNS域名解析" class="headerlink" title="二、DNS域名解析"></a>二、DNS域名解析</h2><p>在浏览器输入网址后，首先要经过域名解析，因为浏览器并不能直接通过域名找到对应的服务器，而是要通过 IP 地址。</p>
+<ol>
+<li><p>IP 地址<br>IP 地址是指互联网协议地址，是 IP Address 的缩写。IP 地址是 IP 协议提供的一种统一的地址格式，<br>它为互联网上的每一个网络和每一台主机分配一个逻辑地址，以此来屏蔽物理地址的差异。</p>
+</li>
+<li><p>什么是域名解析<br>DNS 协议提供通过域名查找 IP 地址，或逆向从 IP 地址反查域名的服务。<br>DNS 是一个网络服务器，我们的域名解析简单来说就是在 DNS 上记录一条信息记录。</p>
+</li>
+<li><p>浏览器如何通过域名去查询 URL 对应的 IP 呢？<br>DNS域名解析分为递归查询和迭代查询两种方式，现一般为迭代查询。</p>
+</li>
+</ol>
+<p><br></p>
+<p>  <img src="/img/images/page1.png" alt>  </p>
+<h3 id="DNS的优化与应用"><a href="#DNS的优化与应用" class="headerlink" title="DNS的优化与应用"></a>DNS的优化与应用</h3><ol>
+<li><p>DNS缓存<br><code>DNS存在着多级缓存，从离浏览器的距离排序的话，有以下几种: 浏览器缓存，系统缓存，路由器缓存，IPS服务器缓存，根域名服务器缓存，顶级域名服务器缓存，主域名服务器缓存。</code></p>
+</li>
+<li><p>DNS负载均衡<br><code>(DNS重定向)DNS负载均衡技术的实现原理是在DNS服务器中为同一个主机名配置多个IP地址，在应答DNS查询时，DNS服务器对每个查询将以DNS文件中主机记录的IP地址按顺序返回不同的解析结果，将客户端的访问引导到不同的机器上去，使得不同的客户端访问不同的服务器，从而达到负载均衡的目的。</code></p>
+</li>
+</ol>
+<p><em>大家耳熟能详的CDN(Content Delivery Network)就是利用DNS的重定向技术，DNS服务器会返回一个跟用户最接近的点的IP地址给用户，CDN节点的服务器负责响应用户的请求，提供所需的内容。</em></p>
+<ol start="3">
+<li>dns-prefetch<br><code>DNS Prefetch 是一种 DNS 预解析技术。当你浏览网页时，浏览器会在加载网页时对网页中的域名进行解析缓存，这样在你单击当前网页中的连接时就无需进行 DNS 的解析，减少用户等待时间，提高用户体验。</code></li>
+</ol>
+<p><br></p>
+<h2 id="OSI参考模型与TCP-IP四层模型"><a href="#OSI参考模型与TCP-IP四层模型" class="headerlink" title="OSI参考模型与TCP/IP四层模型"></a>OSI参考模型与TCP/IP四层模型</h2><p>  <img src="/img/images/page2.png" alt></p>
+<p><br></p>
+<h2 id="三、TCP三次握手"><a href="#三、TCP三次握手" class="headerlink" title="三、TCP三次握手"></a>三、TCP三次握手</h2><p>  <img src="/img/images/page3.png" alt></p>
+<ul>
+<li><p>客户端发送一个带 SYN=1，Seq=X 的数据包到服务器端口<code>（第一次握手，由浏览器发起，告诉服务器我要发送请求了）</code></p>
+</li>
+<li><p>服务器发回一个带 SYN=1， ACK=X+1， Seq=Y 的响应包以示传达确认信息<code>（第二次握手，由服务器发起，告诉浏览器我准备接受了，你赶紧发送吧）</code></p>
+</li>
+<li><p>客户端再回传一个带 ACK=Y+1， Seq=Z 的数据包，代表“握手结束”<code>（第三次握手，由浏览器发送，告诉服务器，我马上就发了，准备接受吧）</code></p>
+</li>
+</ul>
+<p><br></p>
+<h2 id="四、发送-HTTP-请求"><a href="#四、发送-HTTP-请求" class="headerlink" title="四、发送 HTTP 请求"></a>四、发送 HTTP 请求</h2><p>TCP 三次握手结束后，开始发送 HTTP 请求报文。</p>
+<p><code>为避免篇幅过长，http协议、缓存等相关内容请移步至：</code><a href="/2019/03/04/从HTTP到WEB缓存/">从HTTP到WEB缓存</a></p>
+<p><br></p>
+<h2 id="五、服务器处理请求并返回-HTTP-报文"><a href="#五、服务器处理请求并返回-HTTP-报文" class="headerlink" title="五、服务器处理请求并返回 HTTP 报文"></a>五、服务器处理请求并返回 HTTP 报文</h2><p>每台服务器上都会安装处理请求的应用——Web server。常见的web server产品有apache、nginx、IIS、Lighttpd等。</p>
+<p><code>假装我是一个传统的MVC模型，RD同学请无视</code><br>  <img src="/img/images/page4.png" alt>  </p>
+<h2 id="六、浏览器解析渲染页面"><a href="#六、浏览器解析渲染页面" class="headerlink" title="六、浏览器解析渲染页面"></a>六、浏览器解析渲染页面</h2><h3 id="浏览器的主要构成"><a href="#浏览器的主要构成" class="headerlink" title="浏览器的主要构成"></a>浏览器的主要构成</h3><p>  <img src="/img/images/page5.png" alt>  </p>
+<pre>
+用户界面    (User Interface)    － 包括地址栏、后退/前进按钮、书签目录等，也就是你所看到的除了用来显示你所请求页面的主窗口之外的其他部分
+
+浏览器引擎  (Browser Engine)    － 用来查询及操作渲染引擎的接口
+
+渲染引擎    (Rendering Engine)  － 用来显示请求的内容，例如，如果请求内容为html，它负责解析html及css，并将解析后的结果显示出来
+
+网络        (Networking)        － 用来完成网络调用，例如http请求，它具有平台无关的接口，可以在不同平台上工作
+
+JS解释器    (JS Interpreter)    － 用来解释执行JS代码
+
+UI后端      (UI Backend)        － 用来绘制类似组合选择框及对话框等基本组件，具有不特定于某个平台的通用接口，底层使用操作系统的用户接口
+
+数据存储    (DB Persistence)    － 属于持久层，浏览器需要在硬盘中保存类似cookie的各种数据，HTML5定义了web database技术，这是一种轻量级完整的客户端存储技术
+</pre>
+
+<h4 id="1-多进程的浏览器"><a href="#1-多进程的浏览器" class="headerlink" title="1.多进程的浏览器"></a>1.多进程的浏览器</h4><p>浏览器是多进程的，有一个主控进程，以及每一个tab页面都会新开一个进程</p>
+<p>进程可能包括主控进程，插件进程，GPU，tab页（浏览器内核）等…</p>
+<pre>
+1.Browser进程：浏览器的主进程（负责协调、主控），只有一个
+
+2.第三方插件进程：每种类型的插件对应一个进程，仅当使用该插件时才创建
+
+3.GPU进程：最多一个，用于3D绘制
+
+4.浏览器渲染进程（内核）：默认每个Tab页面一个进程，互不影响，控制页面渲染，
+  脚本执行，事件处理等 (有时候会优化，如多个空白tab会合并成一个进程）
+</pre>
+
+<h4 id="2-多线程的浏览器内核"><a href="#2-多线程的浏览器内核" class="headerlink" title="2.多线程的浏览器内核"></a>2.多线程的浏览器内核</h4><p>每一个tab页面可以看作是浏览器内核进程，然后这个进程是多线程的，它有几大类子线程：</p>
+<pre>
+1. GUI线程
+
+2. JS引擎线程
+
+3. 事件触发线程
+
+4. 定时器线程
+
+5. 网络请求线程
+</pre>
+
+<p><br></p>
+<h3 id="浏览器的渲染过程"><a href="#浏览器的渲染过程" class="headerlink" title="浏览器的渲染过程"></a>浏览器的渲染过程</h3><p>浏览器内核拿到内容后，渲染步骤大致可以分为以下几步：</p>
+<pre>
+1. 解析HTML，构建DOM树
+
+2. 解析CSS，生成CSS规则树
+
+3. 合并DOM树和CSS规则，生成render树
+
+4. 布局render树（Layout/reflow），负责各元素尺寸、位置的计算
+
+5. 绘制render树（paint），绘制页面像素信息
+</pre>
+
+<p><code>以webkit内核为例</code><br>  <img src="/img/images/page6.png" alt>  </p>
+<p><br></p>
+<h4 id="1-HTML解析，构建DOM"><a href="#1-HTML解析，构建DOM" class="headerlink" title="1. HTML解析，构建DOM"></a>1. HTML解析，构建DOM</h4><p>简单的理解，这一步的流程是这样的：浏览器解析HTML，构建DOM树。<br>解析HTML到构建出DOM当然过程可以简述如下：</p>
+<pre>
+Bytes → characters → tokens → nodes → DOM
+</pre>
+
+<p>  <img src="/img/images/page7.png" alt>  </p>
+<p><code>其中比较关键的几个步骤</code><br><!-- <pre> --></p>
+<ol>
+<li><p>Conversion转换：浏览器将获得的HTML内容（Bytes）基于他的编码转换为单个字符</p>
+</li>
+<li><p>Tokenizing分词：浏览器按照HTML规范标准将这些字符转换为不同的标记token。每个token都有自己独特的含义以及规则集</p>
+</li>
+<li><p>Lexing词法分析：分词的结果是得到一堆的token，此时把他们转换为对象，这些对象分别定义他们的属性和规则</p>
+</li>
+<li><p>DOM构建：因为HTML标记定义的就是不同标签之间的关系，这个关系就像是一个树形结构一样<br>例如：body对象的父节点就是HTML对象，然后段略p对象的父节点就是body对象</p>
+</li>
+</ol>
+<p><br></p>
+<h4 id="2-解析CSS，生成CSS规则树"><a href="#2-解析CSS，生成CSS规则树" class="headerlink" title="2. 解析CSS，生成CSS规则树"></a>2. 解析CSS，生成CSS规则树</h4><p>同理，CSS规则树的生成也是类似。</p>
+<pre>
+Bytes → characters → tokens → nodes → CSSOM
+</pre>
+
+<p>  <img src="/img/images/page8.png" alt>  </p>
+<p><br></p>
+<h4 id="3-合并DOM树和CSS规则，生成render树"><a href="#3-合并DOM树和CSS规则，生成render树" class="headerlink" title="3. 合并DOM树和CSS规则，生成render树"></a>3. 合并DOM树和CSS规则，生成render树</h4><p>当DOM树和CSSOM都有了后，就要开始构建渲染树了</p>
+<p>一般来说，渲染树和DOM树相对应的，但不是严格意义上的一一对应,因为有一些不可见的DOM元素不会插入到渲染树中，如head这种不可见的标签或者display: none等</p>
+<p>  <img src="/img/images/page9.png" alt>  </p>
+<p><br></p>
+<h4 id="4-布局render树（Layout-Reflow），负责各元素尺寸、位置的计算"><a href="#4-布局render树（Layout-Reflow），负责各元素尺寸、位置的计算" class="headerlink" title="4. 布局render树（Layout/Reflow），负责各元素尺寸、位置的计算"></a>4. 布局render树（Layout/Reflow），负责各元素尺寸、位置的计算</h4><p>布局：通过渲染树中渲染对象的信息，计算出每一个渲染对象的位置和尺寸。</p>
+<p><br></p>
+<h4 id="5-绘制render树（Paint），绘制页面像素信息"><a href="#5-绘制render树（Paint），绘制页面像素信息" class="headerlink" title="5. 绘制render树（Paint），绘制页面像素信息"></a>5. 绘制render树（Paint），绘制页面像素信息</h4><p>绘制阶段，系统会遍历呈现树，并调用呈现器的“paint”方法，将呈现器的内容显示在屏幕上。</p>
+<p>  <img src="/img/images/page10.png" alt>  </p>
+<pre>
+这张图片中重要的四个步骤
+1. 计算CSS样式
+
+2. 构建渲染树
+
+3. 布局，主要定位坐标和大小，是否换行，各种position overflow z-index属性
+
+4. 绘制，将图像绘制出来
+</pre>
+
+<ul>
+<li>Layout，也称为Reflow，即回流。一般意味着元素的内容、结构、位置或尺寸发生了变化，需要重新计算样式和渲染树</li>
+<li>Repaint，即重绘。意味着元素发生的改变只是影响了元素的一些外观之类的时候（例如，背景色，边框颜色，文字颜色等），此时只需要应用新样式绘制这个元素就可以了</li>
+</ul>
+<p><br></p>
+<h2 id="七、断开连接"><a href="#七、断开连接" class="headerlink" title="七、断开连接"></a>七、断开连接</h2><p>当数据传送完毕，需要断开 tcp 连接，此时发起 tcp 四次挥手。</p>
+<p>  <img src="/img/images/page11.png" alt>  </p>
+<ul>
+<li>发起方向被动方发送报文，Fin、Ack、Seq，表示已经没有数据传输了。并进入 FIN_WAIT_1 状态。<br><code>(第一次挥手：由浏览器发起的，发送给服务器，我请求报文发送完了，你准备关闭吧)</code></li>
+<li>被动方发送报文，Ack、Seq，表示同意关闭请求。此时主机发起方进入 FIN_WAIT_2 状态。<br><code>(第二次挥手：由服务器发起的，告诉浏览器，我请求报文接受完了，我准备关闭了，你也准备吧)</code></li>
+<li>被动方向发起方发送报文段，Fin、Ack、Seq，请求关闭连接。并进入 LAST_ACK 状态。<br><code>(第三次挥手：由服务器发起，告诉浏览器，我响应报文发送完了，你准备关闭吧)</code></li>
+<li>发起方向被动方发送报文段，Ack、Seq。然后进入等待 TIME_WAIT 状态。被动方收到发起方的报文段以后关闭连接。发起方等待一定时间未收到回复，则正常关闭。<br><code>(第四次挥手：由浏览器发起，告诉服务器，我响应报文接受完了，我准备关闭了，你也准备吧)</code></li>
+</ul>
+<p><br></p>
+<p>参考文章：</p>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/34453198?group_id=957277541711540224" target="_blank" rel="noopener">从输入URL到页面加载的过程</a></li>
+<li><a href="https://www.cnblogs.com/imyalost/p/6086808.html" target="_blank" rel="noopener">TCP/IP协议</a></li>
+<li><a href="https://www.cnblogs.com/leezhxing/p/4524176.html" target="_blank" rel="noopener">TCP的三次握手与四次分手</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript" target="_blank" rel="noopener">MDN Web Docs</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        分享就是回顾自己所学的知识，欢迎大家交流~
+        
+    </div>
+    
+    <footer>
+        <a href="https://www.williamife.com">
+            <img src="/img/avatar.jpg" alt="William Cao">
+            William Cao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/运维/">运维</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2019/02/16/从URL输入到页面展现到底发生什么/&title=《从URL输入到页面展现到底发生什么？》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2019/02/16/从URL输入到页面展现到底发生什么/&title=《从URL输入到页面展现到底发生什么？》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2019/02/16/从URL输入到页面展现到底发生什么/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《从URL输入到页面展现到底发生什么？》 — 我的博客&url=https://www.williamife.com/2019/02/16/从URL输入到页面展现到底发生什么/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2019/02/16/从URL输入到页面展现到底发生什么/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2019/03/04/从HTTP到WEB缓存/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">从HTTP到WEB缓存</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/12/23/JS隐式转换/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">关于JS隐式转换的那些小事儿</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷赏赐~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>William Cao &copy; 2018 - 2021</span></p>
+        <p> 
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">京ICP备19030143号-1</a>
+                
+            </span>
+            <span>
+                
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802031297" target="_blank">京公网安备11010802031297号</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2019/02/16/从URL输入到页面展现到底发生什么/&title=《从URL输入到页面展现到底发生什么？》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2019/02/16/从URL输入到页面展现到底发生什么/&title=《从URL输入到页面展现到底发生什么？》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2019/02/16/从URL输入到页面展现到底发生什么/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《从URL输入到页面展现到底发生什么？》 — 我的博客&url=https://www.williamife.com/2019/02/16/从URL输入到页面展现到底发生什么/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2019/02/16/从URL输入到页面展现到底发生什么/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACqklEQVR42u3aQW7DMAwEwPz/0+m1QGF3SYqNC4xPQRI7GhWQ2KVer/h6f7uuPr165/3jur/3fgyvjQsPDw9vMPSroVy9TjD585Mn52PGw8PD2+bdL8T5z0/w+aaSb1F4eHh4T+NNluycgYeHh/d/eXkAkcQHV99P3sfDw8N7Ai8PC3oFcXXi7p+zkrXg4eHhxbxq8+kJr1f6e3h4eHjjrvpkq8hL5Gp4UbgXDw8Pb4FXXZSrJfX94OZtsyiqwMPDwzvKqy6+1SOkvbZWEnBE0TAeHh7eGq93c8LOt5l8kyhMMR4eHt4Cr/pjvW2gMJTgydVDYHh4eHhneb3gNR9o8pzega2o1MbDw8P7EK9a5uabx2RCo7gEDw8Pb413tk3Va55Nmm2Xo8LDw8Nb4CUhQm+BnrS18mMEhZMReHh4eGu8aqxQbe1PrvywFx4eHt42r7cN9Npg1QFVN5LCMQI8PDy8Fi//tz8pcJMlu1pA96JhPDw8vG1eHhlMlv5TzbPyoSs8PDy8P+FV49S8Zs9hCeCXu/Dw8PAWeNV4tBen5pMyn+5CJIGHh4fX4lWX3XnpnCzoyXRE48TDw8Nb5vV+OA+FT8UZyRaCh4eHt82blLP5BOX3nirK8fDw8LZ5k0NUo6NR1UHnATEeHh7eAi8vmnsFdP60fMrw8PDwPsurRrHV4VbDjir4lyIeDw8Pb4FXDQt6hXJhjyqym10+PDw8vME338XrVJvqbNR7+SkeHh7eAi+/kpvziUgijN6EvnoXHh4eXpE3+cmclx9NuH9d3hjw8PDw1ni9ALcXvPYmZdTfw8PDw/sQL1/iJ0cKksI9qZnx8PDwnsCbHI06tUmUg1o8PDy8Nd6pMKJ6UKDZssr/YHh4eHgLvOoNeRiRt9B63z82NXh4eHgp7wtoHgMnlJ/f0QAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

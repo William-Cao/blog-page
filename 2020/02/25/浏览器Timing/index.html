@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+    <meta charset="utf-8">
+    
+    <meta name="google-site-verification" content="21k73v5G8oRoUeP-cTwUyeD5lkZ5asW5K667uxY6oqI">
+    
+    
+    <meta name="baidu-site-verification" content="I1QHrtH1Ea">
+    
+    
+    
+    <link rel="canonical" href="https://www.williamife.com//2020/02/25/浏览器Timing/">
+    
+    
+    <title>Network 之 Resource Timing字段解析 | 我的博客 | What&#39;s past is prologue.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="开发">
+    <meta name="description" content="Resource Timing API提供了让用户查看一个资源从输入url到下载下来经历的各个过程所消耗的时间，借此可以来衡量网站的性能。我们可以通过Resource Timing Api监控哪个阶段消耗时间比较长，然后针对该阶段进行优化。了解网络下载资源的阶段至关重要。这是修复加载问题的基础。  一、浏览器DevTools">
+<meta name="keywords" content="开发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Network 之 Resource Timing字段解析">
+<meta property="og:url" content="https://www.williamife.com/2020/02/25/浏览器Timing/index.html">
+<meta property="og:site_name" content="我的博客">
+<meta property="og:description" content="Resource Timing API提供了让用户查看一个资源从输入url到下载下来经历的各个过程所消耗的时间，借此可以来衡量网站的性能。我们可以通过Resource Timing Api监控哪个阶段消耗时间比较长，然后针对该阶段进行优化。了解网络下载资源的阶段至关重要。这是修复加载问题的基础。  一、浏览器DevTools">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.williamife.com/img/images/web1.png">
+<meta property="og:image" content="https://www.williamife.com/img/images/web2.png">
+<meta property="og:updated_time" content="2020-02-24T09:49:44.597Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Network 之 Resource Timing字段解析">
+<meta name="twitter:description" content="Resource Timing API提供了让用户查看一个资源从输入url到下载下来经历的各个过程所消耗的时间，借此可以来衡量网站的性能。我们可以通过Resource Timing Api监控哪个阶段消耗时间比较长，然后针对该阶段进行优化。了解网络下载资源的阶段至关重要。这是修复加载问题的基础。  一、浏览器DevTools">
+<meta name="twitter:image" content="https://www.williamife.com/img/images/web1.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="我的博客" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">William Cao</h5>
+          <a href="mailto:demondora@qq.com" title="demondora@qq.com" class="mail">demondora@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                关于
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c6664e66fb9a049b41cfdda" target="_blank" >
+                <i class="icon icon-lg icon-juejin"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/William-Cao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.weibo.com/" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Network 之 Resource Timing字段解析</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Network 之 Resource Timing字段解析</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-02-25T06:48:00.000Z" itemprop="datePublished" class="page-time">
+  2020-02-25
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <!-- <h4>TOC</h4> -->
+            <h4>文章目录</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#一、浏览器DevTools"><span class="post-toc-text">一、浏览器DevTools</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#二、Resource-Timing-Api"><span class="post-toc-text">二、Resource Timing Api</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-浏览器Timing"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Network 之 Resource Timing字段解析</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-02-25 14:48:00" datetime="2020-02-25T06:48:00.000Z"  itemprop="datePublished">2020-02-25</time>
+
+            
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>Resource Timing API提供了让用户查看一个资源从输入url到下载下来经历的各个过程所消耗的时间，借此可以来衡量网站的性能。我们可以通过Resource Timing Api监控哪个阶段消耗时间比较长，然后针对该阶段进行优化。了解网络下载资源的阶段至关重要。这是修复加载问题的基础。</p>
+</blockquote>
+<h1 id="一、浏览器DevTools"><a href="#一、浏览器DevTools" class="headerlink" title="一、浏览器DevTools"></a>一、浏览器DevTools</h1><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/images/web1.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p><strong>Queueing</strong><code>队列</code><br>排队的时间花费。可能由于该请求被渲染引擎认为是优先级比较低的资源（图片）、服务器不可用、超过浏览器并发请求的最大连接数（Chrome的最大并发连接数是6）。</p>
+<p><strong>Stalled / Blocking</strong><code>停止/阻塞</code><br>是浏览器得到要发出这个请求的指令，到请求可以发出的等待时间，一般是代理协商、以及等待可复用的TCP连接释放的时间，不包括DNS查询、建立TCP连接等时间等。</p>
+<p><strong>Proxy negotiation</strong><code>代理协商</code><br>与代理服务器连接的时间花费(如有)。<br>主要是浏览器通过代理服务器去服务目标服务，如本地代理Fiddler，一般无法优化。</p>
+<p><strong>DNS Lookup</strong><code>DNS查找</code><br>执行DNS查找的时间，每个新域pagerequires DNS查找一个完整的往返。 DNS查询的时间，当本地DNS缓存没有的时候，这个时间可能是有一段长度的。</p>
+<p><strong>Initial connection / Connecting</strong><code>初始连接/连接</code><br>建立TCP连接的时间，就相当于客户端从发请求开始到TCP握手结束这一段，包括DNS查询+Proxy时间+TCP握手时间。</p>
+<p><strong>SSL</strong><code>安全套接层</code><br>(Secure Sockets Layer 安全套接层)及其继任者传输层安全（Transport Layer Security，TLS）是为网络通信提供安全及数据完整性的一种安全协议。TLS与SSL在传输层对网络连接进行加密。</p>
+<p><strong>Request sent / Sending</strong><code>请求已发送/正在发送</code><br>请求第一个字节发出前到最后一个字节发出后的时间（上传时间）。</p>
+<p><strong>Waiting（TTFB）</strong><code>等待响应</code><br>请求发出后，到收到响应的第一个字节所花费的时间(Time To First Byte)。<br>通常是耗费时间最长的，通常受到线路、服务器距离等因素的影响。它包含了TCP连接时间，发送HTTP请求时间和获得响应消息第一个字节的时间。</p>
+<p><strong>Content Download / Downloading</strong><code>内容下载/下载</code><br>收到响应的第一个字节，到接受完最后一个字节的时间（下载时间）。<br>浏览器开始收到服务器响应数据的时间=后台处理时间+重定向时间，是反映服务端响应速度的重要指标。</p>
+<p><br></p>
+<h1 id="二、Resource-Timing-Api"><a href="#二、Resource-Timing-Api" class="headerlink" title="二、Resource Timing Api"></a>二、Resource Timing Api</h1><blockquote>
+<p>所有网络请求都被视为资源。当它们通过网络检索时，分为不同的生命周期。Network(网络)面板使用的Resource Timing API和提供给开发者的API是一样的。</p>
+</blockquote>
+<p>  <img src="/img/images/web2.png" alt></p>
+<p><strong>注意: 当使用跨源资源的<code>Resource Timing API</code>时， 请确保所有资源都有CORS头信息。Resource Timing API提供了关于每个单独资源接收时间的详细信息。</strong></p>
+<p>请求生命周期的主要阶段是：</p>
+<p><strong><code>Redirect</code></strong><br>立即开始startTime。<br>如果发生重定向, redirectStart也会开始计时。<br>如果重定向发生在此阶段结束时，那么redirectEnd将被采用。</p>
+<p><strong><code>App Cache</code></strong><br>如果浏览器有缓存，将采用fetchStart时间。</p>
+<p><strong><code>DNS</code></strong><br>domainLookupStart 记录DNS请求开始的时间。<br>domainLookupEnd 记录DNS请求结束的时间。</p>
+<p><strong><code>TCP</code></strong><br>connectStart 记录开始连接到服务器的时间。<br>如果用了TLS或SSL，secureConnectionStart记录开始连接时间。<br>connectEnd 记录连接完毕时间。</p>
+<p><strong><code>Request</code></strong><br>requestStart记录请求发送到服务器的时间。</p>
+<p><strong><code>Response</code></strong><br>responseStart记录最开始的响应时间。<br>responseEnd记录响应结束时间。</p>
+<p>通过window.performance.getEntriesByType(‘resource’)获取所有的PerformanceResourceTiming：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="string">'performance'</span> <span class="keyword">in</span> <span class="built_in">window</span>) &#123;</span><br><span class="line">    <span class="comment">// 获取的是所有的PerformanceResourceTiming</span></span><br><span class="line">    <span class="keyword">var</span> resources = <span class="built_in">window</span>.performance.getEntriesByType(<span class="string">'resource'</span>)</span><br><span class="line">    <span class="comment">// 遍历各个资源加载的时间</span></span><br><span class="line">    resources.map(<span class="function">(<span class="params">resource</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// 这里以图片为例，判断图片加载的时间</span></span><br><span class="line">        <span class="keyword">if</span>(resource.initiatorType === <span class="string">'img'</span>) &#123;</span><br><span class="line">            <span class="comment">// duration取的是整个过程中经历的时间，即startTime到responseEnd直接的时间,</span></span><br><span class="line">            <span class="comment">// 即等于resource.responseEnd - resource.startTime</span></span><br><span class="line">            <span class="keyword">if</span>(resource.duration &gt; <span class="number">5000</span>) &#123;</span><br><span class="line">                <span class="comment">// 图片加载超过了5秒了，上报服务器，提示图片加载过长</span></span><br><span class="line">                reportToServer()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>注意，上面的代码需要在onload事件上面执行（onload会在图片加载完毕以后调用）。</strong></p>
+<p>PerformanceResourceTimeing包含以下的属性：</p>
+<p><code>initiatorType</code>：资源的类型，有img、script、link</p>
+<p>下面的属性是以毫秒为单位，对应上图</p>
+<ul>
+<li><p><code>redirectStart</code></p>
+</li>
+<li><p><code>redirectEnd</code></p>
+</li>
+<li><p><code>fetchStart</code></p>
+</li>
+<li><p><code>domainLookupStart</code></p>
+</li>
+<li><p><code>domainLookupEnd</code></p>
+</li>
+<li><p><code>connectStart</code></p>
+</li>
+<li><p><code>connectEnd</code></p>
+</li>
+<li><p><code>secureConnectionStart</code></p>
+</li>
+<li><p><code>requestStart</code></p>
+</li>
+<li><p><code>responseStart</code></p>
+</li>
+<li><p><code>responseEnd</code></p>
+</li>
+</ul>
+<p><strong>所以我们得出这样的一个计算：</strong><br>查看DNS查询时间: <code>domainLookupEnd</code> - <code>domainLookupStart</code><br>查看TCP三次握手时间: <code>connectEnd</code> - <code>connectStart</code><br>request请求时间: <code>responseEnd</code> - <code>responseStart</code><br>整个过程时间: <code>responseEnd</code> - <code>startTime</code> 或者 <code>duration</code></p>
+<p><br></p>
+<p>参考文章：</p>
+<ul>
+<li><a href="https://segmentfault.com/a/1190000015133004?utm_source=tag-newest" target="_blank" rel="noopener">Network Resource Timing 我的请求慢在哪</a></li>
+<li><a href="https://juejin.im/post/5b8e737c6fb9a019fd147835#heading-3" target="_blank" rel="noopener">利用Resource Timing监控资源加载速度</a></li>
+<li><a href="https://www.breakyizhan.com/chromeconsole/2216.htmlt" target="_blank" rel="noopener">Chrome DevTools谷歌浏览器开发者工具了解资源加载时序</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        分享就是回顾自己所学的知识，欢迎大家交流~
+        
+    </div>
+    
+    <footer>
+        <a href="https://www.williamife.com">
+            <img src="/img/avatar.jpg" alt="William Cao">
+            William Cao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开发/">开发</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2020/02/25/浏览器Timing/&title=《Network 之 Resource Timing字段解析》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2020/02/25/浏览器Timing/&title=《Network 之 Resource Timing字段解析》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2020/02/25/浏览器Timing/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Network 之 Resource Timing字段解析》 — 我的博客&url=https://www.williamife.com/2020/02/25/浏览器Timing/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2020/02/25/浏览器Timing/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2020/05/29/React常见问题汇总/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">React常见问题汇总</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/12/01/NPM/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">在centos下搭建npm镜像</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷赏赐~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>William Cao &copy; 2018 - 2021</span></p>
+        <p> 
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">京ICP备19030143号-1</a>
+                
+            </span>
+            <span>
+                
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802031297" target="_blank">京公网安备11010802031297号</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2020/02/25/浏览器Timing/&title=《Network 之 Resource Timing字段解析》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2020/02/25/浏览器Timing/&title=《Network 之 Resource Timing字段解析》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2020/02/25/浏览器Timing/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Network 之 Resource Timing字段解析》 — 我的博客&url=https://www.williamife.com/2020/02/25/浏览器Timing/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2020/02/25/浏览器Timing/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACLklEQVR42u3ay1LjMBAF0Pz/T2e2VDEx90o2lKTjFQVOrONF06/XK77eX672/utPff1r+5T6wsDAWJbxvryu7/l+lOSI3+9vn/ufJ2JgYBzASA6RBOL26Pm3/XBmDAwMjIl7koNevwgMDAyM9ohJepcUpX8ccDEwMBZk5GVqGyLbAvjxWhwDA2NBRt51//2fH5lvYGBgLMV4l9dY621mkBmdCgMDY2vGWJssSebGVjfytA8DA+McRhIQ51crZoYE0avBwMDYmpEkamM148w4oV3jwMDA2JsxUzomo4KiBB0K7hgYGKcxrpPF5OvaVG8sEfzYNcTAwNiUkX+svXNs8jjzdAwMjF0ZYw36mdWx9kVE62gYGBgHMNrmfs4ojhIziiIWAwNjC0bSGru3cM3bam3pi4GBsTdjvpV/17LFDeUxBgbGMYw8acvb+jOJZvGaMDAwtmOMtcza4rNtqD0SZDEwMBZnzMTpmSHBbYNSDAyMrRltKduOJ/NFipl/AxgYGCcw5hdV84CYJ3ztoBQDA+M0xqff5OE4x8+voGFgYJzDmBkDjC2KFQ21JAPEwMDYlPEur/YB+crFDUkhBgbGpow2zI0F0PbxD4ZsDAyMZRltadqWl3d98w+pKgYGxgGMNvDlY8789zMDAwwMDIz5wWTSwktGFK/2EBgYGMcz2tWuT5g2yN4ccDEwMBZhjKV6LaBduXik3YaBgbEgY2zFYaZMbYPvbYNMDAyM9Rj/AHLsapjXfg/+AAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

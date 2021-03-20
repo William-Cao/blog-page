@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+    <meta charset="utf-8">
+    
+    <meta name="google-site-verification" content="21k73v5G8oRoUeP-cTwUyeD5lkZ5asW5K667uxY6oqI">
+    
+    
+    <meta name="baidu-site-verification" content="I1QHrtH1Ea">
+    
+    
+    
+    <link rel="canonical" href="https://www.williamife.com//2019/05/29/Mock/">
+    
+    
+    <title>在项目中使用Mock.js的基本步骤 | 我的博客 | What&#39;s past is prologue.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="JavaScript">
+    <meta name="description" content="在日常工作中，往往会出现后端接口还没有开发完成。这时我们可以根据已有的接口文档来搭建web server自己模拟假数据,拦截 Ajax 请求,返回模拟的响应数据。  一、开始 &amp;amp; 安装1234//我们使用axios来发起http请求npm install axios --save//安装依赖mockjsnpm install mockjs --save-dev 二、拦截 &amp;amp; 响应">
+<meta name="keywords" content="JavaScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在项目中使用Mock.js的基本步骤">
+<meta property="og:url" content="https://www.williamife.com/2019/05/29/Mock/index.html">
+<meta property="og:site_name" content="我的博客">
+<meta property="og:description" content="在日常工作中，往往会出现后端接口还没有开发完成。这时我们可以根据已有的接口文档来搭建web server自己模拟假数据,拦截 Ajax 请求,返回模拟的响应数据。  一、开始 &amp;amp; 安装1234//我们使用axios来发起http请求npm install axios --save//安装依赖mockjsnpm install mockjs --save-dev 二、拦截 &amp;amp; 响应">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.williamife.com/img/images/mock1.png">
+<meta property="og:image" content="https://www.williamife.com/img/images/mock2.png">
+<meta property="og:updated_time" content="2019-07-10T05:43:49.589Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在项目中使用Mock.js的基本步骤">
+<meta name="twitter:description" content="在日常工作中，往往会出现后端接口还没有开发完成。这时我们可以根据已有的接口文档来搭建web server自己模拟假数据,拦截 Ajax 请求,返回模拟的响应数据。  一、开始 &amp;amp; 安装1234//我们使用axios来发起http请求npm install axios --save//安装依赖mockjsnpm install mockjs --save-dev 二、拦截 &amp;amp; 响应">
+<meta name="twitter:image" content="https://www.williamife.com/img/images/mock1.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="我的博客" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">William Cao</h5>
+          <a href="mailto:demondora@qq.com" title="demondora@qq.com" class="mail">demondora@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                关于
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c6664e66fb9a049b41cfdda" target="_blank" >
+                <i class="icon icon-lg icon-juejin"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/William-Cao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.weibo.com/" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">在项目中使用Mock.js的基本步骤</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">在项目中使用Mock.js的基本步骤</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-05-29T09:48:22.000Z" itemprop="datePublished" class="page-time">
+  2019-05-29
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <!-- <h4>TOC</h4> -->
+            <h4>文章目录</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#一、开始-amp-安装"><span class="post-toc-text">一、开始 &amp; 安装</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#二、拦截-amp-响应"><span class="post-toc-text">二、拦截 &amp; 响应</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Mock"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">在项目中使用Mock.js的基本步骤</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-05-29 17:48:22" datetime="2019-05-29T09:48:22.000Z"  itemprop="datePublished">2019-05-29</time>
+
+            
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>在日常工作中，往往会出现后端接口还没有开发完成。这时我们可以根据已有的接口文档来搭建<code>web server</code>自己模拟假数据,拦截 <code>Ajax</code> 请求,返回模拟的响应数据。</p>
+</blockquote>
+<h1 id="一、开始-amp-安装"><a href="#一、开始-amp-安装" class="headerlink" title="一、开始 &amp; 安装"></a>一、开始 &amp; 安装</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//我们使用axios来发起http请求</span></span><br><span class="line">npm install axios --save</span><br><span class="line"><span class="comment">//安装依赖mockjs</span></span><br><span class="line">npm install mockjs --save-dev</span><br></pre></td></tr></table></figure>
+<h1 id="二、拦截-amp-响应"><a href="#二、拦截-amp-响应" class="headerlink" title="二、拦截 &amp; 响应"></a>二、拦截 &amp; 响应</h1><p><em>拦截并响应浏览器的http请求</em></p>
+<p>1.在<code>src</code>目录下新建<code>mock</code>目录，结构如下：</p>
+<p>  <img src="/img/images/mock1.png" alt></p>
+<p><br></p>
+<p>2.<code>index.js</code>内容如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Mock = <span class="built_in">require</span>(<span class="string">'mockjs'</span>);</span><br><span class="line"><span class="comment">//格式： Mock.mock( url, post/get , 返回的数据)；</span></span><br><span class="line">Mock.mock(<span class="string">'/user/userInfo'</span>, <span class="string">'get'</span>, <span class="built_in">require</span>(<span class="string">'./json/userInfo'</span>));</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<p>3.<code>json</code>文件内容如下，以userInfo.json为例：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"data"</span>: &#123;</span><br><span class="line">    <span class="attr">"userid"</span>: <span class="string">"@id()"</span>,</span><br><span class="line">    <span class="attr">"username"</span>: <span class="string">"@cname()"</span>,</span><br><span class="line">    <span class="attr">"date"</span>: <span class="string">"@date()"</span>,</span><br><span class="line">    <span class="attr">"avatar"</span>: <span class="string">"@image('200x100', '#02adea', 'Hello')"</span>,</span><br><span class="line">    <span class="attr">"description"</span>: <span class="string">"@paragraph()"</span>,</span><br><span class="line">    <span class="attr">"ip"</span>: <span class="string">"@ip()"</span>,</span><br><span class="line">    <span class="attr">"email"</span>: <span class="string">"@email()"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<p>4.在<code>main.js</code>入口文件中引入<code>mock</code>数据，不需要时，则注释掉。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span>;</span><br><span class="line"><span class="keyword">import</span> App <span class="keyword">from</span> <span class="string">'./App'</span>;</span><br><span class="line"><span class="keyword">import</span> router <span class="keyword">from</span> <span class="string">'./router'</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./mock'</span>); <span class="comment">//引入mock数据，关闭则注释该行</span></span><br><span class="line"></span><br><span class="line">Vue.config.productionTip = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#app'</span>,</span><br><span class="line">  router,</span><br><span class="line">  components: &#123; App &#125;,</span><br><span class="line">  template: <span class="string">'&lt;App/&gt;'</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<p>3、在<code>vue</code>模板访问</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">axios.get(<span class="string">'/user/userInfo'</span>)</span><br><span class="line">.then(<span class="function"><span class="keyword">function</span>(<span class="params">res</span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(res);</span><br><span class="line">&#125;).catch(<span class="function"><span class="keyword">function</span>(<span class="params">err</span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(err);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>  <img src="/img/images/mock2.png" alt></p>
+<p><br></p>
+<p><a href="https://github.com/William-Cao/vue-app" target="_blank" rel="noopener">项目地址</a></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        分享就是回顾自己所学的知识，欢迎大家交流~
+        
+    </div>
+    
+    <footer>
+        <a href="https://www.williamife.com">
+            <img src="/img/avatar.jpg" alt="William Cao">
+            William Cao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2019/05/29/Mock/&title=《在项目中使用Mock.js的基本步骤》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2019/05/29/Mock/&title=《在项目中使用Mock.js的基本步骤》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2019/05/29/Mock/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《在项目中使用Mock.js的基本步骤》 — 我的博客&url=https://www.williamife.com/2019/05/29/Mock/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2019/05/29/Mock/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2019/06/14/Nginx/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">使用Nginx部署静态页面</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/05/10/JS数据结构与算法/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">JS中的数据结构和算法</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷赏赐~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>William Cao &copy; 2018 - 2021</span></p>
+        <p> 
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">京ICP备19030143号-1</a>
+                
+            </span>
+            <span>
+                
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802031297" target="_blank">京公网安备11010802031297号</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2019/05/29/Mock/&title=《在项目中使用Mock.js的基本步骤》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2019/05/29/Mock/&title=《在项目中使用Mock.js的基本步骤》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2019/05/29/Mock/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《在项目中使用Mock.js的基本步骤》 — 我的博客&url=https://www.williamife.com/2019/05/29/Mock/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2019/05/29/Mock/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACQElEQVR42u3awXLCMAxFUf7/p9NNF51Jnd4nGTq2b1ZMAOOThZAlvV74um7Xz/uj1/fPj1a+f+v1jkuGDBnLMq7Ha/QDZNPpHf7uL1QZMmQcwCChcIQnnyFhlKw5vC9DhgwZIIHrB1zy+GTIkCGDM3hI5Qfgfwi4MmTIWIpBDpNpjSst0hHehLO4DBkyFmTwqvvnX7+lvyFDhoylGLVw2Un75u7ne00ZMmRszeABrtOkJA2ADliGDBknMOY2MjuY59XiHFaGDBlbMGqnXh5e57Yqh6vJkCFjawY/OvKA+Hz0TRsG5PAsQ4aMExhpAyBdtNZ07Ix3yJAhYydGrSWQjkp0BjvQI5AhQ8bWDFL8eq5r8R+oBWUS6GXIkHEOgzQs07I+v5OG7+L/iQwZMpZlpOlXWowjhTYSTP/4rgwZMjZlkCGJWjrY2W4xBZQhQ8bWjFrZK21bFv8NyOiGDBkytmbwlG5Wcb8ffFv1PBkyZCzL6I9WpGE0HTUrZrsyZMjYlMGHLTqFtnSjQWdDhgwZmzJ4ekfSPt7+5I8GtTxlyJBxDIMndumQRDHVqyWFMmTI2JpRSwdTajregYqDMmTI2JRxhRdJ2tI2AC/VBbmtDBkyNmLUwlxt6Vq5bXLIliFDxrKMdHii82zSNDQYzpAhQ8YBjHT8gofCWqugeBaXIUOGDBD40nGx9HEM9yNDhgwZjbIaKa7VEspWaihDhowFGbwZwI+yfFwsPUjLkCHjNEZtJKvzw+kmpjUyZciQsR7jC7yJIuDwZGXsAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

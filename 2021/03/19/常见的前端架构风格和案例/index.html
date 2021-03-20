@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+    <meta charset="utf-8">
+    
+    <meta name="google-site-verification" content="21k73v5G8oRoUeP-cTwUyeD5lkZ5asW5K667uxY6oqI">
+    
+    
+    <meta name="baidu-site-verification" content="I1QHrtH1Ea">
+    
+    
+    
+    <link rel="canonical" href="https://www.williamife.com//2021/03/19/常见的前端架构风格和案例/">
+    
+    
+    <title>常见的前端架构风格和案例 | 我的博客 | What&#39;s past is prologue.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="前端">
+    <meta name="description" content="所谓软件架构风格，是指描述某个特定应用领域中系统组织方式的惯用模式。架构风格定义一个词汇表和一组约束，词汇表中包含一些组件及连接器，约束则指出系统如何将构建和连接器组合起来。软件架构风格反映了领域中众多系统所共有的结构和语义特性，并指导如何将系统中的各个模块和子系统有机的结合为一个完整的系统。 透过现象看本质，我们来探讨下前端领域一些流行技术栈背后的架构思想。 一、分层风格 分层架构是最常见">
+<meta name="keywords" content="前端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常见的前端架构风格和案例">
+<meta property="og:url" content="https://www.williamife.com/2021/03/19/常见的前端架构风格和案例/index.html">
+<meta property="og:site_name" content="我的博客">
+<meta property="og:description" content="所谓软件架构风格，是指描述某个特定应用领域中系统组织方式的惯用模式。架构风格定义一个词汇表和一组约束，词汇表中包含一些组件及连接器，约束则指出系统如何将构建和连接器组合起来。软件架构风格反映了领域中众多系统所共有的结构和语义特性，并指导如何将系统中的各个模块和子系统有机的结合为一个完整的系统。 透过现象看本质，我们来探讨下前端领域一些流行技术栈背后的架构思想。 一、分层风格 分层架构是最常见">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3c8205f9b6694a13920a77a86789c787~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5fbf7536bf9546b2a061ea2fb4e31ddd~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e6d2f83608134a6f95b3c205808b2891~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/053e360b92f142b4840437daf2e93621~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6453b96f206447e7bbc46094d9d28940~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f1639e4029594ef889bfd59048fe30fd~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/271d4633fb1a43f0b234e6f5a12e9268~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1f2b0939641840d093df3e817dc598a0~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1e59f1dcc5da42c7bcaa9b5cfc886871~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dbdaa3bc36fd429aaebeeaec1680b525~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/560d4bb2886f47e88a205a8dc99d5f97~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4866b08820da45fca3699375d8042b39~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b96e364650de4296ae0f316ff1695f97~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7f0f8247d7ac4440a1a134c12980f630~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d5941cd43e9f4d11a714407104f172cc~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7c2787d139ac44ef8a73ce09bba9b04d~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dbdbc0c4d51d40caae67c145beacff8c~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:updated_time" content="2021-03-19T16:03:37.486Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="常见的前端架构风格和案例">
+<meta name="twitter:description" content="所谓软件架构风格，是指描述某个特定应用领域中系统组织方式的惯用模式。架构风格定义一个词汇表和一组约束，词汇表中包含一些组件及连接器，约束则指出系统如何将构建和连接器组合起来。软件架构风格反映了领域中众多系统所共有的结构和语义特性，并指导如何将系统中的各个模块和子系统有机的结合为一个完整的系统。 透过现象看本质，我们来探讨下前端领域一些流行技术栈背后的架构思想。 一、分层风格 分层架构是最常见">
+<meta name="twitter:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3c8205f9b6694a13920a77a86789c787~tplv-k3u1fbpfcp-watermark.image">
+    
+        <link rel="alternate" type="application/atom+xml" title="我的博客" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">William Cao</h5>
+          <a href="mailto:demondora@qq.com" title="demondora@qq.com" class="mail">demondora@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                关于
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c6664e66fb9a049b41cfdda" target="_blank" >
+                <i class="icon icon-lg icon-juejin"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/William-Cao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.weibo.com/" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">常见的前端架构风格和案例</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">常见的前端架构风格和案例</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2021-03-19T15:00:00.000Z" itemprop="datePublished" class="page-time">
+  2021-03-19
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <!-- <h4>TOC</h4> -->
+            <h4>文章目录</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#一、分层风格"><span class="post-toc-text">一、分层风格</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Virtual-DOM"><span class="post-toc-text">Virtual DOM</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#多端统一开发框架"><span class="post-toc-text">多端统一开发框架</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#二、管道-过滤器"><span class="post-toc-text">二、管道/过滤器</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Unix管道"><span class="post-toc-text">Unix管道</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ReactiveX"><span class="post-toc-text">ReactiveX</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Gulp"><span class="post-toc-text">Gulp</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#管道中间件"><span class="post-toc-text">管道中间件</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#三、事件驱动"><span class="post-toc-text">三、事件驱动</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Node-js事件驱动模型"><span class="post-toc-text">Node.js事件驱动模型</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#四、复制风格"><span class="post-toc-text">四、复制风格</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#五、微内核架构"><span class="post-toc-text">五、微内核架构</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Webpack"><span class="post-toc-text">Webpack</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#六、微前端"><span class="post-toc-text">六、微前端</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#七、组件化"><span class="post-toc-text">七、组件化</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#八、其他"><span class="post-toc-text">八、其他</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-常见的前端架构风格和案例"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">常见的前端架构风格和案例</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2021-03-19 23:00:00" datetime="2021-03-19T15:00:00.000Z"  itemprop="datePublished">2021-03-19</time>
+
+            
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>  <img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3c8205f9b6694a13920a77a86789c787~tplv-k3u1fbpfcp-watermark.image" alt></p>
+<p><strong>所谓软件架构风格，是指描述某个特定应用领域中系统组织方式的惯用模式。架构风格定义一个词汇表和一组约束，词汇表中包含一些组件及连接器，约束则指出系统如何将构建和连接器组合起来。软件架构风格反映了领域中众多系统所共有的结构和语义特性，并指导如何将系统中的各个模块和子系统有机的结合为一个完整的系统。</strong></p>
+<p><em>透过现象看本质，我们来探讨下前端领域一些流行技术栈背后的架构思想。</em></p>
+<h1 id="一、分层风格"><a href="#一、分层风格" class="headerlink" title="一、分层风格"></a>一、分层风格</h1><blockquote>
+<p>分层架构是最常见的软件架构，你要不知道用什么架构，或者不知道怎么解决问题，那就尝试加多一层。一个分层系统是按照层次来组织的，每一层为在其之上的层提供服务，并且使用在其之下的层所提供的服务。</p>
+</blockquote>
+<p>分层通常可以解决什么问题？</p>
+<ul>
+<li><p><strong>是隔离业务复杂度与技术复杂度的利器。</strong> 典型的例子是网络协议, 越高层越面向人类，越底层越面向机器。一层一层往上，很多技术的细节都被隐藏了，比如我们使用<code>HTTP</code>时，不需要考虑<code>TCP</code>的握手和包传输细节，<code>TCP</code>不需要关心<code>IP</code>的寻址和路由。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5fbf7536bf9546b2a061ea2fb4e31ddd~tplv-k3u1fbpfcp-watermark.image" alt></p>
+</li>
+<li><p><strong>分离关注点和复用。减少跨越多层的耦合, 当一层变动时不会影响到其他层。</strong> 例如我们前端项目建议拆分逻辑层和视图层，一方面可以降低逻辑和视图之间的耦合，当视图层元素变动时可以尽量减少对逻辑层的影响；另外一个好处是, 当逻辑抽取出去后，可以被不同平台的视图复用。</p>
+</li>
+</ul>
+<p>关注点分离之后，软件的结构会变得容易理解和开发, 每一层可以被复用, 容易被测试, 其他层的接口通过模拟解决. 但是分层架构，也不是全是优点，分层的抽象可能会丢失部分效率和灵活性, 比如编程语言就有所谓的<code>层次</code>，语言抽象的层次越高，运行效率会相应衰减:</p>
+<p>  <img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e6d2f83608134a6f95b3c205808b2891~tplv-k3u1fbpfcp-watermark.image" alt></p>
+<h2 id="Virtual-DOM"><a href="#Virtual-DOM" class="headerlink" title="Virtual DOM"></a>Virtual DOM</h2><p>前端石器时代，我们页面交互和渲染，是通过服务端渲染或者直接操作DOM实现的.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">'.tab-list'</span>).on(<span class="string">'click'</span>,<span class="string">'.tab'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">  e.preventDefault()</span><br><span class="line">  $(<span class="string">'.tab'</span>).removeClass(<span class="string">'active'</span>)</span><br><span class="line">  $(<span class="string">'.tab-content'</span>).removeClass(<span class="string">'active'</span>)</span><br><span class="line">  $(<span class="keyword">this</span>).addClass(<span class="string">'active'</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>由于<code>SPA</code>类型项目的出现，<code>DOM tree</code>的结构变得越来越复杂，它的改变也变得越来越频繁，大量的DOM操作产生了，对DOM节点的增删改，还有许多的事件监听、事件回调、事件销毁需要处理。由于DOM tree结构的频繁变化，会导致大量的<code>reflow</code>从而影响性能。</p>
+<p>然后React就搞了一层<code>VirtualDOM</code>。 所谓的<code>VirtualDOM</code>，也就是虚拟节点。它通过 JS 的 Object 对象模拟 DOM 中的节点，然后再通过特定的 render 方法将其渲染成真实的 DOM 节点。</p>
+<p>  <img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/053e360b92f142b4840437daf2e93621~tplv-k3u1fbpfcp-watermark.image" alt></p>
+<p>所以说 <code>VirtualDOM</code> 更大的意义在于开发方式的转变: <code>声明式、数据驱动</code>, 让开发者不需要关心 DOM 的操作细节 <strong>(属性操作、事件绑定、DOM 节点变更)</strong> ，另外有了VirtualDOM这一层抽象层，使得多平台渲染成为可能。</p>
+<p>当然VirtualDOM或者React，不是唯一一个这样的解决方案。其他前端框架，例如<code>Vue、Angular</code>基本都是这样一个发展历程。我们通过<code>RN</code>可以开发跨平台的移动应用，但是众所周知，它运行效率或者灵活性暂时是无法与原生应用比拟的。</p>
+<h2 id="多端统一开发框架"><a href="#多端统一开发框架" class="headerlink" title="多端统一开发框架"></a>多端统一开发框架</h2><p><strong>chameleon、Taro、uni-app、mpvue、WePY</strong></p>
+<blockquote>
+<p>软件架构设计里面最基础的概念“拆分”和“合并”，拆分的意义是“分而治之”，将复杂问题拆分成单一问题解决，比如后端业务系统的”微服务化“设计；“合并”的意义是将同样的业务需求抽象收敛到一块，达成高效率高质量的目的，例如后端业务系统中的“中台服务”设计。</p>
+</blockquote>
+<p>现如今市面上端的形态多种多样，Web、App 端(React Native)、微信小程序等各种端大行其道，当业务要求同时在不同的端都要求有所表现的时候，针对不同的端去编写多套代码的成本显然非常高，这时候只编写一套代码就能够适配到多端的能力就显得极为需要。</p>
+<p>多端统一开发框架属于后者，通过定义统一的语言框架 + 统一多态协议，从多端（对应多个独立服务）业务中抽离出自成体系、连续性强、可维护强的“前端中台服务”。</p>
+<p><strong><a href="https://cml.js.org/docs/" target="_blank" rel="noopener">chameleon</a></strong></p>
+<p>  <img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6453b96f206447e7bbc46094d9d28940~tplv-k3u1fbpfcp-watermark.image" alt></p>
+<p><strong><a href="https://jelly.jd.com/article/5c2dea3517b02c004733147d" target="_blank" rel="noopener">Taro</a></strong></p>
+<p>  <img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f1639e4029594ef889bfd59048fe30fd~tplv-k3u1fbpfcp-watermark.image" alt></p>
+<h1 id="二、管道-过滤器"><a href="#二、管道-过滤器" class="headerlink" title="二、管道/过滤器"></a>二、管道/过滤器</h1><p>在<code>管道/过滤器</code>架构风格中，每个组件都有一组输入和输出，每个组件职责都很单一，数据输入组件，经过内部处理，然后将处理过的数据输出。所以这些组件也称为过滤器，连接器按照业务需求将组件连接起来，其形状就像<code>管道</code>一样，这种架构风格由此得名。</p>
+<h2 id="Unix管道"><a href="#Unix管道" class="headerlink" title="Unix管道"></a>Unix管道</h2><p>  <img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/271d4633fb1a43f0b234e6f5a12e9268~tplv-k3u1fbpfcp-watermark.image" alt></p>
+<p> <em>在\</em>unix中经常会看到stdin，stdout和stderr，这3个可以称为终端（Terminal）的标准输入（standard input），标准输出（ standard out）和标准错误输出（standard error）。*</p>
+<p>这里面最经典的案例是<em>Unix Shell</em>命令，Unix的哲学之一就是<code>“让程序只做好一件事”</code>，所以我们常用的Unix命令功能都非常单一，但是Unix Shell还有一件法宝就是管道，通过管道我们可以将命令通过标准输入输出串联起来实现复杂的功能:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 获取网页，并进行拼写检查。代码来源于wiki</span><br><span class="line">curl "http://en.wikipedia.org/wiki/Pipeline_(Unix)" | \</span><br><span class="line">sed 's/[^a-zA-Z ]/ /g' | \</span><br><span class="line">tr 'A-Z ' 'a-z\n' | \</span><br><span class="line">grep '[a-z]' | \</span><br><span class="line">sort -u | \</span><br><span class="line">comm -23 - /usr/share/dict/words | \</span><br><span class="line">less</span><br></pre></td></tr></table></figure>
+<h2 id="ReactiveX"><a href="#ReactiveX" class="headerlink" title="ReactiveX"></a>ReactiveX</h2><p>另一个和<code>Unix管道</code>相似的例子是<code>ReactiveX</code>, 例如<code>RxJS</code>。很多教程将Rx比喻成河流，这个河流的开头就是一个事件源，这个事件源按照一定的频率发布事件。Rx真正强大的其实是它的操作符，有了这些操作符，你可以对这条河流做一切可以做的事情，例如分流、节流、建大坝、转换、统计、合并、产生河流的河流…</p>
+<p><em>这些操作符和Unix的命令一样，职责都很单一，只干好一件事情。但我们管道将它们组合起来的时候，就迸发了无限的能力.</em></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; fromEvent &#125; <span class="keyword">from</span> <span class="string">'rxjs'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; throttleTime, map, scan &#125; <span class="keyword">from</span> <span class="string">'rxjs/operators'</span>;</span><br><span class="line"></span><br><span class="line">fromEvent(<span class="built_in">document</span>, <span class="string">'click'</span>)</span><br><span class="line">  .pipe(</span><br><span class="line">    throttleTime(<span class="number">1000</span>),</span><br><span class="line">    map(<span class="function"><span class="params">event</span> =&gt;</span> event.clientX),</span><br><span class="line">    scan(<span class="function">(<span class="params">count, clientX</span>) =&gt;</span> count + clientX, <span class="number">0</span>)</span><br><span class="line">  )</span><br><span class="line">  .subscribe(<span class="function"><span class="params">count</span> =&gt;</span> <span class="built_in">console</span>.log(count));</span><br></pre></td></tr></table></figure>
+<h2 id="Gulp"><a href="#Gulp" class="headerlink" title="Gulp"></a>Gulp</h2><p>除了上述的<code>RxJS</code>，管道模式在前端领域也有很多应用，主要集中在前端工程化领域。例如’老牌’的项目构建工具<code>Gulp</code>, Gulp使用管道化模式来处理各种文件类型，管道中的每一个步骤称为<code>Transpiler</code>(转译器), 它们以 NodeJS的Stream作为输入输出。整个过程高效而简单。</p>
+<figure class="highlight js"><figcaption><span>gulpfile.js</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//gulpfile.js</span></span><br><span class="line"><span class="keyword">const</span> &#123; src, dest, parallel &#125; = <span class="built_in">require</span>(<span class="string">'gulp'</span>);</span><br><span class="line"><span class="keyword">const</span> pug = <span class="built_in">require</span>(<span class="string">'gulp-pug'</span>);</span><br><span class="line"><span class="keyword">const</span> less = <span class="built_in">require</span>(<span class="string">'gulp-less'</span>);</span><br><span class="line"><span class="keyword">const</span> minifyCSS = <span class="built_in">require</span>(<span class="string">'gulp-csso'</span>);</span><br><span class="line"><span class="keyword">const</span> concat = <span class="built_in">require</span>(<span class="string">'gulp-concat'</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">html</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> src(<span class="string">'client/templates/*.pug'</span>)</span><br><span class="line">    .pipe(pug())</span><br><span class="line">    .pipe(dest(<span class="string">'build/html'</span>))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">css</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> src(<span class="string">'client/templates/*.less'</span>)</span><br><span class="line">    .pipe(less())</span><br><span class="line">    .pipe(minifyCSS())</span><br><span class="line">    .pipe(dest(<span class="string">'build/css'</span>))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">js</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> src(<span class="string">'client/javascript/*.js'</span>, &#123; <span class="attr">sourcemaps</span>: <span class="literal">true</span> &#125;)</span><br><span class="line">    .pipe(concat(<span class="string">'app.min.js'</span>))</span><br><span class="line">    .pipe(dest(<span class="string">'build/js'</span>, &#123; <span class="attr">sourcemaps</span>: <span class="literal">true</span> &#125;))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">exports.js = js;</span><br><span class="line">exports.css = css;</span><br><span class="line">exports.html = html;</span><br><span class="line">exports.default = parallel(html, css, js);</span><br></pre></td></tr></table></figure>
+<p>不确定是否受到Gulp的影响，现代的<code>Webpack</code>打包工具，也使用同样的模式来实现对文件的处理，即<code>Loader</code>，<code>Loader</code> 用于对模块的源代码进行转换，通过Loader的组合，可以实现复杂的文件转译需求。</p>
+<figure class="highlight js"><figcaption><span>webpack.config.js</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack.config.js</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  ...</span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    rules: [&#123;</span><br><span class="line">      test: <span class="regexp">/\.scss$/</span>,</span><br><span class="line">      use: [&#123;</span><br><span class="line">          loader: <span class="string">"style-loader"</span> <span class="comment">// 将 JS 字符串生成为 style 节点</span></span><br><span class="line">      &#125;, &#123;</span><br><span class="line">          loader: <span class="string">"css-loader"</span> <span class="comment">// 将 CSS 转化成 CommonJS 模块</span></span><br><span class="line">      &#125;, &#123;</span><br><span class="line">          loader: <span class="string">"sass-loader"</span> <span class="comment">// 将 Sass 编译成 CSS</span></span><br><span class="line">      &#125;]</span><br><span class="line">    &#125;]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="管道中间件"><a href="#管道中间件" class="headerlink" title="管道中间件"></a>管道中间件</h2><blockquote>
+<p>中间件(middleware)就是一个函数，用来完成各种特定的任务。它最大的特点就是，一个中间件处理完，可以把相应数据再传递给下一个中间件。</p>
+</blockquote>
+<p>如果开发过Express、Koa或者Redux， 你可能会发现中间件模式和上述的管道模式有一定的相似性。</p>
+<p><strong>Koa2的洋葱圈模型，如下图。</strong></p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1f2b0939641840d093df3e817dc598a0~tplv-k3u1fbpfcp-watermark.image" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>洋葱圈模型有以下特点:</p>
+<ul>
+<li><code>中间件没有显式的输入输出</code> 这些中间件之间通常通过集中式的上下文对象来共享状态</li>
+<li><code>有一个循环的过程</code> 管道中，数据处理完毕后交给下游了，后面就不管了。而中间件还有一个回归的过程，当下游处理完毕后会进行回溯，所以有机会干预下游的处理结果。</li>
+</ul>
+<p>我们暂且把它当作一个特殊形式的管道模式吧。这种模式通常用于后端，它可以干净地分离出请求的不同阶段，也就是分离关注点。比如我们可以创建这些中间件：</p>
+<ul>
+<li>日志： 记录开始时间，计算响应时间，输出请求日志</li>
+<li>认证： 验证用户是否登录</li>
+<li>授权： 验证用户是否有执行该操作的权限</li>
+<li>缓存： 是否有缓存结果，有的话就直接返回，当下游响应完成后，再判断一下响应是否可以被缓存</li>
+<li>执行： 执行实际的请求处理、响应</li>
+</ul>
+<p>这个简易的 gif 说明了 async 函数如何使我们能够恰当地利用堆栈流来实现请求和响应流：<br>  <img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1e59f1dcc5da42c7bcaa9b5cfc886871~tplv-k3u1fbpfcp-watermark.image" alt><br><a href="https://www.jianshu.com/p/12849bd34a1f" target="_blank" rel="noopener">koa2洋葱模型源码分析</a></p>
+<h1 id="三、事件驱动"><a href="#三、事件驱动" class="headerlink" title="三、事件驱动"></a>三、事件驱动</h1><blockquote>
+<p>事件驱动编程最好的方法论是发布订阅模式，对于前端开发来说是再熟悉不过的概念了。 它定义了一种一对多的依赖关系， 在事件驱动系统风格中，组件不直接调用另一个组件，而是触发或广播一个或多个事件。系统中的其他组件在一个或多个事件中注册。当一个事件被触发，系统会自动通知在这个事件中注册的所有组件。</p>
+</blockquote>
+<p>这样就分离了关注点，订阅者依赖于事件而不是依赖于发布者，发布者也不需要关心订阅者，两者解除了耦合。<br>生活中也有很多发布-订阅的例子，比如微信公众号信息订阅，当新增一个订阅者的时候，发布者并不需要作出任何调整，同样发布者调整的时候也不会影响到订阅者，只要协议没有变化。我们可以发现，发布者和订阅者之间其实是一种弱化的动态的关联关系。</p>
+<p><em>解除耦合目的是一方面, 另一方面也可能由基因决定的，一些事情天然就不适合或不支持用同步的方式去调用，或者这些行为是异步触发的。</em></p>
+<h2 id="Node-js事件驱动模型"><a href="#Node-js事件驱动模型" class="headerlink" title="Node.js事件驱动模型"></a>Node.js事件驱动模型</h2><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dbdaa3bc36fd429aaebeeaec1680b525~tplv-k3u1fbpfcp-watermark.image" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<ul>
+<li>Application应用层，即JavaScript 交互层，常见的就是 Node.js 的模块，比如 http，fs等</li>
+<li>V8这一层是V8引擎层，这一层的主要作用是解析JavaScript，同时和应用层和NodeApi层交互</li>
+<li>NodeApi为上层模块提供系统调用，和操作系统进行交互 。</li>
+<li>Libuv是跨平台的底层封装，实现了线程池、事件循环、文件操作等，是 Node.js 实现异步的核心。</li>
+</ul>
+<p><code>libuv</code>是一个高性能事件驱动库，屏蔽了各种操作系统的差异从而提供了统一的<code>AP</code>I。libuv严格使用<code>异步、事件驱动</code>的编程风格。其核心工作是提供事件循环及 基于I/O 或其他活动事件的回调机制。libuv库包含了诸如计时器、非阻塞网络支持、异步文件系统访问、线程创建、子进程等核心工具。<br>  <img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/560d4bb2886f47e88a205a8dc99d5f97~tplv-k3u1fbpfcp-watermark.image" alt><br><a href="https://www.williamife.com/2019/03/28/%E6%B5%85%E8%B0%88IO%E6%A8%A1%E5%9E%8B%E4%B8%8EEvent%20Loop/">I/O模型、Libuv和Eventloop</a></p>
+<h1 id="四、复制风格"><a href="#四、复制风格" class="headerlink" title="四、复制风格"></a>四、复制风格</h1><blockquote>
+<p>基于复制(Replication)风格的系统，会利用多个实例提供相同的服务，来改善服务的可访问性和可伸缩性，以及性能。这种架构风格可以改善用户可察觉的性能，简单服务响应的延迟。</p>
+</blockquote>
+<p>  <img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4866b08820da45fca3699375d8042b39~tplv-k3u1fbpfcp-watermark.image" alt></p>
+<p>这种风格在后端用得比较多，举前端比较熟悉的例子，NodeJS是单线程的，为了利用多核资源，NodeJS标准库提供了一个cluster模块，它可以根据CPU数创建多个Worker进程，这些Worker进程可以共享一个服务器端口，对外提供同质的服务, Master进程会根据一定的策略将资源分配给Worker:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> cluster = <span class="built_in">require</span>(<span class="string">'cluster'</span>);</span><br><span class="line"><span class="keyword">const</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>);</span><br><span class="line"><span class="keyword">const</span> numCPUs = <span class="built_in">require</span>(<span class="string">'os'</span>).cpus().length;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (cluster.isMaster) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`Master <span class="subst">$&#123;process.pid&#125;</span> is running`</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Fork workers.</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; numCPUs; i++) &#123;</span><br><span class="line">    cluster.fork();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  cluster.on(<span class="string">'exit'</span>, (worker, code, signal) =&gt; &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`worker <span class="subst">$&#123;worker.process.pid&#125;</span> died`</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="comment">// Workers可以共享任意的TCP连接 </span></span><br><span class="line">  <span class="comment">// 比如共享HTTP服务器 </span></span><br><span class="line">  http.createServer(<span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">    res.writeHead(<span class="number">200</span>);</span><br><span class="line">    res.end(<span class="string">'hello world\n'</span>);</span><br><span class="line">  &#125;).listen(<span class="number">8000</span>);</span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`Worker <span class="subst">$&#123;process.pid&#125;</span> started`</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>利用多核能力可以提升应用的性能和可靠性。我们也可以利用<code>PM2</code>这样的进程管理工具，来简化<code>Node集群</code>的管理，它支持很多有用的特性，例如<code>集群节点重启、日志归集、性能监视</code>等。</p>
+<p><code>复制风格</code>常用于<code>网络服务器</code>。浏览器和Node都有Worker的概念，但是一般都只推荐在CPU密集型的场景使用它们，因为浏览器或者NodeJS内置的异步操作已经非常高效。实际上前端应用CPU密集型场景并不多，或者目前阶段不是特别实用。除此之外你还要权衡进程间通信的效率、Worker管理复杂度、异常处理等事情。</p>
+<p>有一个典型的CPU密集型的场景，即源文件转译。典型的例子是<code>CodeSandbox</code>, 它就是利用浏览器的Worker机制来提高源文件的转译性能的:</p>
+<p>  <img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b96e364650de4296ae0f316ff1695f97~tplv-k3u1fbpfcp-watermark.image" alt></p>
+<p>除了处理CPU密集型任务，对于浏览器来说，Worker也是一个重要的安全机制，用于隔离不安全代码的执行，或者限制访问浏览器DOM相关的东西。</p>
+<h1 id="五、微内核架构"><a href="#五、微内核架构" class="headerlink" title="五、微内核架构"></a>五、微内核架构</h1><blockquote>
+<p>微核架构（microkernel architecture）又称为”插件架构”（plug-in architecture），指的是软件的内核相对较小，主要功能和业务逻辑都通过插件实现。</p>
+</blockquote>
+<p>  <img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7f0f8247d7ac4440a1a134c12980f630~tplv-k3u1fbpfcp-watermark.image" alt></p>
+<p><code>内核</code>（core）通常只包含系统运行的最小功能。插件则是互相独立的，插件之间的通信，应该减少到最低，避免出现互相依赖的问题。微内核结构的难点在于建立一套粒度合适的插件协议、以及对插件之间进行适当的隔离和解耦。从而才能保证良好的扩展性、灵活性和可迁移性。</p>
+<p>前端领域比较典型的例子是<code>Webpack、Babel、PostCSS</code>以及<code>ESLint</code>, 这些应用需要应对复杂的定制需求，而且这些需求时刻在变，只有微内核架构才能保证灵活和可扩展性。</p>
+<h2 id="Webpack"><a href="#Webpack" class="headerlink" title="Webpack"></a>Webpack</h2><p>Webpack的核心是一个<code>Compiler</code>，这个Compiler主要功能是集成插件系统、维护模块对象图, 对于模块代码具体编译工作、模块的打包、优化、分析、聚合统统都是基于外部插件完成的.<br>如上文说的Loader运用了管道模式，负责对源文件进行转译；那Plugin则可以将行为注入到Compiler运行的整个生命周期的钩子中, 完全访问Compiler的当前状态。</p>
+<p>  <img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d5941cd43e9f4d11a714407104f172cc~tplv-k3u1fbpfcp-watermark.image" alt></p>
+<p>这里还有一篇文章<a href="https://yunsong0922.github.io/2018/12/09/%E5%BE%AE%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84%E5%BA%94%E7%94%A8%E7%A0%94%E7%A9%B6/" target="_blank" rel="noopener">微内核架构应用研究</a>专门写了前端微内核架构模式的一些应用，推荐阅读一下。</p>
+<h1 id="六、微前端"><a href="#六、微前端" class="headerlink" title="六、微前端"></a>六、微前端</h1><blockquote>
+<p>微前端旨在将单体前端分解成更小、更简单的模块，这些模块可以被独立的团队进行开发、测试和部署，最后再组合成一个大型的整体。</p>
+</blockquote>
+<p>  <img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7c2787d139ac44ef8a73ce09bba9b04d~tplv-k3u1fbpfcp-watermark.image" alt></p>
+<p>微前端下各个应用模块是独立运行、独立开发、独立部署的，相对应的会配备更加自治的团队(一个团队干好一件事情)。微前端的实施还需要有稳固的前端基础设施和研发体系的支撑。<br>如果你想深入学习微前端架构，建议阅读<code>Phodal</code>的<a href="https://juejin.cn/user/3650034292754584/posts" target="_blank" rel="noopener">相关文章</a>，还有他的书《前端架构：从入门到微前端》。</p>
+<h1 id="七、组件化"><a href="#七、组件化" class="headerlink" title="七、组件化"></a>七、组件化</h1><blockquote>
+<p>在给定的软件系统中，基于组件的架构侧重于对广泛使用的功能进行关注点分离。即将不同的复杂性、关注点分离出来，分别进行处理，让每一小部分都拥有自己的关注焦点。通过定义、实现松散耦合的独立组件，将其组合到系统中，以降低整个系统的复杂度。</p>
+</blockquote>
+<p>  <img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dbdbc0c4d51d40caae67c145beacff8c~tplv-k3u1fbpfcp-watermark.image" alt></p>
+<p>组件化具有一系列的优点：可重用、代码简洁、易测试等。</p>
+<p>组件的发展过程：</p>
+<ul>
+<li><code>风格指南(Style Guide)</code>对设计的文字、颜色、LOGO、ICON等设计做出规范，产出物一般为Guidline，Guidline一般为UI的规范。</li>
+<li><code>模式库(Pattern Library)</code>即UI组件库。模式库更侧重于前端开发，对界面元素的样式进行实现，其代码可供预览使用，产出物一般为组件库UI框架等，如Bootstrap库。</li>
+<li><code>设计系统(Design System)</code>设计系统在某种程度上结合了风格指南和模式库，并附加了一些业务特定的元素，并且进一步完善了组件化到页面模板相关的内容。</li>
+</ul>
+<p><a href="https://zhuanlan.zhihu.com/p/78040258" target="_blank" rel="noopener">架构设计：组件化架构</a></p>
+<h1 id="八、其他"><a href="#八、其他" class="headerlink" title="八、其他"></a>八、其他</h1><blockquote>
+<p>还有很多架构风格且这些风格主要应用于后端领域，这里就不一一阐述了。你可以通过扩展阅读了解这些模式</p>
+</blockquote>
+<ul>
+<li>面向对象风格:将应用或系统任务分割为单独、可复用、可自给的对象，每个对象都包含数据、以及对象相关的行为</li>
+<li>C/S:客户端/服务器风格</li>
+<li>面向服务架构(SOA):指那些利用契约和消息将功能暴露为服务、消费功能服务的应用</li>
+<li>N层/三层:和分层架构差不多，侧重物理层. 例如C/S风格就是一个典型的N层架构</li>
+<li>点对点风格</li>
+<li>微服务架构</li>
+<li>云架构</li>
+</ul>
+<p><strong>通过上文，你估计会觉得架构风格比设计模式或者算法好理解多的，正所谓<code>大道至简</code>，但是<code>简洁而不简单！</code>大部分项目的架构不是一开始就是这样的，它们可能经过长期的迭代，踩着巨人的肩膀，一路走过来才成为今天的样子。</strong></p>
+<p><em>希望本文可以给你一点启发，对于我们前端工程师来说，不应该只追求能做多酷的页面、掌握多少API，要学会通过现象看本质，举一反三融会贯通，这才是进阶之道。</em></p>
+<p><br></p>
+<hr>
+
+<p>参考文章：</p>
+<ul>
+<li><a href="https://juejin.cn/post/6844903943068205064#heading-0" target="_blank" rel="noopener">透过现象看本质: 常见的前端架构风格和案例</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/79388540" target="_blank" rel="noopener">架构设计：微前端架构</a></li>
+<li><a href="https://www.jianshu.com/p/ae7b5a2f78ae" target="_blank" rel="noopener">深入理解 Redux 中间件</a></li>
+<li><a href="https://www.cnblogs.com/doit8791/p/9343826.html" target="_blank" rel="noopener">五种常见软件架构</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        分享就是回顾自己所学的知识，欢迎大家交流~
+        
+    </div>
+    
+    <footer>
+        <a href="https://www.williamife.com">
+            <img src="/img/avatar.jpg" alt="William Cao">
+            William Cao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/前端/">前端</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2021/03/19/常见的前端架构风格和案例/&title=《常见的前端架构风格和案例》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2021/03/19/常见的前端架构风格和案例/&title=《常见的前端架构风格和案例》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2021/03/19/常见的前端架构风格和案例/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《常见的前端架构风格和案例》 — 我的博客&url=https://www.williamife.com/2021/03/19/常见的前端架构风格和案例/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2021/03/19/常见的前端架构风格和案例/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/11/02/Object.creat/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Object.create</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷赏赐~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>William Cao &copy; 2018 - 2021</span></p>
+        <p> 
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">京ICP备19030143号-1</a>
+                
+            </span>
+            <span>
+                
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802031297" target="_blank">京公网安备11010802031297号</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2021/03/19/常见的前端架构风格和案例/&title=《常见的前端架构风格和案例》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2021/03/19/常见的前端架构风格和案例/&title=《常见的前端架构风格和案例》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2021/03/19/常见的前端架构风格和案例/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《常见的前端架构风格和案例》 — 我的博客&url=https://www.williamife.com/2021/03/19/常见的前端架构风格和案例/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2021/03/19/常见的前端架构风格和案例/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACsklEQVR42u3aQW7jMBAEQP//097rArtyumdEQwFKJyOyJRYPJNMzr1d8vf+5km/+/Zerz1fPvPrm68SFh4eHtx761RDvGlBy9/MUJGPGw8PDO81LXlM/erSsfyblY8bDw8N7Dm/zl/z5ORUPDw/vt/D27PbgjoeHh/c03ubRyeH78/E6iTmOZy14eHh4XWIQBQTP+XykvoeHh4e3rqrnQUBydxb+rkaLh4eHd4CXL7j54biNG5Kj9maceHh4ePfykgLVZinfbA9tvPuficDDw8P7Cq89OrcH8Xsn9IdpxcPDwzvGixbZuEyVlME2zVX5XTw8PLwTvFnjVF7mn5E2h/V698PDw8Nb8PLI9a4Jmm0ndesVHh4e3q28z8t6Gxm0Ja4ZLAmR8fDw8E7z8mPxrJDftiNEQ0/YeHh4eAd4JzD5ltC2bQ3HiYeHh3eA1y7W7cvajWfTfDBsJsDDw8OLeZuwNX99u4jnTVfRNoCHh4d3K29TYU9Cgdlv67aqdsfDw8PDW/PyZfcdX7NVet+acNkZgYeHh3cTr/3ZXcfitjVhFhbj4eHhneDdVeb/zmG6nVA8PDy8c7x2IU5eMCv/5xtVUbTDw8PDu5XXlu1PMNpQo4g/8PDw8A7w8rB1H8jOjs7tlBVgPDw8vAVvdpDdJB/J3WSKo2gYDw8P7+u8ZIj5YX0WEBfJylXWgoeHh3eA1xbA8tdvjuNt0PBDAQwPDw9vzXuX16zpajZZeTvC5V08PDy8A7zZgjtrL2ibBj5PZV6cw8PDwzvBazeD/XJ8V4NCtBXh4eHhHeO1i3JUfCoxr9EVbQx4eHh4D+C1B+K25J9EFdHmhIeHh/cYXt6YlU9WHlsk8QceHh7eaV4SRrQvaCclD3mLrQgPDw/vAK/9hz8fyiaWnRXhZnEGHh4eXsz7A6K6kpeHuoNLAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

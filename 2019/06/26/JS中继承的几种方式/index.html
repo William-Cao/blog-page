@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+    <meta charset="utf-8">
+    
+    <meta name="google-site-verification" content="21k73v5G8oRoUeP-cTwUyeD5lkZ5asW5K667uxY6oqI">
+    
+    
+    <meta name="baidu-site-verification" content="I1QHrtH1Ea">
+    
+    
+    
+    <link rel="canonical" href="https://www.williamife.com//2019/06/26/JS中继承的几种方式/">
+    
+    
+    <title>JS中继承的几种方式 | 我的博客 | What&#39;s past is prologue.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="JavaScript">
+    <meta name="description" content="我们今天就来了解下 JS 中的继承，在此之前建议学习JS中的原型和原型链的相关知识。 一种面向对象语言需要向开发者提供四种基本能力： 封装 - 把相关的信息（无论数据或方法）存储在对象中的能力聚集 - 把一个对象存储在另一个对象内的能力继承 - 由另一个类（或多个类）得来类的属性和方法的能力多态 - 编写能以多种方法运行的函数或方法的能力 ECMAScript 支持这些要求，因此可被是看做面向对象">
+<meta name="keywords" content="JavaScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS中继承的几种方式">
+<meta property="og:url" content="https://www.williamife.com/2019/06/26/JS中继承的几种方式/index.html">
+<meta property="og:site_name" content="我的博客">
+<meta property="og:description" content="我们今天就来了解下 JS 中的继承，在此之前建议学习JS中的原型和原型链的相关知识。 一种面向对象语言需要向开发者提供四种基本能力： 封装 - 把相关的信息（无论数据或方法）存储在对象中的能力聚集 - 把一个对象存储在另一个对象内的能力继承 - 由另一个类（或多个类）得来类的属性和方法的能力多态 - 编写能以多种方法运行的函数或方法的能力 ECMAScript 支持这些要求，因此可被是看做面向对象">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-07-10T05:43:49.586Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JS中继承的几种方式">
+<meta name="twitter:description" content="我们今天就来了解下 JS 中的继承，在此之前建议学习JS中的原型和原型链的相关知识。 一种面向对象语言需要向开发者提供四种基本能力： 封装 - 把相关的信息（无论数据或方法）存储在对象中的能力聚集 - 把一个对象存储在另一个对象内的能力继承 - 由另一个类（或多个类）得来类的属性和方法的能力多态 - 编写能以多种方法运行的函数或方法的能力 ECMAScript 支持这些要求，因此可被是看做面向对象">
+    
+        <link rel="alternate" type="application/atom+xml" title="我的博客" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">William Cao</h5>
+          <a href="mailto:demondora@qq.com" title="demondora@qq.com" class="mail">demondora@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                关于
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c6664e66fb9a049b41cfdda" target="_blank" >
+                <i class="icon icon-lg icon-juejin"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/William-Cao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.weibo.com/" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">JS中继承的几种方式</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">JS中继承的几种方式</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-06-26T07:25:05.000Z" itemprop="datePublished" class="page-time">
+  2019-06-26
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <!-- <h4>TOC</h4> -->
+            <h4>文章目录</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#一、原型链继承"><span class="post-toc-text">一、原型链继承</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#二、借用构造函数继承"><span class="post-toc-text">二、借用构造函数继承</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#三、组合继承"><span class="post-toc-text">三、组合继承</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#四、原型式继承"><span class="post-toc-text">四、原型式继承</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#五、寄生式继承"><span class="post-toc-text">五、寄生式继承</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#六、寄生组合式继承"><span class="post-toc-text">六、寄生组合式继承</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#七、class…extends"><span class="post-toc-text">七、class…extends</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-JS中继承的几种方式"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">JS中继承的几种方式</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-06-26 15:25:05" datetime="2019-06-26T07:25:05.000Z"  itemprop="datePublished">2019-06-26</time>
+
+            
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>我们今天就来了解下 JS 中的继承，在此之前建议学习<a href="https://www.williamife.com/2019/04/29/JS%E4%B8%AD%E7%9A%84%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/">JS中的原型和原型链</a>的相关知识。</p>
+<p><strong>一种面向对象语言需要向开发者提供四种基本能力：</strong></p>
+<p><code>封装</code> - 把相关的信息（无论数据或方法）存储在对象中的能力<br><code>聚集</code> - 把一个对象存储在另一个对象内的能力<br><code>继承</code> - 由另一个类（或多个类）得来类的属性和方法的能力<br><code>多态</code> - 编写能以多种方法运行的函数或方法的能力</p>
+<p>ECMAScript 支持这些要求，因此可被是看做面向对象的。<br>目前来说在 JS 中有 7 中实现方式，让我们一起来学习吧。</p>
+<h1 id="一、原型链继承"><a href="#一、原型链继承" class="headerlink" title="一、原型链继承"></a>一、原型链继承</h1><blockquote>
+<p>原型链继承的基本思想是利用原型让一个引用类型继承另一个引用类型的属性和方法。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ClassA</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ClassA.prototype.color = <span class="string">"blue"</span></span><br><span class="line">ClassA.prototype.sayColor = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    alert(<span class="keyword">this</span>.color);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ClassB</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ClassB.prototype = <span class="keyword">new</span> ClassA()</span><br><span class="line">ClassB.prototype.constructor = ClassB</span><br><span class="line"><span class="comment">// 重写prototype会丢失constructor属性</span></span><br></pre></td></tr></table></figure>
+<p>优点：1、实例可继承构造函数的属性，父类构造函数属性，父类原型的属性</p>
+<p>缺点：1、新实例无法向父类构造函数传参<br>　　　2、原型上的属性共享，一个实例修改了原型属性，另一个实例的原型属性也会被修改</p>
+<p><br></p>
+<h1 id="二、借用构造函数继承"><a href="#二、借用构造函数继承" class="headerlink" title="二、借用构造函数继承"></a>二、借用构造函数继承</h1><blockquote>
+<p>在子类型的构造函数中调用超类型构造函数。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ClassA</span>(<span class="params">age</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.age = age</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ClassB</span>(<span class="params">age,name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name</span><br><span class="line">  ClassA.call(<span class="keyword">this</span>,age)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> ClassC = <span class="keyword">new</span> ClassB(<span class="number">18</span>,<span class="string">'william'</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(ClassC)  <span class="comment">// ClassB &#123; name: 'william', age: 18 &#125;</span></span><br></pre></td></tr></table></figure>
+<p>优点：1、可以向父类构造函数传参<br>　　　2、解决了原型中包含引用类型值被所有实例共享的问题</p>
+<p>缺点：1、只能继承父类构造函数的属性<br>　　　2、函数无法复用（每次都要调用，每个新实例都有父类构造函数的副本）</p>
+<p><br></p>
+<h1 id="三、组合继承"><a href="#三、组合继承" class="headerlink" title="三、组合继承"></a>三、组合继承</h1><blockquote>
+<p>组合继承指的是将原型链继承和借用构造函数继承组合到一块，从而发挥二者之长的一种继承模式，比较常用。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ClassA</span> (<span class="params">age</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.age = age</span><br><span class="line">  <span class="keyword">this</span>.hobby = <span class="string">'Run'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ClassA.prototype.sayAge = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>.age)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ClassB</span> (<span class="params">age, name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name</span><br><span class="line">  ClassA.call(<span class="keyword">this</span>, age)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ClassB.prototype = <span class="keyword">new</span> ClassA()</span><br><span class="line">ClassB.prototype.constructor = ClassB</span><br><span class="line">ClassB.prototype.sayName = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>.name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> ClassC = <span class="keyword">new</span> ClassB(<span class="number">18</span>, <span class="string">'william'</span>)</span><br><span class="line"><span class="built_in">console</span>.log(ClassC)  <span class="comment">// ClassB &#123; name: 'william', age: 18, hobby: 'Run' &#125;</span></span><br><span class="line"></span><br><span class="line">ClassC.sayName() <span class="comment">// william</span></span><br><span class="line">ClassC.sayAge() <span class="comment">// 18</span></span><br></pre></td></tr></table></figure>
+<p>特点：1、可以继承父类原型上的属性，可以传参，可复用。<br>　　　2、每个新实例引入的构造函数属性是私有的。</p>
+<p>缺点：1、调用了两次父类构造函数，子类的构造函数会代替原型上的那个父类构造函数。</p>
+<p><br></p>
+<h1 id="四、原型式继承"><a href="#四、原型式继承" class="headerlink" title="四、原型式继承"></a>四、原型式继承</h1><blockquote>
+<p>用一个函数包装一个对象，然后返回这个函数的调用，这个函数就变成了个可以随意增添属性的实例或对象。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ClassObj</span>(<span class="params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">F</span> (<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">  F.prototype = obj</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> F()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>ECMAScript5通过新增 Object.create()方法规范了原型式继承。<br>在传入一个参数的情况下，Object.create() 和 object() 方法的行为相同。</p>
+<p>缺点：1、所有实例都会继承原型上的属性。<br>　　　2、无法实现复用。</p>
+<p><br></p>
+<h1 id="五、寄生式继承"><a href="#五、寄生式继承" class="headerlink" title="五、寄生式继承"></a>五、寄生式继承</h1><blockquote>
+<p>在原型式继承的基础上包装一个仅用于封装继承过程的函数，即该函数在内部以某种方式来增强对象，最后再像真地是它做了所有工作一样返回对象。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ClassObj</span> (<span class="params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">F</span> (<span class="params"></span>) </span>&#123; &#125;</span><br><span class="line">  F.prototype = obj</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> F()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ExtendObj</span> (<span class="params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> newObj = ClassObj(obj)</span><br><span class="line">  newObj.sayHi = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.name)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> newObj</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> person = &#123;</span><br><span class="line">  name: <span class="string">'William'</span>,</span><br><span class="line">  age: <span class="number">18</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> newPerson = ExtendObj(person)</span><br><span class="line">newPerson.sayHi() <span class="comment">//William</span></span><br></pre></td></tr></table></figure>
+<p>优点：1、没有创建自定义类型，因为只是套了个壳子返回对象，这个函数顺理成章就成了创建的新对象。<br>缺点：1、使用寄生式继承来为对象添加函数，没用到原型，无法复用。<br>　　　2、同原型链实现继承一样，包含引用类型值的属性会被所有实例共享。</p>
+<p><br></p>
+<h1 id="六、寄生组合式继承"><a href="#六、寄生组合式继承" class="headerlink" title="六、寄生组合式继承"></a>六、寄生组合式继承</h1><blockquote>
+<p>通过借用构造函数来继承属性，通过原型链的混成形式来继承方法。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 原型式继承</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ClassObj</span> (<span class="params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">F</span> (<span class="params"></span>) </span>&#123; &#125;</span><br><span class="line">  F.prototype = obj</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> F()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ClassPrototype</span> (<span class="params">subType, superType</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> prorotype = ClassObj(superType.prototype)</span><br><span class="line">  prorotype.constructor = subType</span><br><span class="line">  subType.prorotype = prorotype</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ClassA</span> (<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name</span><br><span class="line">  <span class="keyword">this</span>.age = age</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ClassB</span> (<span class="params">name, age, height</span>) </span>&#123;</span><br><span class="line">  ClassA.call(<span class="keyword">this</span>, name, age)</span><br><span class="line">  <span class="keyword">this</span>.height = height</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+<p>优点：只调用了一次超类构造函数,避免在SuberType.prototype上面创建多余的属性，与其同时，原型链还能保持不变。</p>
+<p><code>寄生组合继承是引用类型最理性的继承范式。</code></p>
+<p><br></p>
+<h1 id="七、class…extends"><a href="#七、class…extends" class="headerlink" title="七、class…extends"></a>七、class…extends</h1><blockquote>
+<p>S6中引入了class关键字，class可以通过extends关键字实现继承，还可以通过static关键字定义类的静态方法</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  <span class="comment">//调用类的构造方法</span></span><br><span class="line">  <span class="keyword">constructor</span>(name, age) &#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name</span><br><span class="line">    <span class="keyword">this</span>.age = age</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//定义一般的方法</span></span><br><span class="line">  sayHi () &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"调用父类的方法"</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.name, <span class="keyword">this</span>.age);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> person1 = <span class="keyword">new</span> Person(<span class="string">'Tom'</span>, <span class="number">18</span>)</span><br><span class="line">person1.sayHi() <span class="comment">// Tom 18</span></span><br><span class="line"><span class="built_in">console</span>.log(person1) <span class="comment">// Person &#123; name: 'Tom', age: 18 &#125;</span></span><br><span class="line"><span class="comment">//定义一个子类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Human</span> <span class="keyword">extends</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(name, age, height) &#123;</span><br><span class="line">    <span class="comment">//通过super调用父类的构造方法</span></span><br><span class="line">    <span class="keyword">super</span>(name, age)</span><br><span class="line">    <span class="keyword">this</span>.height = height</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//在子类自身定义方法</span></span><br><span class="line">  sayHi () &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"调用子类的方法"</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.name, <span class="keyword">this</span>.age, <span class="keyword">this</span>.height);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> H1 = <span class="keyword">new</span> Human(<span class="string">'Jerry'</span>, <span class="number">18</span>, <span class="number">180</span>)</span><br><span class="line"><span class="built_in">console</span>.log(H1) <span class="comment">//Human &#123; name: 'Jerry', age: 18, height: 180 &#125;</span></span><br><span class="line">H1.sayHi() <span class="comment">//Jerry 18 180</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>ES5 的继承，实质是先创造子类的实例对象this，然后再将父类的方法添加到this上面<code>Parent.apply(this)</code>。</li>
+<li>ES6 的继承机制完全不同，实质是先将父类实例对象的属性和方法，加到this上面<code>（所以必须先调用super方法）</code>，然后再用子类的构造函数修改this。</li>
+</ul>
+<p><strong><em>需要注意的是，class关键字只是原型的语法糖，JavaScript继承仍然是基于原型实现的,这比 ES5 的通过修改原型链实现继承，要清晰和方便很多。</em></strong></p>
+<p><br></p>
+<p>参考文章：</p>
+<ul>
+<li><a href=".">JavaScript高级程序设计3</a></li>
+<li><a href="http://es6.ruanyifeng.com/#docs/class-extends" target="_blank" rel="noopener">ECMAScript 6 入门</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript" target="_blank" rel="noopener">MDN Web Docs</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        分享就是回顾自己所学的知识，欢迎大家交流~
+        
+    </div>
+    
+    <footer>
+        <a href="https://www.williamife.com">
+            <img src="/img/avatar.jpg" alt="William Cao">
+            William Cao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2019/06/26/JS中继承的几种方式/&title=《JS中继承的几种方式》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2019/06/26/JS中继承的几种方式/&title=《JS中继承的几种方式》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2019/06/26/JS中继承的几种方式/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JS中继承的几种方式》 — 我的博客&url=https://www.williamife.com/2019/06/26/JS中继承的几种方式/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2019/06/26/JS中继承的几种方式/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2019/07/30/防抖和节流/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">JS中的防抖与节流</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/06/14/Nginx/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">使用Nginx部署静态页面</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷赏赐~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>William Cao &copy; 2018 - 2021</span></p>
+        <p> 
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">京ICP备19030143号-1</a>
+                
+            </span>
+            <span>
+                
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802031297" target="_blank">京公网安备11010802031297号</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2019/06/26/JS中继承的几种方式/&title=《JS中继承的几种方式》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2019/06/26/JS中继承的几种方式/&title=《JS中继承的几种方式》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2019/06/26/JS中继承的几种方式/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JS中继承的几种方式》 — 我的博客&url=https://www.williamife.com/2019/06/26/JS中继承的几种方式/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2019/06/26/JS中继承的几种方式/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACpklEQVR42u3ay27DQAgF0Pz/T7fbVlGcCwxOKx2vojxm5nhhCPB4xNfX0/X8/vWvfr5z/Tr57eELDw8Pb3z0hHH9/Ve75KsltyM6Ax4eHt4aLzlQ8gTO38/x+Xnw8PDw/iavlyL3bl8SMPDw8PD+I69aqki+n6fXeHh4eJ/i5UvntdPkdkzKwYdrLXh4eHgxb37c+1+v9Pfw8PDwxl31anOr+vhOgsHotHh4eHgLvGrJ9fpY1VGA/Ld5uoyHh4d3P6/KmLSyqkEiT6/x8PDw7uT1hqLyQnAvCPXGDvDw8PA2eMkDN0+OewMBk/NEIQEPDw/vKK9akK2286sBZhK6mi0xPDw8vMFAQC+p7QWSfCRrVCzGw8PDW+b1xgV6YwR5ijwKaXh4eHhrvBx56ih5sTgvQLwMDHh4eHhHeZMy66nte3sVbjceHh7eUd5km8mQwbw8Ee2Ch4eHt8DbKLxWCwc5o9kew8PDw1vjVXPRfJ05uxd48PDw8DZ4vQJu3hjbSNPzlfHw8PDu4SVHzMehkgQ6DxJ5KRkPDw9vm1cYAF1+3SttvFwZDw8Pb41XSFLj1PlrcBVKtNdhBg8PD2+BV23P5+2rahk3T6+rpV48PDy8Pd7kEV8tH/QCUl4UxsPDw7uHl48L5El2NZxMQstoHgEPDw9vwKuWdKuP/uqnkyEwPDw8vHt4yYO+ejvy4DG53tSq8fDw8A7xJq2pScu/t1rSKvv1KR4eHt4C72zBolqeyJPs3vAWHh4e3h6vNzowGdVKEu4krS//Y8DDw8M7yksKB/mWSSEjL4XkCfqbyQg8PDy8j/J6YSMPCfl53qyDh4eH98d4efG0eguqQ1ovd8fDw8Nb41WbT72Bg3taaHh4eHjbvPkf/mqpYtKLS1pxeHh4eGu8bzQeVLkj7kGaAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

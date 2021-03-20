@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+    <meta charset="utf-8">
+    
+    <meta name="google-site-verification" content="21k73v5G8oRoUeP-cTwUyeD5lkZ5asW5K667uxY6oqI">
+    
+    
+    <meta name="baidu-site-verification" content="I1QHrtH1Ea">
+    
+    
+    
+    <link rel="canonical" href="https://www.williamife.com//2019/03/28/浅谈IO模型与Event Loop/">
+    
+    
+    <title>I/O模型、Libuv和Eventloop | 我的博客 | What&#39;s past is prologue.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Node.js,Libuv,I/O模型">
+    <meta name="description" content="一、I/O模型①常见的IO模型：Linux(UNIX)操作系统中的网络IO模型为例  Blocking I/O      同步阻塞IO Non-blocking I/O  同步非阻塞IO I/O Multiplexing  IO多路复用 Signal-blocking I/O  信号驱动IO Asynchronous I/O  异步IO  ②基本概念的定义： IO 指的是输入输出，通常指数据在内部">
+<meta name="keywords" content="Node.js,Libuv,I&#x2F;O模型">
+<meta property="og:type" content="article">
+<meta property="og:title" content="I&#x2F;O模型、Libuv和Eventloop">
+<meta property="og:url" content="https://www.williamife.com/2019/03/28/浅谈IO模型与Event Loop/index.html">
+<meta property="og:site_name" content="我的博客">
+<meta property="og:description" content="一、I/O模型①常见的IO模型：Linux(UNIX)操作系统中的网络IO模型为例  Blocking I/O      同步阻塞IO Non-blocking I/O  同步非阻塞IO I/O Multiplexing  IO多路复用 Signal-blocking I/O  信号驱动IO Asynchronous I/O  异步IO  ②基本概念的定义： IO 指的是输入输出，通常指数据在内部">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.williamife.com/img/images/io1.png">
+<meta property="og:image" content="https://www.williamife.com/img/images/io2.png">
+<meta property="og:image" content="https://www.williamife.com/img/images/io3.png">
+<meta property="og:image" content="https://www.williamife.com/img/images/io4.png">
+<meta property="og:image" content="https://www.williamife.com/img/images/io5.png">
+<meta property="og:image" content="https://www.williamife.com/img/images/io6.png">
+<meta property="og:image" content="https://www.williamife.com/img/images/io7.png">
+<meta property="og:image" content="https://www.williamife.com/img/images/io8.png">
+<meta property="og:image" content="https://www.williamife.com/img/images/io9.png">
+<meta property="og:updated_time" content="2019-07-10T05:43:49.593Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="I&#x2F;O模型、Libuv和Eventloop">
+<meta name="twitter:description" content="一、I/O模型①常见的IO模型：Linux(UNIX)操作系统中的网络IO模型为例  Blocking I/O      同步阻塞IO Non-blocking I/O  同步非阻塞IO I/O Multiplexing  IO多路复用 Signal-blocking I/O  信号驱动IO Asynchronous I/O  异步IO  ②基本概念的定义： IO 指的是输入输出，通常指数据在内部">
+<meta name="twitter:image" content="https://www.williamife.com/img/images/io1.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="我的博客" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">William Cao</h5>
+          <a href="mailto:demondora@qq.com" title="demondora@qq.com" class="mail">demondora@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                关于
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c6664e66fb9a049b41cfdda" target="_blank" >
+                <i class="icon icon-lg icon-juejin"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/William-Cao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.weibo.com/" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">I/O模型、Libuv和Eventloop</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">I/O模型、Libuv和Eventloop</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-03-28T08:40:00.000Z" itemprop="datePublished" class="page-time">
+  2019-03-28
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <!-- <h4>TOC</h4> -->
+            <h4>文章目录</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#一、I-O模型"><span class="post-toc-text">一、I/O模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1、同步阻塞IO"><span class="post-toc-text">1、同步阻塞IO</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2、同步非阻塞IO"><span class="post-toc-text">2、同步非阻塞IO</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3、IO多路复用"><span class="post-toc-text">3、IO多路复用</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#4、信号驱动IO"><span class="post-toc-text">4、信号驱动IO</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#5、异步IO"><span class="post-toc-text">5、异步IO</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#6、五种IO模型对比"><span class="post-toc-text">6、五种IO模型对比</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#二、Libuv"><span class="post-toc-text">二、Libuv</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1、-句柄和请求"><span class="post-toc-text">1、 句柄和请求</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2、-I-O循环"><span class="post-toc-text">2、  I/O循环</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#三、Event-Loop"><span class="post-toc-text">三、Event Loop</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1、-浏览器-E-L"><span class="post-toc-text">1、 浏览器 E-L</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2、-Node-E-L"><span class="post-toc-text">2、 Node E-L</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-setImmediate-amp-amp-setTimeout"><span class="post-toc-text">1. setImmediate &amp;&amp; setTimeout</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-Process-nextTick"><span class="post-toc-text">2. Process.nextTick</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-浅谈IO模型与Event Loop"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">I/O模型、Libuv和Eventloop</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-03-28 16:40:00" datetime="2019-03-28T08:40:00.000Z"  itemprop="datePublished">2019-03-28</time>
+
+            
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="一、I-O模型"><a href="#一、I-O模型" class="headerlink" title="一、I/O模型"></a>一、I/O模型</h1><p>①常见的IO模型：<code>Linux(UNIX)操作系统中的网络IO模型为例</code></p>
+<ol>
+<li><code>Blocking I/O</code>      同步阻塞IO</li>
+<li><code>Non-blocking I/O</code>  同步非阻塞IO</li>
+<li><code>I/O Multiplexing</code>  IO多路复用</li>
+<li><code>Signal-blocking I/O</code>  信号驱动IO</li>
+<li><code>Asynchronous I/O</code>  异步IO</li>
+</ol>
+<p>②基本概念的定义：</p>
+<p>IO 指的是输入输出，通常指数据在内部存储器和外部存储器或其他周边设备之间的输入和输出。简而言之，从硬盘中读写数据或者从网络上收发数据，都属于IO行为。</p>
+<ul>
+<li>IO：内存IO、网络IO和磁盘IO，通常我们说的IO指的是后两者。</li>
+<li>阻塞和非阻塞：在调用结果在返回之前，当前线程是否挂起，即发起IO请求是否会被阻塞。</li>
+<li>同步和异步：如果做阻塞I/O调用，应用程序等待调用的完成的过程就是一种同步状况。相反，I/O为非阻塞模式时，应用程序则是异步的。</li>
+</ul>
+<p>③完成一次IO的过程：<br>以读一个文件为例,一个IO读过程是文件数据从磁盘→内核缓冲区→用户内存的过程。</p>
+<p>同步与异步的区别主要在于数据从<strong>内核缓冲区→用户内存</strong>这个过程需不需要用户（应用）进程等待，即实际的IO读写是否阻塞请求进程。<code>(网络IO可把磁盘换做网卡)</code></p>
+<p><br></p>
+<h2 id="1、同步阻塞IO"><a href="#1、同步阻塞IO" class="headerlink" title="1、同步阻塞IO"></a>1、同步阻塞IO</h2><p>  <img src="/img/images/io1.png" alt></p>
+<p><code>阻塞 I/O</code>是最简单的 I/O 模型，一般表现为进程或线程等待某个条件，如果条件不满足，则一直等下去。条件满足，则进行下一步操作。</p>
+<p>应用进程通过系统调用 <code>recvfrom</code> 接收数据，但由于内核还未准备好数据报，应用进程就会阻塞住，直到内核准备好数据报，<code>recvfrom</code> 完成数据报复制工作，应用进程才能结束阻塞状态。</p>
+<p><br></p>
+<h2 id="2、同步非阻塞IO"><a href="#2、同步非阻塞IO" class="headerlink" title="2、同步非阻塞IO"></a>2、同步非阻塞IO</h2><p>  <img src="/img/images/io2.png" alt></p>
+<p>应用进程通过 <code>recvfrom</code> 调用不停的去和内核交互，直到内核准备好数据。如果没有准备好，内核会返回 <code>error</code> ，应用进程在得到 <code>error</code> 后，过一段时间再发送 <code>recvfrom</code> 请求。如果某一次轮询发现数据已经准备好了，那就把数据拷贝到用户空间中。在发送请求的时间间隔中，进程可以先做别的事情。</p>
+<p><br></p>
+<h2 id="3、IO多路复用"><a href="#3、IO多路复用" class="headerlink" title="3、IO多路复用"></a>3、IO多路复用</h2><p>  <img src="/img/images/io3.png" alt></p>
+<p>IO多路复用是多了一个<code>select</code>函数，多个进程的IO可以注册到同一个<code>select</code>上，当用户进程调用该<code>select</code>，<code>select</code>会监听所有注册好的IO，如果所有被监听的IO需要的数据都没有准备好时，<code>select</code>调用进程会阻塞。当任意一个IO所需的数据准备好之后，<code>select</code>调用就会返回，然后进程在通过<code>recvfrom</code>来进行数据拷贝。</p>
+<p>这里的IO复用模型，并没有向内核注册信号处理函数，所以，他并不是非阻塞的。进程在发出select后，要等到select监听的所有IO操作中至少有一个需要的数据准备好，才会有返回，并且也需要再次发送请求去进行文件的拷贝。</p>
+<p><br></p>
+<h2 id="4、信号驱动IO"><a href="#4、信号驱动IO" class="headerlink" title="4、信号驱动IO"></a>4、信号驱动IO</h2><p>  <img src="/img/images/io4.png" alt></p>
+<p>应用进程预先向内核注册一个信号处理函数，然后用户进程返回，并且不阻塞，当内核数据准备就绪时会发送一个信号给进程，用户进程便在信号处理函数中开始把数据拷贝的用户空间中。</p>
+<p><br></p>
+<h2 id="5、异步IO"><a href="#5、异步IO" class="headerlink" title="5、异步IO"></a>5、异步IO</h2><p>  <img src="/img/images/io5.png" alt></p>
+<p>应用进程发起<code>aio_read</code>操作之后，给内核传递描述符、缓冲区指针、缓冲区大小等，告诉内核当整个操作完成时，如何通知进程，然后就立刻去做其他事情了。当内核收到<code>aio_read</code>后，会立刻返回，然后内核开始等待数据准备，数据准备好以后，直接把数据拷贝到用户控件，然后再通知进程本次IO已经完成。</p>
+<p><br></p>
+<h2 id="6、五种IO模型对比"><a href="#6、五种IO模型对比" class="headerlink" title="6、五种IO模型对比"></a>6、五种IO模型对比</h2><p>  <img src="/img/images/io6.png" alt></p>
+<p>阻塞IO模型、非阻塞IO模型、IO多路复用和信号驱动IO模型都是同步的IO模型，因为无论以上那种模型，真正的数据拷贝过程，都是同步进行的。</p>
+<p><br></p>
+<h1 id="二、Libuv"><a href="#二、Libuv" class="headerlink" title="二、Libuv"></a>二、Libuv</h1><p>libuv是一个高性能事件驱动库，屏蔽了各种操作系统的差异从而提供了统一的API。libuv严格使用异步、事件驱动的编程风格。其核心工作是提供事件循环及 <code>基于I/O</code> 或其他活动事件的回调机制。libuv库包含了诸如计时器、非阻塞网络支持、异步文件系统访问、线程创建、子进程等核心工具。</p>
+<p>  <img src="/img/images/io7.png" alt></p>
+<h2 id="1、-句柄和请求"><a href="#1、-句柄和请求" class="headerlink" title="1、 句柄和请求"></a>1、 句柄和请求</h2><p>libuv给用户提供了两种方式与event loop一起协同工作，一个是句柄(handle)一个是请求(request)。</p>
+<p>句柄(handle)代表了一个长期存在的对象，这些对象当处于活跃状态的时候能够执行特定的操作。例如：一个准备（prepare）句柄在活跃的时候可以在每个循环中调用它的回调一次。一个TCP服务器的句柄在每次有新的连接的时候都会调用它的连接回调函数。</p>
+<p>请求(request)一般代表短时操作。这些操作能用作用于句柄之上。写请求用于在句柄上写数据；还有一些例外，比如说getaddrinfo请求不需要句柄而是直接在循环中执行。</p>
+<h2 id="2、-I-O循环"><a href="#2、-I-O循环" class="headerlink" title="2、  I/O循环"></a>2、  I/O循环</h2><p>I/O循环或者叫做事件循环是整个libuv的核心部分。I/O循环建立了所有IO操作的执行环境，I/O循环会被绑定在一个线程之上。我们可以运行多个事件循环，只要每一个都运行在不同的线程之上。libuv事件循环不是线程安全的，所以所有包含事件循环的API及句柄都不是线程安全的。</p>
+<p>事件循环遵循最普遍的<code>单线程异步I/O</code>方法：所有I/O或者网络操作在非阻塞的socket上执行，这个socket会使用基于平台的组好的poll机制：在linux上使用<code>epoll</code>，在OSX和其他BSD平台上使用<code>kqueue</code>，在sunOS上使用<code>event ports</code>，在windows上使用<code>IOCP</code>。作为循环迭代的一部分，循环会阻塞以等待socket上的I/O活动，这些活动已经被加到socket的触发实践中了，一旦这些条件满足，那么socket的状态就会发生变化，从而循环不再阻塞，而且句柄也可以读、写及执行其他期望的I/O操作。</p>
+<p><strong>更好的理解事件循环操作如何进行，下图展示了一个循环迭代的所有阶段。</strong></p>
+<p>  <img src="/img/images/io8.png" alt></p>
+<p>文件 I/O 与网络 I/O 不同 ，并不存在 libuv 可以依靠的各特定平台下的文件 I/O 基础函数，所以目前的实现是在线程中执行阻塞的文件 I/O 操作来模拟异步。</p>
+<p><strong>注意：libuv利用线程池技术使得异步文件I/O操作称为可能，但是对于网络IO只能执行在一个单一线程中，即loop的线程中。</strong></p>
+<p><br></p>
+<h1 id="三、Event-Loop"><a href="#三、Event-Loop" class="headerlink" title="三、Event Loop"></a>三、Event Loop</h1><blockquote>
+<p>任务队列</p>
+</blockquote>
+<p>异步任务分为task（宏任务，也可称为macroTask）和microtask（微任务）两类。<br>当满足执行条件时，task和microtask会被放入各自的队列中等待放入主线程执行，我们把这两个队列称为Task Queue(Macrotask Queue)和Microtask Queue。</p>
+<p><strong>MacroTask（宏任务）</strong></p>
+<p><code>script代码</code>、<code>setTimeout</code>、<code>setInterval</code>、<code>setImmediate(浏览器IE10)</code>、<code>MessageChannel</code>、<code>I/O</code>、<code>UI-Rendering</code></p>
+<p><strong>MicroTask（微任务）</strong></p>
+<p><code>Process.nextTick(Node独有)</code>、<code>Promise</code>、<code>MutationObserver</code>、<code>Object.observe(废弃)</code></p>
+<h2 id="1、-浏览器-E-L"><a href="#1、-浏览器-E-L" class="headerlink" title="1、 浏览器 E-L"></a>1、 浏览器 E-L</h2><p>JS调用栈采用的是<code>先进后出</code>原则，当函数执行的时候，会被添加到栈的顶部，当执行栈执行完成后，就会从栈顶移出，直到栈内被清空。</p>
+<ul>
+<li><code>执行栈在执行完同步任务后</code> ，查看执行栈是否为空，如果执行栈为空，就会去检查微任务<code>microTask</code>队列是否为空，如果为空的话，就执行Task（宏任务），否则执行微任务。</li>
+<li><code>每当单个宏任务执行完毕后</code> ，检查<code>microTask</code>队列是否为空，如果不为空，会按照 <code>先入先出</code> 原则全部执行microTask队列，设置microTask队列为null，然后再执行宏任务，如此反复。</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">'script start'</span>);</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'setTimeout'</span>);</span><br><span class="line">&#125;, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">Promise</span>.resolve().then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'promise1'</span>);</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'promise2'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'script end'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// script start、script end、promise1、promise2、setTimeout</span></span><br></pre></td></tr></table></figure>
+<p>Another One</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">'script start'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">async1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">await</span> async2()</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'async1 end'</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">async2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'async2 end'</span>)</span><br><span class="line">&#125;</span><br><span class="line">async1()</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'setTimeout'</span>)</span><br><span class="line">&#125;, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'Promise'</span>)</span><br><span class="line">  resolve()</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'promise1'</span>)</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'promise2'</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'script end'</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>async/await</code> 在底层转换成了 <code>promise</code> 和 <code>then</code> 回调函数。</li>
+<li>每次我们使用 <code>await</code>, 解释器都创建一个 <code>promise</code> 对象，然后把剩下的 <code>async</code> 函数中代码的操作放到 <code>then</code> 回调函数中。</li>
+</ul>
+<p><strong>关于Chrome73以下版本和73版本的区别</strong></p>
+<ul>
+<li><p>在老版本版本以下，先执行<code>promise1</code>和<code>promise2</code>，再执行<code>async1</code>。<br>script start、async2 end、Promise、script end、<code>promise1、promise2、async1 end</code>、setTimeout</p>
+</li>
+<li><p>在73版中，先执行<code>async1</code>再执行<code>promise1</code>和<code>promise2</code>。<br>script start、async2 end、Promise、script end、<code>async1 end、promise1、promise2</code>、setTimeout</p>
+</li>
+</ul>
+<p><em>主要原因是因为在谷歌73版本中更改了规范</em></p>
+<h2 id="2、-Node-E-L"><a href="#2、-Node-E-L" class="headerlink" title="2、 Node E-L"></a>2、 Node E-L</h2><p>  <img src="/img/images/io9.png" alt></p>
+<p>在Node中事件每一轮循环按照顺序分为6个阶段，来自libuv的实现：</p>
+<pre><code>   ┌───────────────────────┐
+┌─&gt;│        timers         │
+│  └──────────┬────────────┘
+│  ┌──────────┴────────────┐
+│  │     I/O callbacks     │
+│  └──────────┬────────────┘
+│  ┌──────────┴────────────┐
+│  │     idle, prepare     │
+│  └──────────┬────────────┘      ┌───────────────┐
+│  ┌──────────┴────────────┐      │   incoming:   │
+│  │         poll          │&lt;─────┤  connections, │
+│  └──────────┬────────────┘      │   data, etc.  │
+│  ┌──────────┴────────────┐      └───────────────┘
+│  │        check          │
+│  └──────────┬────────────┘
+│  ┌──────────┴────────────┐
+└──┤    close callbacks    │
+   └───────────────────────┘
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">timers：执行满足条件的setTimeout、setInterval回调。</span><br><span class="line">I/O callbacks：是否有已完成的I/O操作的回调函数，来自上一轮的poll残留。</span><br><span class="line">idle，prepare：可忽略</span><br><span class="line">poll：等待还没完成的I/O事件，会因timers和超时时间等结束等待。</span><br><span class="line">check：执行setImmediate的回调。</span><br><span class="line">close callbacks：关闭所有的closing handles，一些onclose事件。</span><br></pre></td></tr></table></figure>
+<p>我们需要重点关心的是<code>timers</code>、<code>poll</code>、<code>check</code>这三个阶段。</p>
+<p><strong>1. timers</strong><br>执行<code>setTimeout</code>和<code>setInterval</code>中到期的<code>callback</code>，执行这两者回调需要设置一个毫秒数，理论上来说，应该是时间一到就<code>立即执行</code>callback回调，但是由于system的调度可能会延时，达不到预期时间。</p>
+<p><strong>2. poll</strong><br>执行<code>I/O回调</code> 和 处理<code>轮询队列</code>中的事件。</p>
+<p>① 如果 poll 队列不是空的，event loop 就会依次执行队列里的回调函数，直到队列被清空或者到达 poll 阶段的时间上限。</p>
+<p>② 如果 poll 队列是空的，就会：</p>
+<ol>
+<li>有 setImmediate 任务，event loop 就结束 poll 阶段去往 check 阶段。</li>
+<li>没有 setImmediate 任务，event loop 就会等待新的回调函数进入 poll 队列，并立即执行它。</li>
+</ol>
+<p><strong>3. check</strong><br><strong><em>此阶段允许人员在poll阶段完成后立即执行回调。</em></strong></p>
+<p>setImmediate()实际上是一个特殊的计时器，它在事件循环的一个单独阶段运行。它是通过 libuv 里一个能将回调安排在 poll 阶段之后执行的 API 实现的。</p>
+<p>在poll队列是空的 且有 setImmediate 任务的情况下，event loop 就结束 poll 阶段去往 check 阶段执行任务。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">'start'</span>)</span><br><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'timer1'</span>)</span><br><span class="line">  <span class="built_in">Promise</span>.resolve().then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'promise1'</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;, <span class="number">0</span>)</span><br><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'timer2'</span>)</span><br><span class="line">  <span class="built_in">Promise</span>.resolve().then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'promise2'</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;, <span class="number">0</span>)</span><br><span class="line"><span class="built_in">Promise</span>.resolve().then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'promise3'</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'end'</span>)</span><br></pre></td></tr></table></figure>
+<p>如果<code>node</code>版本为<code>v11.x</code>， 其结果与浏览器一致：</p>
+<pre><code>start
+end
+promise3
+timer1
+promise1
+timer2
+promise2
+</code></pre><p><code>v10</code>如果time2定时器已经在执行队列中结果为：</p>
+<pre><code>start
+end
+promise3
+timer1
+timer2
+promise1
+promise2
+</code></pre><p>否则和第一个结果一致。</p>
+<p>了解浏览器的eventloop可能就知道，浏览器的宏任务队列执行了一个，就会执行微任务。</p>
+<p>简单的说，可以把浏览器的宏任务和<code>node10</code>的<code>timers</code>比较，就是node10只有全部执行了timers阶段队列的全部任务才执行微任务队列，而浏览器只要执行了一个宏任务就会执行微任务队列。</p>
+<p><code>node11</code>保持和浏览器相同。</p>
+<p><br></p>
+<h3 id="1-setImmediate-amp-amp-setTimeout"><a href="#1-setImmediate-amp-amp-setTimeout" class="headerlink" title="1. setImmediate &amp;&amp; setTimeout"></a>1. setImmediate &amp;&amp; setTimeout</h3><p>setImmediate和setTimeout是相似的，但根据它们被调用的时间以不同的方式表现。</p>
+<p><code>setImmediate()</code>设计用于在当前<code>poll</code>阶段完成后<code>check</code>阶段执行脚本 。<br><code>setTimeout()</code>为最小（ms）后运行的脚本，在<code>timers</code>阶段执行。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'timeout'</span>);</span><br><span class="line">&#125;, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">setImmediate(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'immediate'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// timeout,immediate</span></span><br><span class="line"><span class="comment">// immediate,timeout</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"></span><br><span class="line">fs.readFile(<span class="string">'../file.txt'</span>, () =&gt; &#123;</span><br><span class="line">  setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'timeout'</span>);</span><br><span class="line">  &#125;, <span class="number">0</span>);</span><br><span class="line">  setImmediate(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'immediate'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// immediate,timeout</span></span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h3 id="2-Process-nextTick"><a href="#2-Process-nextTick" class="headerlink" title="2. Process.nextTick"></a>2. Process.nextTick</h3><p><code>process.nextTick()</code>虽然它是异步API的一部分，但从技术上讲，它不是事件循环的一部分。</p>
+<p><code>process.nextTick()</code>方法将 callback 添加到next tick队列。 一旦当前事件轮询队列的任务全部完成，在next tick队列中的所有callbacks会被依次调用。</p>
+<p>当每个阶段完成后，如果存在 nextTick 队列，就会清空队列中的所有回调函数，并且优先于其他 <code>microtask</code> 执行。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Promise</span>.resolve().then(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'Promise'</span>));</span><br><span class="line">process.nextTick(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'nextTick'</span>));</span><br><span class="line"><span class="comment">// nextTick</span></span><br><span class="line"><span class="comment">// Promise</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">setImmediate(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'setImmediate1'</span>);</span><br><span class="line">  setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'setTimeout1'</span>);</span><br><span class="line">  &#125;, <span class="number">0</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  process.nextTick(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'nextTick'</span>));</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'setTimeout2'</span>);</span><br><span class="line">  setImmediate(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'setImmediate2'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//结果1</span></span><br><span class="line"><span class="comment">// setImmediate1</span></span><br><span class="line"><span class="comment">// setTimeout2</span></span><br><span class="line"><span class="comment">// setTimeout1</span></span><br><span class="line"><span class="comment">// nextTick</span></span><br><span class="line"><span class="comment">// setImmediate2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 结果2</span></span><br><span class="line"><span class="comment">// setTimeout2</span></span><br><span class="line"><span class="comment">// nextTick</span></span><br><span class="line"><span class="comment">// setImmediate1</span></span><br><span class="line"><span class="comment">// setImmediate2</span></span><br><span class="line"><span class="comment">// setTimeout1</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>JavaScript是单线程的，但Node本身其实是多线程的，除了用户代码无法并行执行外，所有的I/O请求是可以并行执行的。<br>事件循环是Node异步I/O实现的核心，Node通过事件驱动的方式处理请求，使得其无须为每个请求创建额外的线程，省掉了创建和销毁线程的开销。同时也因为线程数较少，不受线程上下文切换的影响，维持了Node的高性能。<br>Node异步IO、非阻塞的特性，使它非常适用于IO密集、高并发的应用场景。</p>
+</blockquote>
+<p><br></p>
+<p>参考文章：</p>
+<ul>
+<li><a href="https://blog.csdn.net/gui951753/article/details/82348485" target="_blank" rel="noopener">Linux下五种I/O模型详解</a></li>
+<li><a href="http://lpbobo.com/2016/04/21/%E9%AB%98%E5%B9%B6%E5%8F%91IO%E6%A8%A1%E5%9E%8B/" target="_blank" rel="noopener">高并发I/O模型</a></li>
+<li><a href="https://segmentfault.com/a/1190000005873917" target="_blank" rel="noopener">[译]libuv 设计概述</a></li>
+<li><a href="https://juejin.im/post/5c9a43175188252d876e5903" target="_blank" rel="noopener">Eventloop不可怕，可怕的是遇上Promise</a></li>
+<li><a href="https://juejin.im/post/5c3e8d90f265da614274218a" target="_blank" rel="noopener">又被node的eventloop坑了，这次是node的锅</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        分享就是回顾自己所学的知识，欢迎大家交流~
+        
+    </div>
+    
+    <footer>
+        <a href="https://www.williamife.com">
+            <img src="/img/avatar.jpg" alt="William Cao">
+            William Cao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/I-O模型/">I/O模型</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Libuv/">Libuv</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Node-js/">Node.js</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2019/03/28/浅谈IO模型与Event Loop/&title=《I/O模型、Libuv和Eventloop》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2019/03/28/浅谈IO模型与Event Loop/&title=《I/O模型、Libuv和Eventloop》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2019/03/28/浅谈IO模型与Event Loop/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《I/O模型、Libuv和Eventloop》 — 我的博客&url=https://www.williamife.com/2019/03/28/浅谈IO模型与Event Loop/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2019/03/28/浅谈IO模型与Event Loop/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2019/04/29/JS中的原型和原型链/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">JS中的原型和原型链</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/03/21/关于Web安全常见的攻防姿势/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">关于6种Web安全常见的攻防姿势</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷赏赐~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>William Cao &copy; 2018 - 2021</span></p>
+        <p> 
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">京ICP备19030143号-1</a>
+                
+            </span>
+            <span>
+                
+                <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802031297" target="_blank">京公网安备11010802031297号</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.williamife.com/2019/03/28/浅谈IO模型与Event Loop/&title=《I/O模型、Libuv和Eventloop》 — 我的博客&pic=https://www.williamife.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.williamife.com/2019/03/28/浅谈IO模型与Event Loop/&title=《I/O模型、Libuv和Eventloop》 — 我的博客&source=我叫William，是一名前端工程师，对前端和编程技术非常热爱。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.williamife.com/2019/03/28/浅谈IO模型与Event Loop/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《I/O模型、Libuv和Eventloop》 — 我的博客&url=https://www.williamife.com/2019/03/28/浅谈IO模型与Event Loop/&via=https://www.williamife.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.williamife.com/2019/03/28/浅谈IO模型与Event Loop/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACq0lEQVR42u3awW4qMQwFUP7/p3nrige6104Qi5MVaqczOak0NrYfj3g9X9a7a95dn6/XO7ze//DCw8PDW2+9fViCf/dXn6+ZHR8eHh7ed3jtVvLjiDYRHNPwaPDw8PB+gJeEjc+H0qbIeXqNh4eH95u85MFt2SI/RDw8PLzf4SUpcsLLU/D2OK7XWvDw8PC6OkCU1P7O5yv9PTw8PLx1Vz1vhuUlg7xJlheO3+4WDw8P7wIvf+G2rakk/U3AbbqMh4eHd5s3e5Un17e/3RR83/4VHh4e3gVe++qflXpzdn7nPLTg4eHhneXNmlKzYaxZvr9preHh4eF9h9e+6PODyMu1UYq8GbfCw8PDW/CSQsBs3GoWMNojK2bK8PDw8I7y2iCRp7lnh6uS437M4hgeHh5eydu8fDfbagNGXYzAw8PDu8zb37QdqGpLum3hGA8PD+8erx2xagHPYG06/kX5GA8PD+8oL9n0LGzMihSzUYOoP4aHh4e34LVNqTYY7A+u/Tf857sCHh4e3lHevmE/KyUULf/yO0FUa8HDw8Nb8zbDBJvwkD+3LVXUdWI8PDy8cj+bB+cjUGdDRXEoeHh4eEd5m/ZS/vNTyCSNHtZa8PDw8NYhIWnbb0JCe+ecjYeHh3ebN2s45cGgmPaKk/sWj4eHh3ebt99ocuUzWLNnHT4zPDw8vFGbqi097JtkeSiKdoWHh4d3jbfHFC/rET6/Z921w8PDw4t5z3K1afHZoJKn3X9GB/Dw8PCO8jYjTZ/bUW2z6uxnPDw8vNu8zcBTkiifPZp65AsPDw/vGm82NDCj7osOReEYDw8P72d4bYa+SbI3Iw54eHh4v8Dbp8u3yxx4eHh43+G1m2sT7jww5EewmozAw8PDW/AOfOEvG/+zXtxqOAAPDw/vDO8fMSAr8LS+NfwAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
